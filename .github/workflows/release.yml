@@ -1,0 +1,28 @@
+# Packages the addon and uploads it when a version tag is pushed, e.g.
+#   git tag 0.1.0 && git push origin 0.1.0
+#
+# Needs, before it can upload to CurseForge:
+#   - "## X-Curse-Project-ID: <number>" in AritlokUI.toc
+#   - a repository secret named CF_API_KEY (CurseForge > My API Tokens)
+# Without those it still builds the zip and attaches it to a GitHub release.
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: BigWigsMods/packager@v2
+        env:
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,12 @@
+package-as: AritlokUI
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
+ignore:
+  - .github
+  - .gitignore
+  - .pkgmeta
+  - Assets
+  - README.md
