@@ -6,6 +6,8 @@ local addonName, ns = ...
 --  plugin API).
 -------------------------------------------------------------------------------
 
+local L = ns.L
+
 local PLUGIN_ID = "AritlokUI"
 
 local function Refresh()
@@ -20,15 +22,15 @@ end
 function ns.OpenOptions()
     local eui = _G.EllesmereUI
     if type(eui) ~= "table" or not eui.OpenPlugin then
-        ns.Print("the settings page needs EllesmereUI's plugin API. Use /aui help for the chat commands.")
+        ns.Print(L["the settings page needs EllesmereUI's plugin API. Use /aui help for the chat commands."])
         return
     end
     local ran = ns.RunOutOfCombat(function()
         if not eui.OpenPlugin(PLUGIN_ID) then
-            ns.Print("EllesmereUI could not open the settings page. Use /aui help for the chat commands.")
+            ns.Print(L["EllesmereUI could not open the settings page. Use /aui help for the chat commands."])
         end
     end)
-    if not ran then ns.Print("in combat: the settings page opens when the fight ends.") end
+    if not ran then ns.Print(L["in combat: the settings page opens when the fight ends."]) end
 end
 
 -- Named in the TOC as AddonCompartmentFunc.
@@ -37,6 +39,38 @@ function AritlokUI_OnAddonCompartmentClick() ns.OpenOptions() end
 -------------------------------------------------------------------------------
 --  Settings page
 -------------------------------------------------------------------------------
+-- EllesmereUI's widget factory, with every text argument translated on the
+-- way in: labels, tooltips, and the display values of dropdowns. Keys (the
+-- dropdown order lists, "gradient", "TOP" and so on) have no translation and
+-- pass through unchanged.
+local function Localized(W)
+    return setmetatable({}, {
+        __index = function(_, method)
+            local fn = W[method]
+            if type(fn) ~= "function" then return fn end
+            return function(_, ...)
+                local n = select("#", ...)
+                local args = { ... }
+                for i = 2, n do -- argument 1 is the parent frame
+                    local a = args[i]
+                    if type(a) == "string" then
+                        args[i] = L[a]
+                    elseif type(a) == "table" then
+                        local copy = {}
+                        for k, v in pairs(a) do
+                            copy[k] = (type(v) == "string") and L[v] or v
+                        end
+                        args[i] = copy
+                    end
+                end
+                return fn(W, unpack(args, 1, n))
+            end
+        end,
+    })
+end
+
+local PAGE_THEME, PAGE_BAR = "Theme", "Menu Bar"
+
 local function BuildThemePage(W, parent, y)
     local db = ns.db
     local prebuild = _G.EllesmereUI.IsSearchPrebuild and _G.EllesmereUI.IsSearchPrebuild()
@@ -48,14 +82,14 @@ local function BuildThemePage(W, parent, y)
         parent,
         "Theme",
         y,
-        { gradient = "Gradient (class colours)", dark = "Dark" },
+        { gradient = "Gradient (class colors)", dark = "Dark" },
         function() return db.theme end,
         function(v)
             db.theme = v
             Refresh()
         end,
         { "gradient", "dark" },
-        "Used the next time you press Install. Dark switches EllesmereUI's unit frames to their dark theme."
+        "Used the next time you run the installer. Dark switches EllesmereUI's unit frames to their dark theme."
     )
     y = y - h
 
@@ -78,118 +112,65 @@ local function BuildThemePage(W, parent, y)
         Refresh()
     end)
     y = y - h
-    _, h = W:Slider(parent, "Right end glow", y, 0, 60, 5, function() return db.shade.glow end, function(v)
+    _, h = W:Slider(parent, "Right end glow", y, 0, 60, 2, function() return db.shade.glow end, function(v)
         db.shade.glow = v
         Refresh()
     end)
     y = y - h
 
-    _, h = W:SectionHeader(parent, "INSTALL INTO ELLESMEREUI", y)
+    -- The same list the installer window shows.
+    _, h = W:SectionHeader(parent, "WHAT THE INSTALLER APPLIES", y)
     y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Unit frames",
-        y,
-        function() return db.install.unitFrames end,
-        function(v) db.install.unitFrames = v end,
-        "ToxiUI layout: 300 x 36 player and target either side of a free centre, texts above and below the bar, power bar in the middle."
-    )
+    local options = ns.Installer.options
+    for i = 1, #options do
+        local option = options[i]
+        _, h = W:Toggle(
+            parent,
+            option.title,
+            y,
+            function() return db.install[option.key] end,
+            function(v) db.install[option.key] = v end,
+            option.desc
+        )
+        y = y - h
+    end
+
+    _, h = W:SectionHeader(parent, "HIDDEN OUT OF COMBAT", y)
     y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Action bars",
-        y,
-        function() return db.install.actionBars end,
-        function(v) db.install.actionBars = v end,
-        "ToxiUI layout: wide 36 x 29 buttons with cropped icons, bars 1-3 stacked at the bottom centre, bars 4 and 5 as 4 x 3 blocks beside them, bar 6 as a mouse-over block right of chat (2 across, 6 down), bars 7-10 off unless you placed them."
-    )
+    local combat = ns.Installer.combatOptions
+    for i = 1, #combat do
+        local option = combat[i]
+        _, h = W:Toggle(
+            parent,
+            option.title,
+            y,
+            function() return db.install.combat[option.key] end,
+            function(v) db.install.combat[option.key] = v end,
+            option.desc
+        )
+        y = y - h
+    end
+
+    _, h = W:SectionHeader(parent, "OTHER ADDONS", y)
     y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Bottom bar from EllesmereUI DataBars",
-        y,
-        function() return db.install.dataBar end,
-        function(v) db.install.dataBar = v end,
-        "Builds the bottom bar with EllesmereUI's DataBars module (icon micro menu, clock, gold). Off uses the built-in bar."
-    )
-    y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Pixel-perfect UI scale",
-        y,
-        function() return db.install.scale end,
-        function(v) db.install.scale = v end,
-        "Sets EllesmereUI's UI scale to 768 / screen height: 0.5333 at 2560 x 1440."
-    )
-    y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Monaspace Neon font",
-        y,
-        function() return db.install.font end,
-        function(v) db.install.font = v end,
-        "Sets EllesmereUI's global font to Monaspace Neon (Regular). Other Neon and Argon weights are also in EllesmereUI's font list."
-    )
-    y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Accent colour",
-        y,
-        function() return db.install.accent end,
-        function(v) db.install.accent = v end,
-        "Sets EllesmereUI's accent, which colours the quest tracker, damage meter, chat and bottom bar alike."
-    )
-    y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Accent is my class colour",
-        y,
-        function() return db.install.accentClass end,
-        function(v) db.install.accentClass = v end,
-        "Off uses Aritlok blue instead."
-    )
-    y = y - h
-    _, h = W:Toggle(parent, "Chat in the bottom-left corner", y, function() return db.install.chat end, function(v) db.install.chat = v end)
-    y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Minimap in the top-right corner",
-        y,
-        function() return db.install.minimap end,
-        function(v) db.install.minimap = v end
-    )
-    y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Quest tracker, tooltip and damage meter on the right edge",
-        y,
-        function() return db.install.rightSide end,
-        function(v) db.install.rightSide = v end
-    )
-    y = y - h
-    _, h = W:Toggle(
-        parent,
-        "Flat EllesmereUI style on every module",
-        y,
-        function() return db.install.style end,
-        function(v) db.install.style = v end,
-        "Replaces the bronze WoW Forever look with EllesmereUI's flat one."
-    )
-    y = y - h
+    -- Integrations for other addons, when those addons are loaded.
+    local found = ns.Installer.DetectedAddons()
+    for i = 1, #found do
+        local entry = found[i]
+        _, h = W:Toggle(
+            parent,
+            entry.title,
+            y,
+            function() return db.install.addons[entry.key] end,
+            function(v) db.install.addons[entry.key] = v end,
+            entry.desc
+        )
+        y = y - h
+    end
 
     _, h = W:WideButton(parent, "Open the installer", y, function()
         if prebuild then return end
         ns.OpenInstaller()
-    end)
-    y = y - h
-    _, h = W:WideButton(parent, "Apply now without the installer", y, function()
-        if prebuild then return end
-        ns.Install(db.theme)
-    end)
-    y = y - h
-    _, h = W:WideButton(parent, "Switch back to my previous profile", y, function()
-        if prebuild then return end
-        ns.Restore()
     end)
     y = y - h
 
@@ -200,73 +181,57 @@ local function BuildBarPage(W, parent, y)
     local cfg = ns.db.bar
     local _, h
 
-    _, h = W:SectionHeader(parent, "INFO BAR", y)
+    _, h = W:SectionHeader(parent, "BACKDROP", y)
     y = y - h
-    _, h = W:Toggle(parent, "Show the info bar", y, function() return cfg.enabled end, function(v)
+    _, h = W:Toggle(parent, "Show the backdrop and XP bar", y, function() return cfg.enabled end, function(v)
         cfg.enabled = v
         Refresh()
-    end)
+    end, "The fading strip behind the menu bar. The menu bar itself is an EllesmereUI DataBar.")
     y = y - h
-    _, h = W:Dropdown(
-        parent,
-        "Position",
-        y,
-        { BOTTOM = "Bottom of the screen", TOP = "Top of the screen" },
-        function() return cfg.position end,
-        function(v)
-            cfg.position = v
-            Refresh()
-        end,
-        { "BOTTOM", "TOP" }
-    )
-    y = y - h
-    _, h = W:Slider(parent, "Height", y, 18, 48, 1, function() return cfg.height end, function(v)
-        cfg.height = v
+    _, h = W:Dropdown(parent, "Screen edge", y, { BOTTOM = "Bottom", TOP = "Top" }, function() return cfg.position end, function(v)
+        cfg.position = v
         Refresh()
-    end)
+    end, { "BOTTOM", "TOP" }, "Run the installer again afterwards so the menu bar and the layout move with it.")
     y = y - h
-    _, h = W:Slider(parent, "Background opacity", y, 0, 100, 5, function() return cfg.opacity end, function(v)
+    _, h = W:Slider(parent, "Opacity", y, 0, 100, 5, function() return cfg.opacity end, function(v)
         cfg.opacity = v
         Refresh()
     end)
     y = y - h
-    _, h = W:Toggle(parent, "Class-colour wash", y, function() return cfg.classWash end, function(v)
+    _, h = W:Toggle(parent, "Class-color wash", y, function() return cfg.classWash end, function(v)
         cfg.classWash = v
         Refresh()
     end)
     y = y - h
-    _, h = W:Toggle(parent, "Menu buttons (built-in bar)", y, function() return cfg.micro end, function(v)
-        cfg.micro = v
-        Refresh()
-    end, "Letter buttons for character, spellbook, talents and so on. The EllesmereUI DataBars bar has its own icon menu.")
+
+    _, h = W:SectionHeader(parent, "EXPERIENCE BAR", y)
     y = y - h
-    _, h = W:Slider(parent, "XP bar length (menu bar)", y, 100, 800, 20, function() return cfg.xpLength end, function(v)
+    _, h = W:Toggle(parent, "Long experience bar", y, function() return cfg.showXP end, function(v)
+        cfg.showXP = v
+        Refresh()
+    end, "Replaces the DataBar's short XP block. Run the installer again after changing this.")
+    y = y - h
+    _, h = W:Slider(parent, "Length", y, 100, 800, 20, function() return cfg.xpLength end, function(v)
         cfg.xpLength = v
         Refresh()
-    end, "Length of the XP bar on the EllesmereUI bottom bar. Run the installer again afterwards so the bar leaves the same room.")
+    end, "Run the installer again afterwards so the menu bar leaves the same room.")
     y = y - h
-    _, h = W:Slider(parent, "XP bar start (from the left edge)", y, 100, 800, 10, function() return cfg.xpOffset end, function(v)
+    _, h = W:Slider(parent, "Start (from the left edge)", y, 100, 800, 10, function() return cfg.xpOffset end, function(v)
         cfg.xpOffset = v
-        Refresh()
-    end)
-    y = y - h
-    _, h = W:Toggle(parent, "Experience hairline", y, function() return cfg.showXP end, function(v)
-        cfg.showXP = v
         Refresh()
     end)
     y = y - h
 
     _, h = W:SectionHeader(parent, "CLOCK", y)
     y = y - h
-    _, h = W:Toggle(parent, "24-hour clock", y, function() return cfg.clock24 end, function(v)
-        cfg.clock24 = v
-        Refresh()
-    end)
-    y = y - h
-    _, h = W:Toggle(parent, "Local time (off = realm time)", y, function() return cfg.localTime end, function(v)
-        cfg.localTime = v
-        Refresh()
-    end)
+    _, h = W:Toggle(
+        parent,
+        "24-hour clock",
+        y,
+        function() return cfg.clock24 end,
+        function(v) cfg.clock24 = v end,
+        "Applied the next time you run the installer."
+    )
     y = y - h
 
     return y
@@ -282,13 +247,14 @@ local function RegisterPlugin()
             {
                 key = "General",
                 title = "Aritlok UI",
-                description = "Theme, health bar shade and info bar.",
-                pages = { "Theme", "Info Bar" },
+                description = L["Theme, bar gradients and the menu bar."],
+                pages = { L[PAGE_THEME], L[PAGE_BAR] },
                 buildPage = function(pageName, parent, yOffset)
                     local W = _G.EllesmereUI.Widgets
                     if not W or not ns.db then return 0 end
+                    W = Localized(W)
                     local y
-                    if pageName == "Info Bar" then
+                    if pageName == L[PAGE_BAR] then
                         y = BuildBarPage(W, parent, yOffset)
                     else
                         y = BuildThemePage(W, parent, yOffset)
@@ -314,25 +280,23 @@ end
 -------------------------------------------------------------------------------
 local HELP = {
     "/aui                      open the settings page (EllesmereUI panel)",
-    "/aui install              open the step-by-step installer",
-    '/aui apply [gradient|dark]     theme the "AritlokUI" profile straight away, no window',
-    "/aui restore              switch EllesmereUI back to the profile you had before",
+    "/aui install              open the installer",
     "/aui shade on|off|<0-90>  bar gradients and how deep the left end gets",
-    "/aui bar on|off|top|bottom     info bar",
+    "/aui bar on|off|top|bottom     the menu bar backdrop and XP bar",
     "/aui xp <length> [offset] length of the XP bar on the menu bar, and where it starts",
     "/aui status               what is switched on",
-    "/aui probe                print which client and EllesmereUI APIs this build has",
+    "/aui probe                print which client and EllesmereUI functions this build has",
     "/aui help                 this list",
 }
 
-local function OnOff(v) return v and "on" or "off" end
+local function OnOff(v) return L[v and "on" or "off"] end
 
 local commands = {}
 
 commands.help = function()
-    ns.Print("version " .. ns.VERSION .. " commands:")
+    ns.Print(string.format(L["version %s commands:"], ns.VERSION))
     for i = 1, #HELP do
-        ns.Print(HELP[i])
+        ns.Print(L[HELP[i]])
     end
 end
 
@@ -340,16 +304,6 @@ commands.config = function() ns.OpenOptions() end
 commands.options = commands.config
 
 commands.install = function() ns.OpenInstaller() end
-
-commands.apply = function(arg)
-    if arg ~= "" and arg ~= "gradient" and arg ~= "dark" then
-        ns.Print('unknown theme "' .. arg .. '". Use gradient or dark.')
-        return
-    end
-    ns.Install(arg ~= "" and arg or nil)
-end
-
-commands.restore = function() ns.Restore() end
 
 commands.shade = function(arg)
     local db = ns.db
@@ -362,11 +316,11 @@ commands.shade = function(arg)
         db.shade.strength = n
         db.shade.enabled = true
     else
-        ns.Print("usage: /aui shade on|off|<0-90>")
+        ns.Print(L["usage: /aui shade on|off|<0-90>"])
         return
     end
     Refresh()
-    ns.Print("shade " .. OnOff(db.shade.enabled) .. ", strength " .. db.shade.strength .. ".")
+    ns.Print(string.format(L["gradients %s, depth %d."], OnOff(db.shade.enabled), db.shade.strength))
 end
 
 commands.bar = function(arg)
@@ -382,11 +336,17 @@ commands.bar = function(arg)
         cfg.position = "BOTTOM"
         cfg.enabled = true
     else
-        ns.Print("usage: /aui bar on|off|top|bottom")
+        ns.Print(L["usage: /aui bar on|off|top|bottom"])
         return
     end
     Refresh()
-    ns.Print("info bar " .. OnOff(cfg.enabled) .. ", " .. string.lower(cfg.position) .. ".")
+    ns.Print(
+        string.format(
+            L["backdrop %s, %s. Run /aui install to move the menu bar with it."],
+            OnOff(cfg.enabled),
+            L[cfg.position == "TOP" and "top" or "bottom"]
+        )
+    )
 end
 
 commands.xp = function(arg)
@@ -394,18 +354,18 @@ commands.xp = function(arg)
     local length, offset = string.match(arg, "^(%d+)%s*(%d*)$")
     length = tonumber(length)
     if not length then
-        ns.Print("usage: /aui xp <length> [offset from left]. Now " .. cfg.xpLength .. " long, starting at " .. cfg.xpOffset .. ".")
+        ns.Print(string.format(L["usage: /aui xp <length> [offset from left]. Now %d long, starting at %d."], cfg.xpLength, cfg.xpOffset))
         return
     end
     cfg.xpLength = length
     if tonumber(offset) then cfg.xpOffset = tonumber(offset) end
     Refresh()
     ns.Print(
-        "XP bar "
-            .. cfg.xpLength
-            .. " long, starting at "
-            .. cfg.xpOffset
-            .. ". Run /aui install again so the menu bar leaves the same room for it."
+        string.format(
+            L["XP bar %d long, starting at %d. Run /aui install so the menu bar leaves the same room for it."],
+            cfg.xpLength,
+            cfg.xpOffset
+        )
     )
 end
 
@@ -413,18 +373,21 @@ commands.status = function()
     local db = ns.db
     local eui = _G.EllesmereUI
     local profile = (type(eui) == "table" and eui.GetActiveProfileName) and eui.GetActiveProfileName() or "?"
-    ns.Print("theme " .. db.theme .. ", installed " .. OnOff(db.installed) .. ', EllesmereUI profile "' .. ns.Text(profile) .. '".')
+    local current, tested, matches = ns.Installer.EUIVersion()
     ns.Print(
-        "shade "
-            .. OnOff(db.shade.enabled)
-            .. " ("
-            .. db.shade.strength
-            .. "), info bar "
-            .. OnOff(db.bar.enabled)
-            .. " ("
-            .. string.lower(db.bar.position)
-            .. ")."
+        string.format(
+            L['theme %s, installed %s, EllesmereUI profile "%s".'],
+            L[db.theme == "dark" and "Dark" or "Gradient"],
+            OnOff(db.installed),
+            ns.Text(profile)
+        )
     )
+    ns.Print(string.format(L["gradients %s (%d), backdrop %s."], OnOff(db.shade.enabled), db.shade.strength, OnOff(db.bar.enabled)))
+    if matches then
+        ns.Print("EllesmereUI " .. ns.Text(current) .. " " .. L["(tested version)"])
+    else
+        ns.Print(string.format(L["EllesmereUI %s, tested with %s."], ns.Text(current or "?"), tested))
+    end
 end
 
 commands.probe = function() ns.Probe() end
@@ -433,7 +396,7 @@ SLASH_ARITLOKUI1 = "/aui"
 SLASH_ARITLOKUI2 = "/aritlokui"
 SlashCmdList["ARITLOKUI"] = function(msg)
     if not ns.db then
-        ns.Print("saved settings have not loaded yet.")
+        ns.Print(L["saved settings have not loaded yet."])
         return
     end
     msg = string.lower(strtrim(msg or ""))
@@ -444,7 +407,7 @@ SlashCmdList["ARITLOKUI"] = function(msg)
     end
     local handler = commands[name]
     if not handler then
-        ns.Print('unknown command "' .. name .. '".')
+        ns.Print(string.format(L['unknown command "%s".'], name))
         handler = commands.help
         arg = ""
     end

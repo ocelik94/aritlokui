@@ -1,6 +1,8 @@
 ## Interface: 16001
 ## Title: |cff18a8ffAritlok|r UI
-## Notes: Dark, flat interface overhaul built on EllesmereUI: shaded class-colour health bars, a slim info bar and a one-command theme profile.
+## Notes: A dark, flat interface overhaul built on EllesmereUI, set up by a step-by-step installer.
+## Notes-deDE: Ein dunkles, flaches Interface auf Basis von EllesmereUI, eingerichtet über einen Installer in wenigen Schritten.
+## Notes-frFR: Une interface sombre et épurée basée sur EllesmereUI, configurée par un installateur pas à pas.
 ## Author: Aritlok
 ## Version: 0.1.0
 ## SavedVariables: AritlokUIDB
@@ -8,15 +10,29 @@
 ## IconTexture: Interface\AddOns\AritlokUI\Media\AritlokIcon.tga
 ## AddonCompartmentFunc: AritlokUI_OnAddonCompartmentClick
 ## X-Website: https://www.curseforge.com/wow/addons/aritlokui
+## X-Curse-Project-ID: 1799088
+## X-License: MIT
 ## Dependencies: EllesmereUI
-## OptionalDeps: EllesmereUIUnitFrames, EllesmereUIActionBars, EllesmereUIDataBars, EllesmereUIChat
+## OptionalDeps: EllesmereUIUnitFrames, EllesmereUIActionBars, EllesmereUIDataBars, EllesmereUIChat, EllesmereUIDamageMeters, EllesmereUICooldownManager, EllesmereUIQuestTracker, EllesmereUIMinimap
 
 Core\Core.lua
+Core\Locale.lua
+Locales\deDE.lua
+Locales\frFR.lua
 Core\Media.lua
 
 Modules\Shade.lua
-Modules\MicroBar.lua
 Modules\InfoBar.lua
-Modules\Installer.lua
-Modules\Wizard.lua
+
+Modules\Installer\Core.lua
+Modules\Installer\Look.lua
+Modules\Installer\MenuBar.lua
+Modules\Installer\UnitFrames.lua
+Modules\Installer\ActionBars.lua
+Modules\Installer\Chat.lua
+Modules\Installer\RightEdge.lua
+Modules\Installer\Combat.lua
+Modules\Installer\Addons.lua
+Modules\Installer\Wizard.lua
+
 Modules\Options.lua

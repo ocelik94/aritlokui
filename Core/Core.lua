@@ -79,46 +79,60 @@ end
 --  Defaults only. AritlokUIDB itself is read and created inside ADDON_LOADED.
 -------------------------------------------------------------------------------
 ns.defaults = {
-    schema = 2,
+    schema = 4,
     theme = "gradient", -- "gradient" | "dark"
     shade = {
         enabled = true,
         strength = 55, -- 0-90: how deep the left end of a bar gets
         glow = 12, -- 0-60: how bright the right end gets
     },
+    -- The menu bar's backdrop and long XP bar (the bar itself is EllesmereUI's).
     bar = {
         enabled = true,
-        mode = "own", -- "own": this addon draws the bar. "eui": EllesmereUI's
-        -- DataBar draws it (set by the installer), we add the fade.
-        micro = true, -- menu buttons on the bar ("own" mode)
         position = "BOTTOM", -- "BOTTOM" | "TOP"
-        height = 28,
-        opacity = 80, -- background, 0-100
-        classWash = true, -- class-colour wash at both ends
+        opacity = 80, -- backdrop, 0-100
+        classWash = true, -- class-color wash at both ends
         showXP = true,
-        xpLength = 320, -- long XP bar on the EllesmereUI bottom bar: its length
-        xpOffset = 320, -- ... and how far from the left screen edge it starts
-        xpLong = false, -- set by the installer once the bar's own XP block is replaced
+        xpLength = 320, -- length of the long XP bar
+        xpOffset = 320, -- how far from the left screen edge it starts
+        xpLong = false, -- set by the installer once EllesmereUI's own XP block is replaced
         clock24 = true,
-        localTime = true,
     },
+    -- What the installer applies; one key per entry in ns.Installer.options.
     install = {
         unitFrames = true,
         actionBars = true,
-        accent = true,
-        accentClass = true, -- accent = your class colour (off: Aritlok blue)
-        font = true, -- Monaspace Neon as EllesmereUI's font
-        style = true,
-        dataBar = true, -- build the bottom bar with EllesmereUI's DataBars
-        scale = true, -- pixel-perfect UI scale (768 / screen height)
+        dataBar = true,
         chat = true,
-        minimap = true, -- minimap into the top-right corner
-        rightSide = true, -- quest tracker, tooltip and damage meter down the right edge
+        rightSide = true,
+        style = true,
+        font = true,
+        accent = true,
+        scale = true,
+        -- Other addons the installer can theme; one key per entry in
+        -- ns.Installer.addons. Only offered when that addon is loaded.
+        addons = {
+            questie = true,
+            questieTracker = true,
+        },
+        -- Hidden while out of combat; one key per entry in
+        -- ns.Installer.combatOptions.
+        combat = {
+            actionBars = false,
+            petBar = true,
+            unitFrames = false,
+            meters = true,
+        },
     },
+    -- Which EllesmereUI profile the installer writes to.
+    profile = {
+        mode = "shared", -- "shared": the profile named "AritlokUI". "own": the name below.
+        name = "",
+    },
+    createdProfiles = {}, -- EllesmereUI profiles this addon made, by name
+    questieOwnsTracker = false, -- the installer switched EllesmereUI's quest tracker off for Questie's
     installed = false,
     wizardSeen = false, -- the installer has been shown once on this account
-    previousScale = false, -- EllesmereUI UI scale before install
-    previousProfile = false, -- EllesmereUI profile that was active before install
 }
 
 local function MergeDefaults(dst, src)
@@ -200,12 +214,32 @@ end)
 ns.On("ADDON_LOADED", function(loaded)
     if loaded ~= addonName then return end
     if type(AritlokUIDB) ~= "table" then AritlokUIDB = {} end
-    -- Schema 2 lowered the default right-end glow (30 washed pale class colours
-    -- out to near white). A saved 30 is the old default, not a choice.
+    -- Saved settings from earlier versions.
     local saved = AritlokUIDB
     if saved.schema == 1 then
+        -- Schema 2 lowered the default right-end glow (30 washed pale class
+        -- colors out to near white). A saved 30 is the old default.
         if type(saved.shade) == "table" and saved.shade.glow == 30 then saved.shade.glow = 12 end
         saved.schema = 2
+    end
+    if saved.schema == 2 then
+        -- Schema 3 dropped the built-in bar and the undo: clear what they kept.
+        saved.previousProfile, saved.previousScale = nil, nil
+        if type(saved.bar) == "table" then
+            local bar = saved.bar
+            -- The long XP bar only shows once the installer has made room for it.
+            bar.xpLong = (bar.mode == "eui" and bar.xpLong) and true or false
+            bar.mode, bar.micro, bar.height, bar.localTime = nil, nil, nil, nil
+        end
+        if type(saved.install) == "table" then
+            saved.install.accentClass, saved.install.minimap = nil, nil
+        end
+        saved.schema = 3
+    end
+    if saved.schema == 3 then
+        -- Schema 4 added the profile choice and addon integrations; the new
+        -- keys come from the defaults merge below.
+        saved.schema = 4
     end
     ns.db = MergeDefaults(AritlokUIDB, ns.defaults)
     eventFrame:UnregisterEvent("ADDON_LOADED")
@@ -216,11 +250,11 @@ ns.On("PLAYER_LOGIN", function()
     local _, _, interface = ns.BuildInfo()
     if interface ~= ns.EXPECTED_INTERFACE then
         ns.Print(
-            "written for interface "
-                .. ns.EXPECTED_INTERFACE
-                .. ", this client reports "
-                .. ns.Text(interface)
-                .. ". Run /aui probe and retest."
+            string.format(
+                ns.L["written for interface %s, this client reports %s. Run /aui probe and retest."],
+                tostring(ns.EXPECTED_INTERFACE),
+                ns.Text(interface)
+            )
         )
     end
 end)
@@ -257,17 +291,12 @@ function ns.Probe()
     local checks = {
         "issecretvalue",
         "CreateColor",
-        "C_Timer.NewTicker",
-        "GetMoney",
-        "GetInventoryItemDurability",
-        "C_Container.GetContainerNumFreeSlots",
-        "GetMinimapZoneText",
-        "GetNetStats",
-        "GetFramerate",
-        "GetGameTime",
-        "HasNewMail",
+        "C_Timer.After",
         "UnitXP",
         "UnitXPMax",
+        "UnitLevel",
+        "FCF_DockFrame",
+        "Enum.DamageMeterType",
         "RAID_CLASS_COLORS",
         "LibStub",
         "EllesmereUI",
@@ -278,11 +307,15 @@ function ns.Probe()
         "EllesmereUI.SwitchProfile",
         "EllesmereUI.GetActiveProfileName",
         "EllesmereUI.GetActiveProfileData",
-        "EllesmereUI.SetAccentColor",
+        "EllesmereUI.SetActiveProfileAccent",
+        "EllesmereUI.RefreshAccent",
         "EllesmereUI.GetAccentColor",
         "EllesmereUI.RegAccent",
         "EllesmereUI.ApplyFirstInstallLook",
         "EllesmereUI.GetFontPath",
+        "EllesmereUI.GetFontsDB",
+        "EllesmereUI.PP.SetUIScale",
+        "EllesmereUI._ModuleNS.EllesmereUIDataBars",
         "EllesmereUIUnitFrames_Player",
         "EllesmereUIUnitFrames_Target",
     }
@@ -306,6 +339,7 @@ function ns.Probe()
 
     local eui = _G.EllesmereUI
     if type(eui) == "table" then
+        if ns.Installer then ns.Print("tested with EllesmereUI " .. ns.Installer.TESTED_EUI) end
         ns.Print(
             "EllesmereUI "
                 .. ns.Text(eui.VERSION)

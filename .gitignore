@@ -1,9 +1,35 @@
-# Editors and operating systems
+# Packager output (BigWigsMods/packager builds into .release)
+.release/
+*.zip
+
+# Editors
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
+.luarc.json
+
+# Operating systems
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Packager output
-.release/
+# Backup and temporary files
+*.bak
+*.tmp
+*.orig
+*.rej
+
+# Game-written files, should the repository ever sit inside the AddOns folder
+*.lua.bak
+
+# Local environment and tooling
+.env
+.venv/
+venv/
+node_modules/
+__pycache__/
+
+# Claude Code local settings
+.claude/settings.local.json

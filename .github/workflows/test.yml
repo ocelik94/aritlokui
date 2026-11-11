@@ -31,14 +31,14 @@ jobs:
               echo "::error file=$f,line=1::first line must be: local addonName, ns = ..."
               status=1
             fi
-          done < <(find Core Modules -name '*.lua' | sort)
+          done < <(find Core Locales Modules -name '*.lua' | sort)
           exit $status
 
       - name: No combat log, secure snippets or forbidden calls
         run: |
           pattern='COMBAT_LOG_EVENT|CombatLogGetCurrentEventInfo|SecureHandler|WrapScript|RegisterStateDriver|_onstate|ChatFrame_OpenChat|ChatEdit_ActivateChat|SetSuperTrackedUserWaypoint'
           # Comments are stripped first so the rules can be explained in the code.
-          if find Core Modules -name '*.lua' -print0 | xargs -0 sed 's/--.*$//' | grep -nE "$pattern"; then
+          if find Core Locales Modules -name '*.lua' -print0 | xargs -0 sed 's/--.*$//' | grep -nE "$pattern"; then
             echo "::error::found something this addon must not use (see the lines above)"
             exit 1
           fi
@@ -50,8 +50,17 @@ jobs:
           listed=$(tr -d '\r' < AritlokUI.toc | grep -v '^#' | grep -v '^$' | tr '\\' '/')
           while IFS= read -r f; do
             echo "$listed" | grep -qxF "$f" || { echo "::error file=AritlokUI.toc::$f is not listed"; status=1; }
-          done < <(find Core Modules -name '*.lua' | sort)
+          done < <(find Core Locales Modules -name '*.lua' | sort)
           while IFS= read -r line; do
             [ -f "$line" ] || { echo "::error file=AritlokUI.toc::$line is listed but missing"; status=1; }
           done <<< "$listed"
           exit $status
+
+      - name: German and French have the same strings
+        run: |
+          # A long entry is wrapped after the "=", so the key line may end there.
+          keys() { sed -n 's/^\(L\[.*\]\) =.*$/\1/p' "$1" | sort; }
+          if ! diff <(keys Locales/deDE.lua) <(keys Locales/frFR.lua); then
+            echo "::error::Locales/deDE.lua and Locales/frFR.lua do not translate the same set of strings"
+            exit 1
+          fi

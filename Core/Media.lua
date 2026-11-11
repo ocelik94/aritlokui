@@ -1,7 +1,7 @@
 local addonName, ns = ...
 
 -------------------------------------------------------------------------------
---  Media and colour helpers. Textures are this addon's own files; fonts are
+--  Media and color helpers. Textures are this addon's own files; fonts are
 --  whatever EllesmereUI is set to.
 -------------------------------------------------------------------------------
 
@@ -10,7 +10,8 @@ local MEDIA = "Interface\\AddOns\\" .. addonName .. "\\Media\\"
 ns.media = {
     flat = MEDIA .. "AritlokFlat", -- status bar fill: flat with a soft bottom shade
     fade = MEDIA .. "AritlokFade", -- transparent -> white, left to right
-    dot = MEDIA .. "AritlokDot", -- soft round indicator
+    circle = MEDIA .. "AritlokCircle", -- crisp white disc
+    logo = MEDIA .. "AritlokLogo",
     icon = MEDIA .. "AritlokIcon",
     white = "Interface\\Buttons\\WHITE8x8",
 }
@@ -28,7 +29,7 @@ do
 end
 
 -- Monaspace Argon and Neon (GitHub Next), bundled unmodified under the SIL
--- Open Font License 1.1; the licence text sits next to the files. Registered
+-- Open Font License 1.1; the license text sits next to the files. Registered
 -- with LibSharedMedia so EllesmereUI lists every weight in its font dropdowns
 -- and resolves them by name. The installer sets Neon Regular: the client has
 -- no letter-spacing control, and at small sizes the heavier weights fill the
@@ -50,7 +51,7 @@ end
 
 ns.DEFAULT_ACCENT = { r = 0.094, g = 0.659, b = 1.0 }
 
--- Current EllesmereUI accent colour, or this addon's blue without it.
+-- Current EllesmereUI accent color, or this addon's blue without it.
 function ns.GetAccent()
     local eui = _G.EllesmereUI
     if type(eui) == "table" and eui.GetAccentColor then
@@ -61,7 +62,7 @@ function ns.GetAccent()
     return a.r, a.g, a.b
 end
 
--- The player's class colour. The class token is unit data, so it is checked
+-- The player's class color. The class token is unit data, so it is checked
 -- for secrecy before it is used as a table key.
 function ns.GetPlayerClassColor()
     local _, token = UnitClass("player")
@@ -104,8 +105,8 @@ end
 
 -------------------------------------------------------------------------------
 --  Gradients
---  A two-tone pair built from one colour: a deeper, slightly cooler left end
---  and a lighter right end. Only colour numbers go into the maths.
+--  A two-tone pair built from one color: a deeper, slightly cooler left end
+--  and a lighter right end. Only color numbers go into the maths.
 -------------------------------------------------------------------------------
 function ns.GradientPair(r, g, b)
     local lr, lg, lb = r * 0.52, g * 0.52, b * 0.62
@@ -113,11 +114,11 @@ function ns.GradientPair(r, g, b)
     return lr, lg, lb, rr, rg, rb
 end
 
--- The player's class colour as a gradient pair.
+-- The player's class color as a gradient pair.
 function ns.ClassGradient() return ns.GradientPair(ns.GetPlayerClassColor()) end
 
--- Paints a texture left -> right between two colours. The texture must be
--- white (SetColorTexture(1, 1, 1, 1) or a white file) for the colours to show.
+-- Paints a texture left -> right between two colors. The texture must be
+-- white (SetColorTexture(1, 1, 1, 1) or a white file) for the colors to show.
 function ns.HGradient(texture, r1, g1, b1, a1, r2, g2, b2, a2)
     if CreateColor and texture.SetGradient then
         texture:SetGradient("HORIZONTAL", CreateColor(r1, g1, b1, a1), CreateColor(r2, g2, b2, a2))
@@ -126,7 +127,7 @@ function ns.HGradient(texture, r1, g1, b1, a1, r2, g2, b2, a2)
     end
 end
 
--- Colours a string character by character between two colours. For this
+-- Colors a string character by character between two colors. For this
 -- addon's own text only (clock, titles, zone). A secret string, or one that
 -- already carries escape codes, is returned untouched.
 function ns.GradientText(text, r1, g1, b1, r2, g2, b2)

@@ -14,6 +14,9 @@ ignore = {
   "213", -- unused loop variable
   "231", -- local variable never accessed
   "311", -- value assigned to a local is unused
+  "411", -- redefining a local (ok, reason = ... used twice in one function)
+  "421", -- shadowing a local
+  "423", -- shadowing a loop variable (nested "for i")
   "431", -- shadowing an upvalue
   "432", -- shadowing an upvalue argument
   "542", -- empty if branch
@@ -34,35 +37,23 @@ read_globals = {
   "_G",
 
   -- Lua extensions the client adds
-  "date",
   "strtrim",
 
   -- Frames and constants
   "DEFAULT_CHAT_FRAME",
-  "GameTooltip",
-  "NUM_BAG_SLOTS",
   "NUM_CHAT_WINDOWS",
   "STANDARD_TEXT_FONT",
   "UIParent",
   "Enum",
 
   -- Functions
-  "BreakUpLargeNumbers",
   "CreateColor",
   "CreateFrame",
   "FCF_DockFrame",
   "GetBuildInfo",
-  "GetCVar",
-  "GetFramerate",
-  "GetGameTime",
-  "GetInventoryItemDurability",
-  "GetMinimapZoneText",
-  "GetMoney",
-  "GetNetStats",
-  "HasNewMail",
+  "GetLocale",
   "InCombatLockdown",
   "ReloadUI",
-  "ToggleAllBags",
   "UnitClass",
   "UnitLevel",
   "UnitXP",
@@ -70,7 +61,6 @@ read_globals = {
   "issecretvalue",
 
   -- Namespaces
-  "C_Container",
   "C_Timer",
 
   -- Libraries (embedded in EllesmereUI)

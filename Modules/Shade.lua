@@ -3,14 +3,14 @@ local addonName, ns = ...
 -------------------------------------------------------------------------------
 --  Bar gradients
 --  The gradient look: every EllesmereUI unit frame bar (health, power, cast)
---  runs from a deepened left end to a brightened right end of whatever colour
+--  runs from a deepened left end to a brightened right end of whatever color
 --  EllesmereUI gave it.
 --
 --  It is done with two extra textures per bar, both pinned to the bar's own
 --  fill texture: a "shade" painted black -> clear from the left, and a "glow"
 --  painted clear -> white from the right with additive blending. The client
 --  sizes the fill, the overlays follow it. Nothing here reads health, power,
---  names or the bar's colour, so there is no arithmetic on them and it works
+--  names or the bar's color, so there is no arithmetic on them and it works
 --  the same when they are secret.
 --
 --  The frames are EllesmereUI's own (addon-created) frames, looked up by their
@@ -115,7 +115,7 @@ function ns.RefreshShades()
     local db = ns.db
     if not db or not Supported() then return end
 
-    -- EllesmereUI's dark theme paints every bar one flat dark colour; a
+    -- EllesmereUI's dark theme paints every bar one flat dark color; a
     -- gradient on top of that only muddies it.
     local show = db.shade.enabled and db.theme ~= "dark"
     local shadeAlpha = Clamp(db.shade.strength, 55, 0, 90) / 100
