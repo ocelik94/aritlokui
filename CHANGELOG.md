@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0
+
+- The pet frame's health bar now uses your class color, a shade darker than the player frame, instead of green
+- EllesmereUI's minimap button is placed on the button row, outside the addon-button group
+- Bags open in EllesmereUI's compact view (new "Compact bags" switch on the Look page)
+
+Run `/aui install` again to apply these.
+
 ## 0.1.1
 
 - Smaller name text on the player and target frames, so a long name no longer runs into the health percentage. Run `/aui install` again to apply it.

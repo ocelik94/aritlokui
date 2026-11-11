@@ -105,6 +105,11 @@ local function WriteUnitFrames(ctx, g)
         m.frameWidth = miniW
         m.healthHeight = miniH
     end
+    -- The pet's health bar takes the player's class color (EllesmereUI's own
+    -- option for the pet frame) instead of the green of a friendly unit;
+    -- Shade.lua darkens it a little so it still reads as a different frame.
+    Sub(uf, "pet").healthClassColored = true
+
     local f = Sub(uf, "focus")
     f.frameWidth = g.frameW
     f.healthHeight = g.frameH

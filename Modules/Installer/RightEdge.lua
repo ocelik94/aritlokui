@@ -27,7 +27,12 @@ I.AddStep({
         local mm = addons.EllesmereUIMinimap
         if type(mm) == "table" then
             local inset = S(4)
-            Sub(mm, "minimap").position = { point = "TOPRIGHT", relPoint = "TOPRIGHT", x = -inset, y = -inset }
+            local minimap = Sub(mm, "minimap")
+            minimap.position = { point = "TOPRIGHT", relPoint = "TOPRIGHT", x = -inset, y = -inset }
+            -- EllesmereUI's own minimap button stands on the button row,
+            -- outside the addon-button group. The value is its place in the row.
+            local ungrouped = Sub(minimap, "ungroupedButtons")
+            if not ungrouped.EllesmereUIMinimapButton then ungrouped.EllesmereUIMinimapButton = 1 end
             ctx:Done("minimap")
         end
 

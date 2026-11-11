@@ -5,7 +5,7 @@ local addonName, ns = ...
 --  event frame with its handler table, and the combat queue.
 -------------------------------------------------------------------------------
 
-ns.VERSION = "0.1.1"
+ns.VERSION = "0.2.0"
 ns.TAG = "|cff18a8ffAritlok|r|cffffffffUI|r"
 
 -- Interface number this addon was written against. RETEST when the TOC number
@@ -85,6 +85,7 @@ ns.defaults = {
         enabled = true,
         strength = 55, -- 0-90: how deep the left end of a bar gets
         glow = 12, -- 0-60: how bright the right end gets
+        petDim = 30, -- 0-70: how much darker the pet's health bar is than the player's
     },
     -- The menu bar's backdrop and long XP bar (the bar itself is EllesmereUI's).
     bar = {
@@ -109,6 +110,7 @@ ns.defaults = {
         font = true,
         accent = true,
         scale = true,
+        bags = true,
         -- Other addons the installer can theme; one key per entry in
         -- ns.Installer.addons. Only offered when that addon is loaded.
         addons = {

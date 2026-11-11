@@ -34,6 +34,8 @@ local FRAME_NAMES = {
     "EllesmereUIUnitFrames_Boss5",
 }
 
+local PET_FRAME = "EllesmereUIUnitFrames_Pet"
+
 -- Fields on an EllesmereUI unit frame that hold a StatusBar.
 local BAR_FIELDS = { "Health", "Power", "Castbar" }
 
@@ -61,14 +63,40 @@ local function OverlaysFor(bar)
     local o = overlays[bar]
     if not o then
         o = {}
+        overlays[bar] = o
+    end
+    if not o.shade then
         o.shade = bar:CreateTexture(nil, "ARTWORK", nil, 6)
         o.shade:SetColorTexture(1, 1, 1, 1)
         o.glow = bar:CreateTexture(nil, "ARTWORK", nil, 7)
         o.glow:SetColorTexture(1, 1, 1, 1)
         o.glow:SetBlendMode("ADD")
-        overlays[bar] = o
     end
     return o
+end
+
+-- A flat darkening over one bar, used to set the pet's health bar apart from
+-- the player's: both are the player's class color, the pet's a shade darker.
+-- It is a plain black texture pinned to the fill, so it needs no knowledge of
+-- the color underneath and works for every class.
+local function ApplyDim(bar, alpha)
+    if type(bar) ~= "table" or not bar.GetStatusBarTexture or not bar.CreateTexture then return end
+    local o = overlays[bar]
+    if alpha <= 0 then
+        if o and o.dim then o.dim:Hide() end
+        return
+    end
+    local fill = bar:GetStatusBarTexture()
+    if not fill then return end
+    if not o then
+        o = {}
+        overlays[bar] = o
+    end
+    if not o.dim then o.dim = bar:CreateTexture(nil, "ARTWORK", nil, 5) end
+    o.dim:ClearAllPoints()
+    o.dim:SetAllPoints(fill)
+    o.dim:SetColorTexture(0, 0, 0, alpha)
+    o.dim:Show()
 end
 
 local function ApplyBar(bar, show, shadeAlpha, glowAlpha)
@@ -76,7 +104,7 @@ local function ApplyBar(bar, show, shadeAlpha, glowAlpha)
 
     if not show then
         local existing = overlays[bar]
-        if existing then
+        if existing and existing.shade then
             existing.shade:Hide()
             existing.glow:Hide()
         end
@@ -128,6 +156,14 @@ function ns.RefreshShades()
                 ApplyBar(frame[BAR_FIELDS[j]], show, shadeAlpha, glowAlpha)
             end
         end
+    end
+
+    -- The pet's health bar, darkened. Not in the dark theme, where bars are
+    -- not class-colored in the first place.
+    local pet = _G[PET_FRAME]
+    if type(pet) == "table" then
+        local dim = (db.theme ~= "dark") and Clamp(db.shade.petDim, 30, 0, 70) / 100 or 0
+        ApplyDim(pet.Health, dim)
     end
 end
 

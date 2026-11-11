@@ -50,6 +50,7 @@ I.options = {
     { key = "font", group = "look", title = "Monaspace Neon font", desc = "Chat tabs keep a narrower font." },
     { key = "accent", group = "look", title = "Class-color accent", desc = "Colors quests, meters, chat and menu bar." },
     { key = "scale", group = "look", title = "Pixel-perfect scale", desc = "Sharper and slightly smaller." },
+    { key = "bags", group = "look", title = "Compact bags", desc = "EllesmereUI's compact bag view." },
 }
 
 -------------------------------------------------------------------------------

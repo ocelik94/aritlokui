@@ -1,7 +1,7 @@
 local addonName, ns = ...
 
 -------------------------------------------------------------------------------
---  Installer steps: style, font, accent color and UI scale.
+--  Installer steps: style, font, accent color, UI scale and the bag view.
 --  These run before the layout steps: the scale decides the screen size the
 --  layout is computed for.
 -------------------------------------------------------------------------------
@@ -83,5 +83,27 @@ I.AddStep({
         if type(current) == "number" and math.abs(current - best) > 0.0001 then pp.SetUIScale(best) end
         ctx.scale = best
         ctx:Done("UI scale %.4f", best)
+    end,
+})
+
+-- Bags in EllesmereUI's compact view. It is one of three display modes of its
+-- Bags module ("grid", "list", "compact") and applies at reload.
+I.AddStep({
+    order = 60,
+    option = "bags",
+    run = function(ctx)
+        -- The module's settings table is only there once it has saved
+        -- something; `_bagsDB` is set by the module itself when it loads
+        -- (EllesmereUIBags_DB.lua), so it tells a loaded module apart.
+        local bags = ctx.addons.EllesmereUIBags
+        if type(bags) ~= "table" then
+            if not ctx.eui._bagsDB then
+                ctx:Skip("compact bags (EllesmereUI Bags is not loaded)")
+                return
+            end
+            bags = I.Sub(ctx.addons, "EllesmereUIBags")
+        end
+        bags.bagDisplayMode = "compact"
+        ctx:Done("compact bags")
     end,
 })
