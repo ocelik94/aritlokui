@@ -47,9 +47,9 @@ local function WriteUnitFrames(ctx, g)
     -- Texts, as in ToxiUI: name above the bar on the outer side, a large
     -- health percentage straddling the top edge on the inner side, level and
     -- current health straddling the bottom edge. These are EllesmereUI's own
-    -- text tags. The name is 18, not ToxiUI's 22: the wide font ran names
-    -- into the number.
-    local nameSize, bigSize, smallSize = S(18), S(34), S(14)
+    -- text tags. The name is 15, not ToxiUI's 22: in the wide font a two-word name
+    -- still ran into the number at 18.
+    local nameSize, bigSize, smallSize = S(15), S(34), S(14)
     local nameY, bigY, lowY = half + S(14), half, -half
 
     p.leftTextContent, p.leftTextSize, p.leftTextX, p.leftTextY = "name", nameSize, S(6), nameY

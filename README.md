@@ -14,6 +14,13 @@
 
 ![Aritlok UI in game](Assets/gameplay.jpg)
 
+<details>
+<summary>The layout, shown in EllesmereUI's unlock mode</summary>
+
+![Aritlok UI layout](Assets/layout.jpg)
+
+</details>
+
 ## Features
 
 - **Gradient unit frames** – class-colored bars that run from a deep left end to a bright right end, on health, power and cast bars

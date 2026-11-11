@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- Smaller name text on the player and target frames, so a long name no longer runs into the health percentage. Run `/aui install` again to apply it.
+
 ## 0.1.0
 
 First release.
