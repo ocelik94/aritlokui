@@ -117,22 +117,36 @@ mklink /J "D:\Games\World of Warcraft\_forever_\Interface\AddOns\AritlokUI" "C:\
 
 Changes to existing files load with `/reload`. New files, and changes to the `.toc`, need a full client restart.
 
+### Checks and releases
+
+Every push to `main` and every pull request runs the **Test** workflow: a StyLua formatting check (run `stylua .` before committing), luacheck, plus checks that each Lua file starts with the namespace line, that nothing forbidden is used (combat log, secure snippets), and that the TOC matches the files.
+
+Releases are made by pushing a tag from `main`:
+
+| Tag | Result |
+| --- | --- |
+| `v0.2.0-beta.1` | beta file |
+| `v0.2.0` | stable file (the tag must match `## Version:` in the TOC) |
+
+Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/Core.lua`, and `CHANGELOG.md`.
+
 ### Layout of the addon
 
-| File | Purpose |
+| Path | Purpose |
 | --- | --- |
-| `AritlokUI.toc` | load order and metadata |
+| `AritlokUI.toc` | load order and metadata (has to stay in the root) |
+| `Core/Core.lua` | namespace, saved variables, the single event frame, combat queue, probe |
+| `Core/Media.lua` | textures, fonts, colour and gradient helpers |
+| `Modules/Shade.lua` | gradient overlays on EllesmereUI's unit frame bars |
+| `Modules/MicroBar.lua` | menu buttons for the built-in bar |
+| `Modules/InfoBar.lua` | the menu bar backdrop, the built-in bar, the long XP bar |
+| `Modules/Installer.lua` | everything the installer writes into the EllesmereUI profile |
+| `Modules/Wizard.lua` | the installer window |
+| `Modules/Options.lua` | settings page, slash command, addon compartment entry |
+| `Media/` | textures and fonts used in game |
 | `Assets/` | images for this README (left out of releases) |
 | `.pkgmeta` | what a release contains |
 | `CHANGELOG.md` | shown on CurseForge with each release |
-| `Core.lua` | namespace, saved variables, the single event frame, combat queue, probe |
-| `Media.lua` | textures, fonts, colour and gradient helpers |
-| `Shade.lua` | gradient overlays on EllesmereUI's unit frame bars |
-| `MicroBar.lua` | menu buttons for the built-in bar |
-| `InfoBar.lua` | the menu bar backdrop, the built-in bar, the long XP bar |
-| `Installer.lua` | everything the installer writes into the EllesmereUI profile |
-| `Wizard.lua` | the installer window |
-| `Options.lua` | settings page, slash command, addon compartment entry |
 
 ## Credits
 

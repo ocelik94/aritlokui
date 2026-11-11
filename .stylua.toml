@@ -1,0 +1,10 @@
+# Matches how the code is already written: 4 spaces, double quotes, short
+# one-line statements kept on one line.
+syntax = "Lua51"
+indent_type = "Spaces"
+indent_width = 4
+column_width = 140
+line_endings = "Unix"
+quote_style = "AutoPreferDouble"
+call_parentheses = "Always"
+collapse_simple_statement = "Always"

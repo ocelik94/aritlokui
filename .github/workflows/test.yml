@@ -1,0 +1,57 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: (!contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[ci skip]'))
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Formatting (StyLua)
+        uses: JohnnyMorganz/stylua-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: v2.6.0
+          args: --check .
+
+      - name: Lint (luacheck)
+        uses: lunarmodules/luacheck@v1
+
+      - name: Every Lua file starts with the namespace line
+        run: |
+          status=0
+          while IFS= read -r f; do
+            if [ "$(head -n 1 "$f" | tr -d '\r')" != "local addonName, ns = ..." ]; then
+              echo "::error file=$f,line=1::first line must be: local addonName, ns = ..."
+              status=1
+            fi
+          done < <(find Core Modules -name '*.lua' | sort)
+          exit $status
+
+      - name: No combat log, secure snippets or forbidden calls
+        run: |
+          pattern='COMBAT_LOG_EVENT|CombatLogGetCurrentEventInfo|SecureHandler|WrapScript|RegisterStateDriver|_onstate|ChatFrame_OpenChat|ChatEdit_ActivateChat|SetSuperTrackedUserWaypoint'
+          # Comments are stripped first so the rules can be explained in the code.
+          if find Core Modules -name '*.lua' -print0 | xargs -0 sed 's/--.*$//' | grep -nE "$pattern"; then
+            echo "::error::found something this addon must not use (see the lines above)"
+            exit 1
+          fi
+
+      - name: TOC lists every Lua file, and only files that exist
+        run: |
+          status=0
+          # The TOC uses backslashes; compare with forward slashes.
+          listed=$(tr -d '\r' < AritlokUI.toc | grep -v '^#' | grep -v '^$' | tr '\\' '/')
+          while IFS= read -r f; do
+            echo "$listed" | grep -qxF "$f" || { echo "::error file=AritlokUI.toc::$f is not listed"; status=1; }
+          done < <(find Core Modules -name '*.lua' | sort)
+          while IFS= read -r line; do
+            [ -f "$line" ] || { echo "::error file=AritlokUI.toc::$line is listed but missing"; status=1; }
+          done <<< "$listed"
+          exit $status

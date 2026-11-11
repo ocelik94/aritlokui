@@ -18,7 +18,7 @@ local WIDTH, HEIGHT = 640, 430
 local frame
 local pages = {}
 local step = 1
-local refreshers = {}      -- per-page functions run each time the page is shown
+local refreshers = {} -- per-page functions run each time the page is shown
 
 local TITLES = {
     "Welcome",
@@ -156,23 +156,25 @@ end
 
 local function BuildWelcome()
     local page = NewPage(1)
-    Paragraph(page,
+    Paragraph(
+        page,
         "This sets up the Aritlok look on top of EllesmereUI.|n|n"
-        .. "- Your current EllesmereUI profile is copied to a new one named \"" .. ns.PROFILE_NAME
-        .. "\". The profile you use now is not changed.|n"
-        .. "- On the next pages you choose the theme and what gets themed.|n"
-        .. "- The last step asks for one UI reload.|n|n"
-        .. "Run it again at any time with |cffffffff/aui install|r. "
-        .. "Go back to your old profile with |cffffffff/aui restore|r.", 0)
+            .. '- Your current EllesmereUI profile is copied to a new one named "'
+            .. ns.PROFILE_NAME
+            .. '". The profile you use now is not changed.|n'
+            .. "- On the next pages you choose the theme and what gets themed.|n"
+            .. "- The last step asks for one UI reload.|n|n"
+            .. "Run it again at any time with |cffffffff/aui install|r. "
+            .. "Go back to your old profile with |cffffffff/aui restore|r.",
+        0
+    )
 end
 
 local function BuildTheme()
     local page = NewPage(2)
     local cards = {
-        ThemeCard(page, 0, "gradient", "Gradient",
-            "Class-coloured bars that run from a deep left end to a bright right end."),
-        ThemeCard(page, 292, "dark", "Dark",
-            "Flat dark bars with class-coloured names. Uses EllesmereUI's dark theme."),
+        ThemeCard(page, 0, "gradient", "Gradient", "Class-coloured bars that run from a deep left end to a bright right end."),
+        ThemeCard(page, 292, "dark", "Dark", "Flat dark bars with class-coloured names. Uses EllesmereUI's dark theme."),
     }
     cards[2]:ClearAllPoints()
     cards[2]:SetPoint("TOPRIGHT", 0, -4)
@@ -212,27 +214,58 @@ local function BuildParts()
     local page = NewPage(3)
     local want = ns.db.install
     local rows = {
-        Check(page, 0, "Unit frames",
+        Check(
+            page,
+            0,
+            "Unit frames",
             "ToxiUI layout: 300 x 36 player and target either side of a free centre, texts above and below the bar, power bar in the middle.",
-            function() return want.unitFrames end, function(v) want.unitFrames = v end),
-        Check(page, -46, "Action bars",
+            function() return want.unitFrames end,
+            function(v) want.unitFrames = v end
+        ),
+        Check(
+            page,
+            -46,
+            "Action bars",
             "ToxiUI layout: wide 36 x 29 buttons, bars 1-3 stacked at the bottom centre, bars 4 and 5 as 4 x 3 blocks beside them.",
-            function() return want.actionBars end, function(v) want.actionBars = v end),
-        Check(page, -92, "Bottom bar from EllesmereUI DataBars",
+            function() return want.actionBars end,
+            function(v) want.actionBars = v end
+        ),
+        Check(
+            page,
+            -92,
+            "Bottom bar from EllesmereUI DataBars",
             "Icon micro menu, clock, gold, durability and more. Off uses the simpler built-in bar.",
-            function() return want.dataBar end, function(v) want.dataBar = v end),
-        Check(page, -184, "Pixel-perfect UI scale",
+            function() return want.dataBar end,
+            function(v) want.dataBar = v end
+        ),
+        Check(
+            page,
+            -184,
+            "Pixel-perfect UI scale",
             "One UI unit per screen pixel: 0.5333 at 2560 x 1440. Everything gets smaller and sharper.",
-            function() return want.scale end, function(v) want.scale = v end),
-        Check(page, -138, "Flat style, font, accent and screen-edge layout",
+            function() return want.scale end,
+            function(v) want.scale = v end
+        ),
+        Check(
+            page,
+            -138,
+            "Flat style, font, accent and screen-edge layout",
             "Flat look, Monaspace font, class-colour accent, chat bottom left; minimap, quests, tooltip and meters on the right.",
             function() return want.style end,
             function(v)
-                want.style = v; want.accent = v; want.chat = v; want.minimap = v; want.rightSide = v; want.font = v
-            end),
+                want.style = v
+                want.accent = v
+                want.chat = v
+                want.minimap = v
+                want.rightSide = v
+                want.font = v
+            end
+        ),
     }
     refreshers[3] = function()
-        for i = 1, #rows do rows[i].Paint() end
+        for i = 1, #rows do
+            rows[i].Paint()
+        end
     end
 end
 
@@ -240,22 +273,48 @@ local function BuildBar()
     local page = NewPage(4)
     local cfg = ns.db.bar
     local rows = {
-        Check(page, 0, "Show the bottom bar",
+        Check(
+            page,
+            0,
+            "Show the bottom bar",
             "The strip along the screen edge with its fading backdrop.",
-            function() return cfg.enabled end, function(v) cfg.enabled = v; ns.ApplyInfoBar() end),
-        Check(page, -46, "Put it at the top of the screen",
+            function() return cfg.enabled end,
+            function(v)
+                cfg.enabled = v
+                ns.ApplyInfoBar()
+            end
+        ),
+        Check(
+            page,
+            -46,
+            "Put it at the top of the screen",
             "Off keeps it at the bottom.",
             function() return cfg.position == "TOP" end,
-            function(v) cfg.position = v and "TOP" or "BOTTOM"; ns.ApplyInfoBar() end),
-        Check(page, -92, "Class-colour wash",
+            function(v)
+                cfg.position = v and "TOP" or "BOTTOM"
+                ns.ApplyInfoBar()
+            end
+        ),
+        Check(
+            page,
+            -92,
+            "Class-colour wash",
             "A soft class-coloured glow at both ends of the bar.",
-            function() return cfg.classWash end, function(v) cfg.classWash = v; ns.ApplyInfoBar() end),
-        Check(page, -138, "24-hour clock",
-            "Off shows AM / PM.",
-            function() return cfg.clock24 end, function(v) cfg.clock24 = v; ns.ApplyInfoBar() end),
+            function() return cfg.classWash end,
+            function(v)
+                cfg.classWash = v
+                ns.ApplyInfoBar()
+            end
+        ),
+        Check(page, -138, "24-hour clock", "Off shows AM / PM.", function() return cfg.clock24 end, function(v)
+            cfg.clock24 = v
+            ns.ApplyInfoBar()
+        end),
     }
     refreshers[4] = function()
-        for i = 1, #rows do rows[i].Paint() end
+        for i = 1, #rows do
+            rows[i].Paint()
+        end
     end
 end
 
@@ -277,11 +336,19 @@ local function BuildInstall()
         if want.style then parts[#parts + 1] = "flat style, accent, chat" end
         summary:SetText(
             "Ready to install.|n|n"
-            .. "Theme:  |cffffffff" .. (db.theme == "dark" and "Dark" or "Gradient") .. "|r|n"
-            .. "Themed:  |cffffffff" .. (#parts > 0 and table.concat(parts, ", ") or "nothing") .. "|r|n"
-            .. "Bottom bar:  |cffffffff" .. (db.bar.enabled and string.lower(db.bar.position) or "off") .. "|r|n|n"
-            .. "Install copies your EllesmereUI profile to \"" .. ns.PROFILE_NAME
-            .. "\" (or reuses it if it exists) and writes the settings there.")
+                .. "Theme:  |cffffffff"
+                .. (db.theme == "dark" and "Dark" or "Gradient")
+                .. "|r|n"
+                .. "Themed:  |cffffffff"
+                .. (#parts > 0 and table.concat(parts, ", ") or "nothing")
+                .. "|r|n"
+                .. "Bottom bar:  |cffffffff"
+                .. (db.bar.enabled and string.lower(db.bar.position) or "off")
+                .. "|r|n|n"
+                .. 'Install copies your EllesmereUI profile to "'
+                .. ns.PROFILE_NAME
+                .. '" (or reuses it if it exists) and writes the settings there.'
+        )
         page.status:SetText("")
     end
 end
@@ -327,11 +394,14 @@ local function RunInstall()
         return
     end
     pages[DONE].text:SetText(
-        "The theme is written to the EllesmereUI profile \"" .. ns.PROFILE_NAME .. "\".|n|n"
-        .. (message and (message .. "|n|n") or "")
-        .. "Reload the UI to apply it. Until then EllesmereUI still shows the old layout.|n|n"
-        .. "Afterwards: |cffffffff/aui|r opens the settings, |cffffffff/eui|r opens EllesmereUI, "
-        .. "|cffffffff/aui restore|r goes back to your old profile.")
+        'The theme is written to the EllesmereUI profile "'
+            .. ns.PROFILE_NAME
+            .. '".|n|n'
+            .. (message and (message .. "|n|n") or "")
+            .. "Reload the UI to apply it. Until then EllesmereUI still shows the old layout.|n|n"
+            .. "Afterwards: |cffffffff/aui|r opens the settings, |cffffffff/eui|r opens EllesmereUI, "
+            .. "|cffffffff/aui restore|r goes back to your old profile."
+    )
     Show(DONE)
 end
 
@@ -464,9 +534,5 @@ ns.On("PLAYER_ENTERING_WORLD", function()
     offered = true
     local db = ns.db
     if not db or db.installed or db.wizardSeen then return end
-    if C_Timer and C_Timer.After then
-        C_Timer.After(3, function()
-            ns.RunOutOfCombat(ns.OpenInstaller)
-        end)
-    end
+    if C_Timer and C_Timer.After then C_Timer.After(3, function() ns.RunOutOfCombat(ns.OpenInstaller) end) end
 end)

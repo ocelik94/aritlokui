@@ -25,15 +25,15 @@ local SIZE, SPACING, LEFT_PAD = 22, 4, 12
 
 -- First existing global name wins.
 local ENTRIES = {
-    { letter = "C", tip = "Character",    names = { "CharacterMicroButton" } },
-    { letter = "S", tip = "Spellbook",    names = { "SpellbookMicroButton", "PlayerSpellsMicroButton" } },
-    { letter = "T", tip = "Talents",      names = { "TalentMicroButton" } },
-    { letter = "Q", tip = "Quest Log",    names = { "QuestLogMicroButton" } },
-    { letter = "F", tip = "Social",       names = { "SocialsMicroButton" } },
-    { letter = "G", tip = "Guild",        names = { "GuildMicroButton" } },
+    { letter = "C", tip = "Character", names = { "CharacterMicroButton" } },
+    { letter = "S", tip = "Spellbook", names = { "SpellbookMicroButton", "PlayerSpellsMicroButton" } },
+    { letter = "T", tip = "Talents", names = { "TalentMicroButton" } },
+    { letter = "Q", tip = "Quest Log", names = { "QuestLogMicroButton" } },
+    { letter = "F", tip = "Social", names = { "SocialsMicroButton" } },
+    { letter = "G", tip = "Guild", names = { "GuildMicroButton" } },
     { letter = "L", tip = "Group Finder", names = { "LFGMicroButton", "LFDMicroButton" } },
-    { letter = "M", tip = "World Map",    names = { "WorldMapMicroButton" } },
-    { letter = "=", tip = "Game Menu",    names = { "MainMenuMicroButton" } },
+    { letter = "M", tip = "World Map", names = { "WorldMapMicroButton" } },
+    { letter = "=", tip = "Game Menu", names = { "MainMenuMicroButton" } },
 }
 
 local holder
@@ -149,6 +149,4 @@ local function Layout()
 end
 
 -- Safe to call at any time: in combat the layout waits in the combat queue.
-function ns.ApplyMicroBar()
-    ns.RunOutOfCombat(Layout)
-end
+function ns.ApplyMicroBar() ns.RunOutOfCombat(Layout) end

@@ -69,9 +69,7 @@ end
 function ns.IsForever()
     local camelot = _G.WOW_PROJECT_CAMELOT
     local project = _G.WOW_PROJECT_ID
-    if camelot ~= nil and project ~= nil then
-        return project == camelot
-    end
+    if camelot ~= nil and project ~= nil then return project == camelot end
     local _, _, interface = ns.BuildInfo()
     return type(interface) == "number" and interface >= 16000 and interface < 20000
 end
@@ -82,25 +80,25 @@ end
 -------------------------------------------------------------------------------
 ns.defaults = {
     schema = 2,
-    theme = "gradient",            -- "gradient" | "dark"
+    theme = "gradient", -- "gradient" | "dark"
     shade = {
         enabled = true,
-        strength = 55,             -- 0-90: how deep the left end of a bar gets
-        glow = 12,                 -- 0-60: how bright the right end gets
+        strength = 55, -- 0-90: how deep the left end of a bar gets
+        glow = 12, -- 0-60: how bright the right end gets
     },
     bar = {
         enabled = true,
-        mode = "own",              -- "own": this addon draws the bar. "eui": EllesmereUI's
-                                   -- DataBar draws it (set by the installer), we add the fade.
-        micro = true,              -- menu buttons on the bar ("own" mode)
-        position = "BOTTOM",       -- "BOTTOM" | "TOP"
+        mode = "own", -- "own": this addon draws the bar. "eui": EllesmereUI's
+        -- DataBar draws it (set by the installer), we add the fade.
+        micro = true, -- menu buttons on the bar ("own" mode)
+        position = "BOTTOM", -- "BOTTOM" | "TOP"
         height = 28,
-        opacity = 80,              -- background, 0-100
-        classWash = true,          -- class-colour wash at both ends
+        opacity = 80, -- background, 0-100
+        classWash = true, -- class-colour wash at both ends
         showXP = true,
-        xpLength = 320,            -- long XP bar on the EllesmereUI bottom bar: its length
-        xpOffset = 320,            -- ... and how far from the left screen edge it starts
-        xpLong = false,            -- set by the installer once the bar's own XP block is replaced
+        xpLength = 320, -- long XP bar on the EllesmereUI bottom bar: its length
+        xpOffset = 320, -- ... and how far from the left screen edge it starts
+        xpLong = false, -- set by the installer once the bar's own XP block is replaced
         clock24 = true,
         localTime = true,
     },
@@ -108,19 +106,19 @@ ns.defaults = {
         unitFrames = true,
         actionBars = true,
         accent = true,
-        accentClass = true,        -- accent = your class colour (off: Aritlok blue)
-        font = true,               -- Monaspace Neon as EllesmereUI's font
+        accentClass = true, -- accent = your class colour (off: Aritlok blue)
+        font = true, -- Monaspace Neon as EllesmereUI's font
         style = true,
-        dataBar = true,            -- build the bottom bar with EllesmereUI's DataBars
-        scale = true,              -- pixel-perfect UI scale (768 / screen height)
+        dataBar = true, -- build the bottom bar with EllesmereUI's DataBars
+        scale = true, -- pixel-perfect UI scale (768 / screen height)
         chat = true,
-        minimap = true,            -- minimap into the top-right corner
-        rightSide = true,          -- quest tracker, tooltip and damage meter down the right edge
+        minimap = true, -- minimap into the top-right corner
+        rightSide = true, -- quest tracker, tooltip and damage meter down the right edge
     },
     installed = false,
-    wizardSeen = false,            -- the installer has been shown once on this account
-    previousScale = false,         -- EllesmereUI UI scale before install
-    previousProfile = false,       -- EllesmereUI profile that was active before install
+    wizardSeen = false, -- the installer has been shown once on this account
+    previousScale = false, -- EllesmereUI UI scale before install
+    previousProfile = false, -- EllesmereUI profile that was active before install
 }
 
 local function MergeDefaults(dst, src)
@@ -217,8 +215,13 @@ end)
 ns.On("PLAYER_LOGIN", function()
     local _, _, interface = ns.BuildInfo()
     if interface ~= ns.EXPECTED_INTERFACE then
-        ns.Print("written for interface " .. ns.EXPECTED_INTERFACE .. ", this client reports "
-            .. ns.Text(interface) .. ". Run /aui probe and retest.")
+        ns.Print(
+            "written for interface "
+                .. ns.EXPECTED_INTERFACE
+                .. ", this client reports "
+                .. ns.Text(interface)
+                .. ". Run /aui probe and retest."
+        )
     end
 end)
 
@@ -238,40 +241,78 @@ ns.Has = Has
 function ns.Probe()
     local version, build, interface = ns.BuildInfo()
     ns.Print("client " .. ns.Text(version) .. " build " .. ns.Text(build) .. " interface " .. ns.Text(interface))
-    ns.Print("WOW_PROJECT_ID=" .. ns.Text(_G.WOW_PROJECT_ID)
-        .. " CAMELOT=" .. ns.Text(_G.WOW_PROJECT_CAMELOT)
-        .. " MAINLINE=" .. ns.Text(_G.WOW_PROJECT_MAINLINE)
-        .. " CLASSIC=" .. ns.Text(_G.WOW_PROJECT_CLASSIC)
-        .. " -> Forever: " .. ns.Text(ns.IsForever()))
+    ns.Print(
+        "WOW_PROJECT_ID="
+            .. ns.Text(_G.WOW_PROJECT_ID)
+            .. " CAMELOT="
+            .. ns.Text(_G.WOW_PROJECT_CAMELOT)
+            .. " MAINLINE="
+            .. ns.Text(_G.WOW_PROJECT_MAINLINE)
+            .. " CLASSIC="
+            .. ns.Text(_G.WOW_PROJECT_CLASSIC)
+            .. " -> Forever: "
+            .. ns.Text(ns.IsForever())
+    )
 
     local checks = {
-        "issecretvalue", "CreateColor", "C_Timer.NewTicker",
-        "GetMoney", "GetInventoryItemDurability", "C_Container.GetContainerNumFreeSlots",
-        "GetMinimapZoneText", "GetNetStats", "GetFramerate", "GetGameTime", "HasNewMail",
-        "UnitXP", "UnitXPMax", "RAID_CLASS_COLORS", "LibStub",
-        "EllesmereUI", "EllesmereUIDB",
-        "EllesmereUI.RegisterPlugin", "EllesmereUI.OpenPlugin",
-        "EllesmereUI.SaveCurrentAsProfile", "EllesmereUI.SwitchProfile",
-        "EllesmereUI.GetActiveProfileName", "EllesmereUI.GetActiveProfileData",
-        "EllesmereUI.SetAccentColor", "EllesmereUI.GetAccentColor", "EllesmereUI.RegAccent",
-        "EllesmereUI.ApplyFirstInstallLook", "EllesmereUI.GetFontPath",
-        "EllesmereUIUnitFrames_Player", "EllesmereUIUnitFrames_Target",
+        "issecretvalue",
+        "CreateColor",
+        "C_Timer.NewTicker",
+        "GetMoney",
+        "GetInventoryItemDurability",
+        "C_Container.GetContainerNumFreeSlots",
+        "GetMinimapZoneText",
+        "GetNetStats",
+        "GetFramerate",
+        "GetGameTime",
+        "HasNewMail",
+        "UnitXP",
+        "UnitXPMax",
+        "RAID_CLASS_COLORS",
+        "LibStub",
+        "EllesmereUI",
+        "EllesmereUIDB",
+        "EllesmereUI.RegisterPlugin",
+        "EllesmereUI.OpenPlugin",
+        "EllesmereUI.SaveCurrentAsProfile",
+        "EllesmereUI.SwitchProfile",
+        "EllesmereUI.GetActiveProfileName",
+        "EllesmereUI.GetActiveProfileData",
+        "EllesmereUI.SetAccentColor",
+        "EllesmereUI.GetAccentColor",
+        "EllesmereUI.RegAccent",
+        "EllesmereUI.ApplyFirstInstallLook",
+        "EllesmereUI.GetFontPath",
+        "EllesmereUIUnitFrames_Player",
+        "EllesmereUIUnitFrames_Target",
     }
     local present, absent = {}, {}
     for i = 1, #checks do
         local name = checks[i]
-        if Has(name) then present[#present + 1] = name else absent[#absent + 1] = name end
+        if Has(name) then
+            present[#present + 1] = name
+        else
+            absent[#absent + 1] = name
+        end
     end
     ns.Print("present: " .. table.concat(present, ", "))
     ns.Print("absent: " .. (#absent > 0 and table.concat(absent, ", ") or "none"))
 
     local missing = {}
-    for event in pairs(ns.missingEvents) do missing[#missing + 1] = event end
+    for event in pairs(ns.missingEvents) do
+        missing[#missing + 1] = event
+    end
     ns.Print("events this client rejected: " .. (#missing > 0 and table.concat(missing, ", ") or "none"))
 
     local eui = _G.EllesmereUI
     if type(eui) == "table" then
-        ns.Print("EllesmereUI " .. ns.Text(eui.VERSION) .. ", plugin API " .. ns.Text(eui.PLUGIN_API_VERSION)
-            .. ", IS_FOREVER=" .. ns.Text(eui.IS_FOREVER))
+        ns.Print(
+            "EllesmereUI "
+                .. ns.Text(eui.VERSION)
+                .. ", plugin API "
+                .. ns.Text(eui.PLUGIN_API_VERSION)
+                .. ", IS_FOREVER="
+                .. ns.Text(eui.IS_FOREVER)
+        )
     end
 end

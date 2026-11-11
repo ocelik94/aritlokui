@@ -1,0 +1,42 @@
+# Stable release: push a tag like v0.1.0
+#   git tag v0.1.0 && git push origin v0.1.0
+#
+# Needs, before it can upload to CurseForge:
+#   - "## X-Curse-Project-ID: <number>" in AritlokUI.toc
+#   - a repository secret named CF_API_KEY (CurseForge > My API Tokens)
+# Without those it still builds the zip and attaches it to a GitHub release.
+name: Stable release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Tag must be on main
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || {
+            echo "::error::this tag is not on the main branch"; exit 1; }
+
+      - name: Tag must match the TOC version
+        run: |
+          toc=$(tr -d '\r' < AritlokUI.toc | sed -n 's/^## Version: //p')
+          tag="${GITHUB_REF_NAME#v}"
+          [ "$toc" = "$tag" ] || {
+            echo "::error file=AritlokUI.toc::TOC says $toc but the tag is $tag"; exit 1; }
+
+      - name: Package and upload
+        uses: BigWigsMods/packager@v2
+        env:
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}

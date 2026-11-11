@@ -108,9 +108,7 @@ local function Preflight()
             return false, "this EllesmereUI version has no " .. needed[i] .. "(). Run /aui probe."
         end
     end
-    if InCombatLockdown() then
-        return false, "you are in combat. Run it again after the fight."
-    end
+    if InCombatLockdown() then return false, "you are in combat. Run it again after the fight." end
     return true
 end
 
@@ -155,9 +153,7 @@ end
 -------------------------------------------------------------------------------
 local GAP = 6
 
-local function Center(x, y)
-    return { point = "CENTER", relPoint = "CENTER", x = x, y = y }
-end
+local function Center(x, y) return { point = "CENTER", relPoint = "CENTER", x = x, y = y } end
 
 -- Pixel-perfect UI scale: one UI unit is exactly one screen pixel, which is
 -- 768 / the screen's pixel height (0.5333 at 2560 x 1440). EllesmereUI owns
@@ -168,9 +164,7 @@ end
 local function ApplyPixelScale()
     local eui = _G.EllesmereUI
     local pp = type(eui) == "table" and eui.PP
-    if type(pp) ~= "table" or type(pp.SetUIScale) ~= "function" or type(pp.PixelBestSize) ~= "function" then
-        return nil
-    end
+    if type(pp) ~= "table" or type(pp.SetUIScale) ~= "function" or type(pp.PixelBestSize) ~= "function" then return nil end
     local best = pp.PixelBestSize()
     if type(best) ~= "number" or best <= 0 then return nil end
     local current = UIParent:GetScale()
@@ -237,20 +231,20 @@ local function WriteUnitFrames(addons, theme, g)
     if type(uf) ~= "table" then return false end
     local dark = (theme == "dark")
 
-    uf.healthBarTexture = ns.FLAT_KEY      -- our LibSharedMedia texture
+    uf.healthBarTexture = ns.FLAT_KEY -- our LibSharedMedia texture
     uf.darkTheme = dark
 
     local units = { "player", "target" }
     for i = 1, #units do
         local u = Sub(uf, units[i])
-        u.darkTheme = nil                  -- follow the profile-wide switch above
+        u.darkTheme = nil -- follow the profile-wide switch above
         u.healthBarTexture = nil
         u.showPortrait = false
         u.healthClassColored = true
         u.bgClassColored = false
         u.customBgColor = { r = 0.05, g = 0.055, b = 0.065 }
         u.healthBarOpacity = 100
-        u.gradientEnabled = false          -- the overlays in Shade.lua do this job
+        u.gradientEnabled = false -- the overlays in Shade.lua do this job
         u.borderSize = 1
         u.borderColor = { r = 0, g = 0, b = 0 }
     end
@@ -271,7 +265,7 @@ local function WriteUnitFrames(addons, theme, g)
     -- health percentage straddling the top edge on the inner side, level and
     -- current health straddling the bottom edge. These are EllesmereUI's own
     -- text tags; this addon never sees the text.
-    local nameSize, bigSize, smallSize = S(18), S(34), S(14)   -- 18, not ToxiUI's 22: the wide font ran names into the number
+    local nameSize, bigSize, smallSize = S(18), S(34), S(14) -- 18, not ToxiUI's 22: the wide font ran names into the number
     local nameY, bigY, lowY = half + S(14), half, -half
 
     p.leftTextContent, p.leftTextSize, p.leftTextX, p.leftTextY = "name", nameSize, S(6), nameY
@@ -336,9 +330,9 @@ local function WriteUnitFrames(addons, theme, g)
     local miniX = g.frameX + g.frameW / 2 + S(4) + miniW / 2
     pos.player = Center(-g.frameX, g.frameY)
     pos.target = Center(g.frameX, g.frameY)
-    pos.targettarget = Center(miniX, g.frameY)                 -- right of the target, level with it
-    pos.pet = Center(-miniX, g.frameY)                         -- left of the player, level with it
-    pos.focus = Center(g.frameX, g.frameY - g.frameH - S(70))  -- 70 under the target
+    pos.targettarget = Center(miniX, g.frameY) -- right of the target, level with it
+    pos.pet = Center(-miniX, g.frameY) -- left of the player, level with it
+    pos.focus = Center(g.frameX, g.frameY - g.frameH - S(70)) -- 70 under the target
     pos.classPower = Center(0, g.Y(463))
     return true
 end
@@ -352,9 +346,7 @@ end
 local function WriteCastbars(addons, profile, g)
     if not g then return end
     local rb = addons.EllesmereUIResourceBars
-    if type(rb) == "table" then
-        Sub(rb, "castBar").enabled = false
-    end
+    if type(rb) == "table" then Sub(rb, "castBar").enabled = false end
 
     local drop = -g.S(10)
     local stores = {}
@@ -373,9 +365,9 @@ end
 
 local function StyleBar(b, g)
     if g then
-        b.buttonWidth = g.btnW             -- square base size ...
+        b.buttonWidth = g.btnW -- square base size ...
         b.buttonHeight = g.btnW
-        b.buttonShape = "cropped"          -- ... drawn at 80% height, icon cropped not stretched
+        b.buttonShape = "cropped" -- ... drawn at 80% height, icon cropped not stretched
         b.buttonPadding = g.pad
     end
     b.borderEnabled = true
@@ -426,17 +418,22 @@ local function WriteActionBars(addons, g, hideXP, hideMenu)
     -- Three rows at the bottom centre. (ToxiUI uses ElvUI bars 1, 6 and 5,
     -- which are Blizzard's main, bottom-left and bottom-right bars: here
     -- bars 1, 2 and 3.)
-    ShapeBar(Sub(bars, "MainBar"), 1); positions.MainBar = Center(0, g.row1)
-    ShapeBar(Sub(bars, "Bar2"), 1);    positions.Bar2 = Center(0, g.row1 - g.step)
-    ShapeBar(Sub(bars, "Bar3"), 1);    positions.Bar3 = Center(0, g.row1 - 2 * g.step)
+    ShapeBar(Sub(bars, "MainBar"), 1)
+    positions.MainBar = Center(0, g.row1)
+    ShapeBar(Sub(bars, "Bar2"), 1)
+    positions.Bar2 = Center(0, g.row1 - g.step)
+    ShapeBar(Sub(bars, "Bar3"), 1)
+    positions.Bar3 = Center(0, g.row1 - 2 * g.step)
 
     -- A 4 x 3 block on each side, as tall as the three rows. (Blizzard's two
     -- right-hand bars: here bars 4 and 5.)
     local blockW = 4 * g.btnW + 3 * g.pad
     local blockX = g.rowW / 2 + 4 * g.pad + blockW / 2
     local blockY = g.row1 - g.step
-    ShapeBar(Sub(bars, "Bar4"), 3);    positions.Bar4 = Center(-blockX, blockY)
-    ShapeBar(Sub(bars, "Bar5"), 3);    positions.Bar5 = Center(blockX, blockY)
+    ShapeBar(Sub(bars, "Bar4"), 3)
+    positions.Bar4 = Center(-blockX, blockY)
+    ShapeBar(Sub(bars, "Bar5"), 3)
+    positions.Bar5 = Center(blockX, blockY)
 
     -- Stance bar above bar 1.
     positions.StanceBar = Center(0, g.row1 + g.btnH / 2 + g.pad + g.S(16))
@@ -459,7 +456,7 @@ local function WriteActionBars(addons, g, hideXP, hideMenu)
     -- bottom edge, shown only while the mouse is over it. These are the same
     -- fields EllesmereUI's own "mouseover" visibility mode sets.
     local side = Sub(bars, "Bar6")
-    ShapeBar(side, 6)                      -- 12 buttons in 6 rows = 2 per row
+    ShapeBar(side, 6) -- 12 buttons in 6 rows = 2 per row
     side.enabled = true
     side.barVisibility = "mouseover"
     side.alwaysHidden = false
@@ -469,9 +466,7 @@ local function WriteActionBars(addons, g, hideXP, hideMenu)
     side.combatShowEnabled = false
     local sideW = 2 * g.btnW + g.pad
     local sideH = 6 * g.btnH + 5 * g.pad
-    positions.Bar6 = Center(
-        g.chatX + g.chatW + g.S(14) + sideW / 2 - g.uiW / 2,
-        g.chatY + sideH / 2 - g.uiH / 2)
+    positions.Bar6 = Center(g.chatX + g.chatW + g.S(14) + sideW / 2 - g.uiW / 2, g.chatY + sideH / 2 - g.uiH / 2)
 
     -- Bars 7-10 have no place in this layout. One that was never positioned
     -- would be drawn at the screen centre, so it is switched off; one you have
@@ -497,7 +492,7 @@ local function WriteChat(addons, g)
     local mod = addons.EllesmereUIChat
     if type(mod) ~= "table" then return false end
     local chat = Sub(mod, "chat")
-    chat.bgAlpha = 0.25                    -- lighter panel, closer to bare text
+    chat.bgAlpha = 0.25 -- lighter panel, closer to bare text
     -- Messages use the global font (Monaspace) at a small size.
     chat.font = "__global"
     chat.chatFontSize = 11
@@ -507,10 +502,10 @@ local function WriteChat(addons, g)
     chat.tabFont = "Expressway"
     chat.tabFontSize = 11
     chat.tabInnerPaddingX = 4
-    chat.lockChatSize = true               -- no accidental resizing
+    chat.lockChatSize = true -- no accidental resizing
     if g then
         chat.chatPosition = { point = "BOTTOMLEFT", relPoint = "BOTTOMLEFT", x = g.chatX, y = g.chatY }
-        chat.chatSize = { w = g.chatW, h = g.chatH }     -- ToxiUI's is 450 wide; a little wider here
+        chat.chatSize = { w = g.chatW, h = g.chatH } -- ToxiUI's is 450 wide; a little wider here
     end
     return true
 end
@@ -529,16 +524,17 @@ local function WriteDataBar()
     local eui = _G.EllesmereUI
     local registry = eui._ModuleNS
     local mod = type(registry) == "table" and registry.EllesmereUIDataBars
-    if type(mod) ~= "table" or type(mod.CreateBar) ~= "function" or type(mod.GetProfile) ~= "function" then
-        return false
-    end
+    if type(mod) ~= "table" or type(mod.CreateBar) ~= "function" or type(mod.GetProfile) ~= "function" then return false end
     local profile = mod.GetProfile()
     if type(profile) ~= "table" or type(profile.bars) ~= "table" then return false end
 
     local cfg
     for i = 1, #profile.bars do
         local b = profile.bars[i]
-        if type(b) == "table" and b.name == DATABAR_NAME then cfg = b; break end
+        if type(b) == "table" and b.name == DATABAR_NAME then
+            cfg = b
+            break
+        end
     end
     if not cfg then
         -- A failure inside EllesmereUI here is an ordinary Lua error, which
@@ -564,9 +560,7 @@ local function WriteDataBar()
                 block.settings.twentyFour = bar.clock24 and true or false
             end
             -- Gold block: silver and copper as well as gold.
-            if type(block) == "table" and block.type == "gold" and type(block.settings) == "table" then
-                block.settings.showSmall = true
-            end
+            if type(block) == "table" and block.type == "gold" and type(block.settings) == "table" then block.settings.showSmall = true end
             -- The first menu icon was cut off by the screen edge.
             if type(block) == "table" and block.type == "micromenu" then
                 block.xOff = 10
@@ -584,9 +578,7 @@ local function WriteDataBar()
         if bar.showXP then
             for i = #cfg.blocks, 1, -1 do
                 local block = cfg.blocks[i]
-                if type(block) == "table" and block.type == "xprep" then
-                    table.remove(cfg.blocks, i)
-                end
+                if type(block) == "table" and block.type == "xprep" then table.remove(cfg.blocks, i) end
             end
             bar.xpLong = true
         end
@@ -609,7 +601,7 @@ local function WriteCooldowns(addons, g)
     local positions = Sub(mod, "cdmBarPositions")
     local S = g.S
 
-    local powerBottom = g.Y(446)                  -- player power bar: 10 tall, centred 451 up
+    local powerBottom = g.Y(446) -- player power bar: 10 tall, centred 451 up
     local size = { cooldowns = S(40), utility = S(30), buffs = S(32) }
     local y = {}
     y.cooldowns = powerBottom - S(6) - size.cooldowns / 2
@@ -640,14 +632,11 @@ end
 -- RETEST on a new build. Returns how many were docked.
 local function DockChatWindows()
     local dock = _G.GENERAL_CHAT_DOCK
-    if type(FCF_DockFrame) ~= "function" or type(dock) ~= "table" or type(dock.DOCKED_CHAT_FRAMES) ~= "table" then
-        return 0
-    end
+    if type(FCF_DockFrame) ~= "function" or type(dock) ~= "table" or type(dock.DOCKED_CHAT_FRAMES) ~= "table" then return 0 end
     local count = 0
     for i = 3, (NUM_CHAT_WINDOWS or 10) do
         local frame = _G["ChatFrame" .. i]
-        if type(frame) == "table" and frame.IsShown and frame:IsShown()
-            and not frame.isDocked and not frame.isTemporary then
+        if type(frame) == "table" and frame.IsShown and frame:IsShown() and not frame.isDocked and not frame.isTemporary then
             FCF_DockFrame(frame, #dock.DOCKED_CHAT_FRAMES + 1, false)
             count = count + 1
         end
@@ -709,7 +698,7 @@ local function WriteRightSide(addons, profile, g)
         damage.width, damage.height = leftW, dmH
         damage.position = { x = g.uiW - dmW, y = dmBottom + dmH }
         damage.curDMType = damageType
-        damage.locked = true               -- no accidental dragging or closing
+        damage.locked = true -- no accidental dragging or closing
 
         local healing = Sub(windows, 2)
         healing.width, healing.height = rightW, dmH
@@ -738,10 +727,10 @@ local function WriteRightSide(addons, profile, g)
 
     -- Tooltip fixed position: stored on the profile itself, as the centre of
     -- its anchor box offset from the screen centre.
-    local boxW, boxH = 280, 165            -- EllesmereUI's fixed anchor box, not scaled
+    local boxW, boxH = 280, 165 -- EllesmereUI's fixed anchor box, not scaled
     profile.tooltipFixedPos = {
         centerX = g.uiW / 2 - boxW / 2,
-        centerY = -g.uiH / 2 + dmBottom + dmH + S(4) + boxH / 2,     -- directly above the meters
+        centerY = -g.uiH / 2 + dmBottom + dmH + S(4) + boxH / 2, -- directly above the meters
     }
     placed[#placed + 1] = "tooltip"
     return placed
@@ -770,7 +759,7 @@ function ns.Install(theme, quiet)
         if _G.EllesmereUIDB.profiles[PROFILE_NAME] then
             eui.SwitchProfile(PROFILE_NAME)
         else
-            eui.SaveCurrentAsProfile(PROFILE_NAME)   -- copies the active profile, then switches
+            eui.SaveCurrentAsProfile(PROFILE_NAME) -- copies the active profile, then switches
         end
     end
 
@@ -832,20 +821,29 @@ function ns.Install(theme, quiet)
     local scale
     if want.scale then
         scale = ApplyPixelScale()
-        if scale then done[#done + 1] = string.format("UI scale %.4f", scale)
-        else skipped[#skipped + 1] = "UI scale (EllesmereUI's scale function not found)" end
+        if scale then
+            done[#done + 1] = string.format("UI scale %.4f", scale)
+        else
+            skipped[#skipped + 1] = "UI scale (EllesmereUI's scale function not found)"
+        end
     end
 
     local g = Geometry(scale)
     if want.unitFrames then
-        if WriteUnitFrames(addons, theme, g) then done[#done + 1] = "unit frames"
-        else skipped[#skipped + 1] = "unit frames (module has no settings in this profile)" end
+        if WriteUnitFrames(addons, theme, g) then
+            done[#done + 1] = "unit frames"
+        else
+            skipped[#skipped + 1] = "unit frames (module has no settings in this profile)"
+        end
         if WriteCooldowns(addons, g) then done[#done + 1] = "cooldown manager" end
         WriteCastbars(addons, profile, g)
     end
     if want.actionBars then
-        if WriteActionBars(addons, g, hideXP, hideMenu) then done[#done + 1] = "action bars"
-        else skipped[#skipped + 1] = "action bars (module has no settings in this profile)" end
+        if WriteActionBars(addons, g, hideXP, hideMenu) then
+            done[#done + 1] = "action bars"
+        else
+            skipped[#skipped + 1] = "action bars (module has no settings in this profile)"
+        end
     end
     if want.chat then
         if WriteChat(addons, g) then done[#done + 1] = "chat" end
@@ -857,14 +855,16 @@ function ns.Install(theme, quiet)
     end
     if want.rightSide then
         local placed = WriteRightSide(addons, profile, g)
-        for i = 1, #placed do done[#done + 1] = placed[i] end
+        for i = 1, #placed do
+            done[#done + 1] = placed[i]
+        end
     end
     if want.accent then
         -- The accent is what EllesmereUI's quest tracker headers, damage meter
         -- title and bars, chat underline and DataBar labels are all coloured
         -- with, so one setting keeps them the same colour.
         if want.accentClass and eui.SetActiveProfileAccent and eui.RefreshAccent then
-            eui.SetActiveProfileAccent(nil, true)      -- useClass = true, on this profile
+            eui.SetActiveProfileAccent(nil, true) -- useClass = true, on this profile
             eui.RefreshAccent()
             done[#done + 1] = "class-colour accent"
         elseif eui.SetAccentColor then
@@ -881,14 +881,20 @@ function ns.Install(theme, quiet)
     ns.RefreshShades()
     ns.ApplyInfoBar()
 
-    ns.Print("installed the " .. theme .. " theme into EllesmereUI profile \"" .. PROFILE_NAME .. "\": "
-        .. (#done > 0 and table.concat(done, ", ") or "nothing") .. ".")
-    if #skipped > 0 then
-        ns.Print("skipped: " .. table.concat(skipped, "; ") .. ".")
-    end
+    ns.Print(
+        "installed the "
+            .. theme
+            .. ' theme into EllesmereUI profile "'
+            .. PROFILE_NAME
+            .. '": '
+            .. (#done > 0 and table.concat(done, ", ") or "nothing")
+            .. "."
+    )
+    if #skipped > 0 then ns.Print("skipped: " .. table.concat(skipped, "; ") .. ".") end
     if not quiet then
-        ShowReloadPrompt("The " .. theme .. " theme is written to the EllesmereUI profile \"" .. PROFILE_NAME
-            .. "\".|n|nReload the UI to apply it.")
+        ShowReloadPrompt(
+            "The " .. theme .. ' theme is written to the EllesmereUI profile "' .. PROFILE_NAME .. '".|n|nReload the UI to apply it.'
+        )
     end
     return true, (#skipped > 0) and ("Skipped: " .. table.concat(skipped, "; ") .. ".") or nil
 end
@@ -908,7 +914,7 @@ function ns.Restore()
         return false
     end
     if eui.GetActiveProfileName() == previous then
-        ns.Print("EllesmereUI is already on \"" .. previous .. "\".")
+        ns.Print('EllesmereUI is already on "' .. previous .. '".')
         return false
     end
 
@@ -918,8 +924,13 @@ function ns.Restore()
         db.previousScale = false
     end
     db.installed = false
-    ns.Print("switched EllesmereUI back to \"" .. previous .. "\". The \"" .. PROFILE_NAME
-        .. "\" profile is kept; delete it under /eui > Profiles if you no longer want it.")
-    ShowReloadPrompt("EllesmereUI is back on the \"" .. previous .. "\" profile.|n|nReload the UI to apply it.")
+    ns.Print(
+        'switched EllesmereUI back to "'
+            .. previous
+            .. '". The "'
+            .. PROFILE_NAME
+            .. '" profile is kept; delete it under /eui > Profiles if you no longer want it.'
+    )
+    ShowReloadPrompt('EllesmereUI is back on the "' .. previous .. '" profile.|n|nReload the UI to apply it.')
     return true
 end

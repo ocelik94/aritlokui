@@ -5,8 +5,11 @@ manual-changelog:
   markup-type: markdown
 
 ignore:
+  - .editorconfig
   - .github
   - .gitignore
+  - .luacheckrc
   - .pkgmeta
+  - .stylua.toml
   - Assets
   - README.md

@@ -11,11 +11,12 @@
 ## Dependencies: EllesmereUI
 ## OptionalDeps: EllesmereUIUnitFrames, EllesmereUIActionBars, EllesmereUIDataBars, EllesmereUIChat
 
-Core.lua
-Media.lua
-Shade.lua
-MicroBar.lua
-InfoBar.lua
-Installer.lua
-Wizard.lua
-Options.lua
+Core\Core.lua
+Core\Media.lua
+
+Modules\Shade.lua
+Modules\MicroBar.lua
+Modules\InfoBar.lua
+Modules\Installer.lua
+Modules\Wizard.lua
+Modules\Options.lua

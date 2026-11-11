@@ -8,9 +8,9 @@ local addonName, ns = ...
 local MEDIA = "Interface\\AddOns\\" .. addonName .. "\\Media\\"
 
 ns.media = {
-    flat = MEDIA .. "AritlokFlat",   -- status bar fill: flat with a soft bottom shade
-    fade = MEDIA .. "AritlokFade",   -- transparent -> white, left to right
-    dot  = MEDIA .. "AritlokDot",    -- soft round indicator
+    flat = MEDIA .. "AritlokFlat", -- status bar fill: flat with a soft bottom shade
+    fade = MEDIA .. "AritlokFade", -- transparent -> white, left to right
+    dot = MEDIA .. "AritlokDot", -- soft round indicator
     icon = MEDIA .. "AritlokIcon",
     white = "Interface\\Buttons\\WHITE8x8",
 }
@@ -24,9 +24,7 @@ ns.FLAT_KEY = "sm:" .. ns.FLAT_NAME
 -- texture in its texture dropdowns, so registering is all that is needed.
 do
     local LSM = LibStub and LibStub("LibSharedMedia-3.0", true)
-    if LSM and LSM.Register then
-        LSM:Register("statusbar", ns.FLAT_NAME, ns.media.flat)
-    end
+    if LSM and LSM.Register then LSM:Register("statusbar", ns.FLAT_NAME, ns.media.flat) end
 end
 
 -- Monaspace Argon and Neon (GitHub Next), bundled unmodified under the SIL
@@ -57,9 +55,7 @@ function ns.GetAccent()
     local eui = _G.EllesmereUI
     if type(eui) == "table" and eui.GetAccentColor then
         local r, g, b = eui.GetAccentColor()
-        if type(r) == "number" and type(g) == "number" and type(b) == "number" then
-            return r, g, b
-        end
+        if type(r) == "number" and type(g) == "number" and type(b) == "number" then return r, g, b end
     end
     local a = ns.DEFAULT_ACCENT
     return a.r, a.g, a.b
@@ -99,9 +95,7 @@ end
 function ns.SetFont(fontString, size)
     local path, flags = ns.GetFont()
     fontString:SetFont(path, size, flags)
-    if not fontString:GetFont() then
-        fontString:SetFont(STANDARD_TEXT_FONT, size, "")
-    end
+    if not fontString:GetFont() then fontString:SetFont(STANDARD_TEXT_FONT, size, "") end
     if flags == "" then
         fontString:SetShadowColor(0, 0, 0, 0.9)
         fontString:SetShadowOffset(1, -1)
@@ -120,9 +114,7 @@ function ns.GradientPair(r, g, b)
 end
 
 -- The player's class colour as a gradient pair.
-function ns.ClassGradient()
-    return ns.GradientPair(ns.GetPlayerClassColor())
-end
+function ns.ClassGradient() return ns.GradientPair(ns.GetPlayerClassColor()) end
 
 -- Paints a texture left -> right between two colours. The texture must be
 -- white (SetColorTexture(1, 1, 1, 1) or a white file) for the colours to show.

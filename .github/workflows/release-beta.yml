@@ -1,0 +1,36 @@
+# Beta release: push a tag like v0.2.0-beta.1
+#   git tag v0.2.0-beta.1 && git push origin v0.2.0-beta.1
+# The packager marks a tag containing "beta" as a beta file on CurseForge.
+#
+# Needs, before it can upload to CurseForge:
+#   - "## X-Curse-Project-ID: <number>" in AritlokUI.toc
+#   - a repository secret named CF_API_KEY (CurseForge > My API Tokens)
+# Without those it still builds the zip and attaches it to a GitHub pre-release.
+name: Beta release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Tag must be on main
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || {
+            echo "::error::this tag is not on the main branch"; exit 1; }
+
+      - name: Package and upload
+        uses: BigWigsMods/packager@v2
+        env:
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}

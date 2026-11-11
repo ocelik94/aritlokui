@@ -103,7 +103,11 @@ end
 
 local function Clamp(v, fallback, low, high)
     if type(v) ~= "number" then v = fallback end
-    if v < low then return low elseif v > high then return high end
+    if v < low then
+        return low
+    elseif v > high then
+        return high
+    end
     return v
 end
 
@@ -127,9 +131,7 @@ function ns.RefreshShades()
     end
 end
 
-local function Refresh()
-    ns.RefreshShades()
-end
+local function Refresh() ns.RefreshShades() end
 
 -- EllesmereUI builds its frames at login and finishes its own setup a frame
 -- later, so the first pass is repeated shortly after entering the world.
@@ -142,7 +144,7 @@ ns.On("PLAYER_ENTERING_WORLD", function()
 end)
 
 ns.On("PLAYER_TARGET_CHANGED", Refresh)
-ns.On("PLAYER_FOCUS_CHANGED", Refresh)              -- rejected harmlessly if this client has no focus
+ns.On("PLAYER_FOCUS_CHANGED", Refresh) -- rejected harmlessly if this client has no focus
 ns.On("UNIT_PET", Refresh)
-ns.On("INSTANCE_ENCOUNTER_ENGAGE_UNIT", Refresh)    -- boss frames
-ns.On("PLAYER_REGEN_ENABLED", Refresh)              -- EllesmereUI re-applies settings after combat
+ns.On("INSTANCE_ENCOUNTER_ENGAGE_UNIT", Refresh) -- boss frames
+ns.On("PLAYER_REGEN_ENABLED", Refresh) -- EllesmereUI re-applies settings after combat

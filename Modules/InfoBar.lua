@@ -26,7 +26,7 @@ local addonName, ns = ...
 local bar
 local state = { fps = "", ms = "", bags = "", dura = "", gold = "", volume = "" }
 local accentHex = "18a8ff"
-local textFrom = { 0.094, 0.659, 1.0 }   -- gradient ends for the bar's own text
+local textFrom = { 0.094, 0.659, 1.0 } -- gradient ends for the bar's own text
 local textTo = { 1, 1, 1 }
 local ticker
 
@@ -54,9 +54,7 @@ local function ReadBags()
     local last = NUM_BAG_SLOTS or 4
     for bag = 0, last do
         local n = getFree(bag)
-        if type(n) == "number" and not ns.IsSecret(n) then
-            free = free + n
-        end
+        if type(n) == "number" and not ns.IsSecret(n) then free = free + n end
     end
     return tostring(free)
 end
@@ -66,8 +64,7 @@ local function ReadDurability()
     local lowest
     for slot = 1, 18 do
         local cur, max = GetInventoryItemDurability(slot)
-        if type(cur) == "number" and type(max) == "number"
-            and not ns.IsSecret(cur) and not ns.IsSecret(max) and max > 0 then
+        if type(cur) == "number" and type(max) == "number" and not ns.IsSecret(cur) and not ns.IsSecret(max) and max > 0 then
             local pct = cur / max
             if not lowest or pct < lowest then lowest = pct end
         end
@@ -104,14 +101,10 @@ end
 
 local function ReadClock()
     local cfg = ns.db.bar
-    if cfg.localTime or not GetGameTime then
-        return date(cfg.clock24 and "%H:%M" or "%I:%M %p")
-    end
+    if cfg.localTime or not GetGameTime then return date(cfg.clock24 and "%H:%M" or "%I:%M %p") end
     local hour, minute = GetGameTime()
     if type(hour) ~= "number" or type(minute) ~= "number" then return "" end
-    if cfg.clock24 then
-        return string.format("%02d:%02d", hour, minute)
-    end
+    if cfg.clock24 then return string.format("%02d:%02d", hour, minute) end
     local suffix = hour >= 12 and "PM" or "AM"
     local h12 = hour % 12
     if h12 == 0 then h12 = 12 end
@@ -172,9 +165,7 @@ local function XPLabel(cur, max)
     if max <= 0 then return "" end
     local text = floor(cur / max * 100) .. "%"
     local level = UnitLevel and UnitLevel("player")
-    if type(level) == "number" and not ns.IsSecret(level) then
-        text = text .. " to level " .. (level + 1)
-    end
+    if type(level) == "number" and not ns.IsSecret(level) then text = text .. " to level " .. (level + 1) end
     return text
 end
 
@@ -197,15 +188,26 @@ local function UpdateXP()
     bar.xpLong:SetShown(long and true or false)
 end
 
-local function UpdateGold() state.gold = ReadGold(); PaintStats() end
-local function UpdateBags() state.bags = ReadBags(); PaintStats() end
-local function UpdateDurability() state.dura = ReadDurability(); PaintStats() end
-local function UpdateVolume() state.volume = ReadVolume(); PaintStats() end
+local function UpdateGold()
+    state.gold = ReadGold()
+    PaintStats()
+end
+local function UpdateBags()
+    state.bags = ReadBags()
+    PaintStats()
+end
+local function UpdateDurability()
+    state.dura = ReadDurability()
+    PaintStats()
+end
+local function UpdateVolume()
+    state.volume = ReadVolume()
+    PaintStats()
+end
 
 local function Tick()
     if not bar or not bar.own or not bar:IsShown() then return end
-    bar.clock:SetText(ns.GradientText(ReadClock(),
-        textFrom[1], textFrom[2], textFrom[3], textTo[1], textTo[2], textTo[3]))
+    bar.clock:SetText(ns.GradientText(ReadClock(), textFrom[1], textFrom[2], textFrom[3], textTo[1], textTo[2], textTo[3]))
     bar.date:SetText(date("%d/%m/%Y"))
     local fps, ms = ReadPerformance()
     if fps ~= state.fps or ms ~= state.ms then
@@ -240,7 +242,9 @@ local function ApplyColors()
     if CreateColor then
         local solid, clear = CreateColor(cr, cg, cb, 0.30), CreateColor(cr, cg, cb, 0)
         local low, high = solid, clear
-        if bar.isTop then low, high = clear, solid end
+        if bar.isTop then
+            low, high = clear, solid
+        end
         bar.washLeft:SetGradient("VERTICAL", low, high)
         bar.washRight:SetGradient("VERTICAL", low, high)
     else
@@ -262,7 +266,11 @@ function ns.InfoBarHeight()
     if cfg and cfg.mode == "eui" then return 30 end
     local height = cfg and cfg.height
     if type(height) ~= "number" then height = 28 end
-    if height < 18 then height = 18 elseif height > 48 then height = 48 end
+    if height < 18 then
+        height = 18
+    elseif height > 48 then
+        height = 48
+    end
     return height
 end
 
@@ -301,7 +309,11 @@ function ns.ApplyInfoBar()
     -- inner edge. It reaches beyond the bar so the fade has room to be soft.
     local opacity = cfg.opacity
     if type(opacity) ~= "number" then opacity = 80 end
-    if opacity < 0 then opacity = 0 elseif opacity > 100 then opacity = 100 end
+    if opacity < 0 then
+        opacity = 0
+    elseif opacity > 100 then
+        opacity = 100
+    end
     local outer = top and "TOP" or "BOTTOM"
     local reach = floor(height * 0.55 + 0.5)
     bar.bg:ClearAllPoints()
@@ -342,7 +354,11 @@ function ns.ApplyInfoBar()
         -- fills the gap at whatever length is set.
         local length = cfg.xpLength
         if type(length) ~= "number" then length = 320 end
-        if length < 60 then length = 60 elseif length > 1200 then length = 1200 end
+        if length < 60 then
+            length = 60
+        elseif length > 1200 then
+            length = 1200
+        end
         local offset = cfg.xpOffset
         if type(offset) ~= "number" then offset = 320 end
         bar.xpLong:ClearAllPoints()
@@ -444,7 +460,7 @@ local function Build()
         local fs = text:CreateFontString(nil, "OVERLAY")
         fs:SetJustifyH(justify)
         fs:SetTextColor(1, 1, 1)
-        ns.SetFont(fs, 12)      -- a font must be set before any SetText
+        ns.SetFont(fs, 12) -- a font must be set before any SetText
         return fs
     end
 
@@ -473,15 +489,11 @@ ns.On("PLAYER_LOGIN", function()
     Build()
     ns.ApplyInfoBar()
 
-    if C_Timer and C_Timer.NewTicker then
-        ticker = C_Timer.NewTicker(1, Tick)
-    end
+    if C_Timer and C_Timer.NewTicker then ticker = C_Timer.NewTicker(1, Tick) end
 
     -- Follow EllesmereUI's accent colour live when it offers the callback.
     local eui = _G.EllesmereUI
-    if type(eui) == "table" and eui.RegAccent then
-        eui.RegAccent({ type = "callback", fn = function() ApplyColors() end })
-    end
+    if type(eui) == "table" and eui.RegAccent then eui.RegAccent({ type = "callback", fn = function() ApplyColors() end }) end
 end)
 
 ns.On("PLAYER_ENTERING_WORLD", function()
