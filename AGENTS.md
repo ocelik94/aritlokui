@@ -58,6 +58,7 @@ These are not style preferences. Breaking one produces errors or "Interface acti
 | `Modules/Shade.lua` | gradient overlays on EllesmereUI's unit frame bars |
 | `Modules/InfoBar.lua` | menu bar backdrop and the long experience bar |
 | `Modules/RestedXP.lua` | theme registered with RestedXP Guides (through its own theme list) |
+| `Modules/Professions.lua` | right-click on the menu bar's profession buttons (First Aid, Cooking) |
 | `Modules/Options.lua` | settings page, `/aui` command, addon compartment entry |
 | `Modules/Installer/Core.lua` | option list, profile choice, screen geometry, `ns.Install` |
 | `Modules/Installer/*.lua` | one installer step per file (see below) |
@@ -123,6 +124,6 @@ The **Test** workflow (`.github/workflows/test.yml`) also runs luacheck, the fir
 
 - **Do not commit, tag or push unless asked.**
 - **Do not add dependencies or libraries.** EllesmereUI embeds LibStub and LibSharedMedia; use those through it.
-- **Do not hook or replace EllesmereUI's functions.** Fields starting with `_` on its tables are internal; the one place this addon uses one (`_ModuleNS`, for the menu bar) is checked at every step, and the menu bar is simply left out when it is missing.
+- **Do not hook or replace EllesmereUI's functions.** Fields starting with `_` on its tables are internal; the one this addon uses (`_ModuleNS`, for the menu bar) is checked at every step, and the menu bar is simply left out when it is missing. The single exception to "do not hook" is `Modules/Professions.lua`, which post-hooks the click of EllesmereUI's two profession buttons and clears their right-click attribute outside combat; do not add more.
 - **Fonts and textures** have to be `.tga` / `.ttf` / `.otf` with power-of-two texture sizes, and anything bundled needs a license that allows it. The Monaspace license file sits next to the fonts.
 - **Scope:** this addon targets Forever only. Do not add other game versions or TOC files.

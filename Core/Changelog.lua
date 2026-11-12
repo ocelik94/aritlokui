@@ -9,6 +9,16 @@ local addonName, ns = ...
 
 ns.changelog = {
     {
+        version = "0.4.0",
+        items = {
+            "Cast bars no longer draw over windows such as the bags.",
+            'Bags open as one bag by default (part of the "Compact bags" switch).',
+            "Right-click the first profession on the menu bar to open First Aid, the second to open Cooking; left-click still "
+                .. "opens the profession itself. Can be switched off under Menu Bar in the settings.",
+        },
+        note = "Run /aui install again to apply the cast bar and bag changes.",
+    },
+    {
         version = "0.3.0",
         items = {
             'RestedXP Guides: a new "AritlokUI" theme for its guide window, arrow, map pins and tooltips, in your accent color '

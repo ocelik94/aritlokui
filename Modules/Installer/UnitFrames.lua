@@ -16,6 +16,10 @@ local function WriteUnitFrames(ctx, g)
 
     uf.healthBarTexture = ns.FLAT_KEY -- our LibSharedMedia texture
     uf.darkTheme = dark
+    -- EllesmereUI lifts every cast bar to the HIGH strata by default, which
+    -- draws it over windows such as the bags. Off: cast bars stay in the unit
+    -- frames' own strata ("Raise Cast Bar Strata (All)" in its options).
+    uf.raiseCastbarStrata = false
 
     local units = { "player", "target" }
     for i = 1, #units do

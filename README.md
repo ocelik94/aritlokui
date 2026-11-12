@@ -154,6 +154,7 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Modules/Shade.lua` | gradient overlays on EllesmereUI's unit frame bars |
 | `Modules/InfoBar.lua` | the menu bar's fading backdrop and the long experience bar |
 | `Modules/RestedXP.lua` | the theme registered with RestedXP Guides |
+| `Modules/Professions.lua` | right-click on the menu bar's profession buttons |
 | `Modules/Options.lua` | settings page, slash command, addon compartment entry |
 | `Modules/Installer/Core.lua` | the option list, screen geometry, and the install run |
 | `Modules/Installer/Look.lua` | style, font, accent color, UI scale |

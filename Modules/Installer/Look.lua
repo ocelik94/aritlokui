@@ -86,8 +86,9 @@ I.AddStep({
     end,
 })
 
--- Bags in EllesmereUI's compact view. It is one of three display modes of its
--- Bags module ("grid", "list", "compact") and applies at reload.
+-- Bags in EllesmereUI's compact view, opening as one bag. The view is one of
+-- three display modes of its Bags module ("grid", "list", "compact") and
+-- applies at reload; the default bag type is "all", "onebag" or "multibag".
 I.AddStep({
     order = 60,
     option = "bags",
@@ -104,6 +105,7 @@ I.AddStep({
             bags = I.Sub(ctx.addons, "EllesmereUIBags")
         end
         bags.bagDisplayMode = "compact"
+        bags.bagDefaultBagType = "onebag"
         ctx:Done("compact bags")
     end,
 })

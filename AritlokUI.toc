@@ -4,7 +4,7 @@
 ## Notes-deDE: Ein dunkles, flaches Interface auf Basis von EllesmereUI, eingerichtet über einen Installer in wenigen Schritten.
 ## Notes-frFR: Une interface sombre et épurée basée sur EllesmereUI, configurée par un installateur pas à pas.
 ## Author: Aritlok
-## Version: 0.3.0
+## Version: 0.4.0
 ## SavedVariables: AritlokUIDB
 ## Category: User Interface
 ## IconTexture: Interface\AddOns\AritlokUI\Media\AritlokIcon.tga
@@ -25,6 +25,7 @@ Core\Media.lua
 Modules\Shade.lua
 Modules\InfoBar.lua
 Modules\RestedXP.lua
+Modules\Professions.lua
 
 Modules\Installer\Core.lua
 Modules\Installer\Look.lua

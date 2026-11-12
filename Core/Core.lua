@@ -5,7 +5,7 @@ local addonName, ns = ...
 --  event frame with its handler table, and the combat queue.
 -------------------------------------------------------------------------------
 
-ns.VERSION = "0.3.0"
+ns.VERSION = "0.4.0"
 ns.TAG = "|cff18a8ffAritlok|r|cffffffffUI|r"
 
 -- Interface number this addon was written against. RETEST when the TOC number
@@ -98,6 +98,7 @@ ns.defaults = {
         xpOffset = 320, -- how far from the left screen edge it starts
         xpLong = false, -- set by the installer once EllesmereUI's own XP block is replaced
         clock24 = true,
+        profRightClick = true, -- right-click the profession buttons: First Aid, Cooking
     },
     -- What the installer applies; one key per entry in ns.Installer.options.
     install = {
@@ -305,6 +306,9 @@ function ns.Probe()
         "issecretvalue",
         "CreateColor",
         "C_Timer.After",
+        "C_TradeSkillUI.OpenTradeSkill",
+        "C_TradeSkillUI.CloseTradeSkill",
+        "C_TradeSkillUI.GetBaseProfessionInfo",
         "UnitXP",
         "UnitXPMax",
         "UnitLevel",

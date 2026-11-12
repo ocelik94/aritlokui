@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0
+
+- Cast bars no longer draw over windows such as the bags
+- Bags open as one bag by default (part of the "Compact bags" switch)
+- Right-click the first profession on the menu bar to open First Aid, the second to open Cooking; left-click still opens the profession itself. Can be switched off under Menu Bar in the settings
+
+Run `/aui install` again to apply the cast bar and bag changes.
+
 ## 0.3.0
 
 - RestedXP Guides: a new "AritlokUI" theme for its guide window, arrow, map pins and tooltips, in your accent color and interface font. The installer selects it when RestedXP is loaded; it can also be picked in RestedXP's own theme list

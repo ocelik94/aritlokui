@@ -222,6 +222,14 @@ local function BuildBarPage(W, parent, y)
     end)
     y = y - h
 
+    _, h = W:SectionHeader(parent, "PROFESSIONS", y)
+    y = y - h
+    _, h = W:Toggle(parent, "Right-click for First Aid and Cooking", y, function() return cfg.profRightClick end, function(v)
+        cfg.profRightClick = v
+        ns.ApplyProfessionClicks()
+    end, "Right-click the first profession on the menu bar for First Aid, the second for Cooking.")
+    y = y - h
+
     _, h = W:SectionHeader(parent, "CLOCK", y)
     y = y - h
     _, h = W:Toggle(
