@@ -7,11 +7,14 @@ local addonName, ns = ...
 --  and only writes that addon's own saved settings; everything takes effect
 --  with the reload at the end of the install.
 --
---  Questie is the one addon covered so far.
+--  Covered so far: Questie and RestedXP Guides.
 --
 --  RETEST after a Questie update: the setting names below were read from
 --  Questie's source as installed, and it is reached through the global it
 --  publishes (`Questie`).
+--
+--  RETEST after a RestedXP update: `activeTheme` in its settings profile
+--  (SettingsPanel.lua, v4.11.36). The theme itself is Modules/RestedXP.lua.
 -------------------------------------------------------------------------------
 
 local I = ns.Installer
@@ -27,14 +30,15 @@ local function QuestieProfile()
 end
 
 -------------------------------------------------------------------------------
---  The list. `key` is the field in AritlokUIDB.install.addons. Titles and
---  descriptions are English here and translated where they are shown.
+--  The list: one entry, and so one switch, per addon. `key` is the field in
+--  AritlokUIDB.install.addons. Titles are addon names; descriptions are
+--  English here and translated where they are shown.
 -------------------------------------------------------------------------------
 I.addons = {
     {
         key = "questie",
-        title = "Questie tracker style",
-        desc = "Interface font, no backdrop.",
+        title = "Questie",
+        desc = "Its quest tracker replaces EllesmereUI's.",
         detect = function() return QuestieProfile() ~= nil end,
         apply = function(ctx)
             local q = QuestieProfile()
@@ -50,16 +54,6 @@ I.addons = {
             q.trackerFontOutline = ""
             q.trackerBackdropEnabled = false
             q.trackerBorderEnabled = false
-            ctx:Done("Questie tracker look")
-        end,
-    },
-    {
-        key = "questieTracker",
-        title = "Use Questie's quest tracker",
-        desc = "Replaces EllesmereUI's tracker.",
-        detect = function() return QuestieProfile() ~= nil end,
-        apply = function(ctx)
-            local q = QuestieProfile()
             q.trackerEnabled = true
 
             -- EllesmereUI's quest tracker module off: `enabled` is the module
@@ -96,6 +90,40 @@ I.addons = {
             ctx.db.questieOwnsTracker = false
         end,
     },
+}
+
+-- RestedXP's settings profile, or nil when RestedXP is not loaded (or has
+-- not set its settings up yet).
+local function RXPProfile()
+    local rxp = ns.GetRXP()
+    local settings = type(rxp) == "table" and rxp.settings
+    local profile = type(settings) == "table" and settings.profile
+    if type(profile) == "table" then return profile end
+    return nil
+end
+
+I.addons[#I.addons + 1] = {
+    key = "restedxp",
+    title = "RestedXP",
+    desc = "Guide window in the AritlokUI theme.",
+    detect = function() return RXPProfile() ~= nil end,
+    apply = function(ctx)
+        local p = RXPProfile()
+        if p.activeTheme ~= ns.RXP_THEME then
+            ctx.db.rxpThemeBefore = p.activeTheme -- remembered, so it can be handed back
+            p.activeTheme = ns.RXP_THEME
+        end
+        ctx:Done("RestedXP theme")
+    end,
+    -- Option switched off after an earlier install had it on: back to the
+    -- theme RestedXP had before ("Default" is its own name for its standard).
+    revert = function(ctx)
+        local p = RXPProfile()
+        if p.activeTheme ~= ns.RXP_THEME then return end
+        local before = ctx.db.rxpThemeBefore
+        p.activeTheme = type(before) == "string" and before or "Default"
+        ctx.db.rxpThemeBefore = nil
+    end,
 }
 
 -- The entries whose addon is loaded.

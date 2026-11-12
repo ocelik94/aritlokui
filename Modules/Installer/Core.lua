@@ -117,7 +117,7 @@ function I.CheckProfileName(name)
     if name == I.SHARED_PROFILE then return true end
     local profiles = _G.EllesmereUIDB and _G.EllesmereUIDB.profiles
     if type(profiles) == "table" and profiles[name] and not ns.db.createdProfiles[name] then
-        return false, string.format(L['A profile named "%s" already exists and was not made by Aritlok UI. Pick another name.'], name)
+        return false, string.format(L['A profile named "%s" already exists and was not made by AritlokUI. Pick another name.'], name)
     end
     return true
 end

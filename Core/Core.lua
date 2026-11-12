@@ -5,7 +5,7 @@ local addonName, ns = ...
 --  event frame with its handler table, and the combat queue.
 -------------------------------------------------------------------------------
 
-ns.VERSION = "0.2.0"
+ns.VERSION = "0.3.0"
 ns.TAG = "|cff18a8ffAritlok|r|cffffffffUI|r"
 
 -- Interface number this addon was written against. RETEST when the TOC number
@@ -79,7 +79,7 @@ end
 --  Defaults only. AritlokUIDB itself is read and created inside ADDON_LOADED.
 -------------------------------------------------------------------------------
 ns.defaults = {
-    schema = 4,
+    schema = 5,
     theme = "gradient", -- "gradient" | "dark"
     shade = {
         enabled = true,
@@ -115,7 +115,7 @@ ns.defaults = {
         -- ns.Installer.addons. Only offered when that addon is loaded.
         addons = {
             questie = true,
-            questieTracker = true,
+            restedxp = true,
         },
         -- Hidden while out of combat; one key per entry in
         -- ns.Installer.combatOptions.
@@ -242,6 +242,17 @@ ns.On("ADDON_LOADED", function(loaded)
         -- Schema 4 added the profile choice and addon integrations; the new
         -- keys come from the defaults merge below.
         saved.schema = 4
+    end
+    if saved.schema == 4 then
+        -- Schema 5: one switch per addon. Questie had two (tracker style, and
+        -- its tracker in place of EllesmereUI's); the one switch does both, so
+        -- it stays on only where both were on.
+        local addons = type(saved.install) == "table" and saved.install.addons
+        if type(addons) == "table" then
+            if addons.questieTracker == false then addons.questie = false end
+            addons.questieTracker = nil
+        end
+        saved.schema = 5
     end
     ns.db = MergeDefaults(AritlokUIDB, ns.defaults)
     eventFrame:UnregisterEvent("ADDON_LOADED")

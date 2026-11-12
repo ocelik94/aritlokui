@@ -32,11 +32,11 @@ local STEPS = { "Welcome", "Profile", "Theme", "Layout", "Look", "Combat", "Addo
 -- note under it.
 local INTROS = {
     {
-        "This installer sets up Aritlok UI on top of EllesmereUI in a few steps. Your current profile is copied, never changed.",
-        "Important: after a larger Aritlok UI update you may need to run the installer again.",
+        "This installer sets up AritlokUI on top of EllesmereUI in a few steps. Your current profile is copied, never changed.",
+        "Important: after a larger AritlokUI update you may need to run the installer again.",
     },
     {
-        "Aritlok UI writes its settings into a copy of your current EllesmereUI profile. Use the shared profile, or create one with its own name.",
+        "AritlokUI writes its settings into a copy of your current EllesmereUI profile. Use the shared profile, or create one with its own name.",
     },
     { "Pick how the unit frame bars are colored. You can switch later by running the installer again." },
     { "Choose which parts of the screen are arranged. Anything you switch off stays exactly as it is now." },
@@ -45,7 +45,7 @@ local INTROS = {
         "Important: the UI scale applies to your whole account, not just this profile.",
     },
     { "Switch on what should be hidden while you are out of combat. It shows again in a fight, and whenever the mouse is over it." },
-    { "Aritlok UI can adjust other addons so they match. Currently supported: Questie." },
+    { "AritlokUI can adjust other addons so they match." },
     { "Check your choices, then press Install. Nothing is changed before that." },
 }
 local PAGE_WELCOME, PAGE_PROFILE, PAGE_THEME, PAGE_LAYOUT, PAGE_LOOK, PAGE_COMBAT, PAGE_ADDONS, PAGE_INSTALL = 1, 2, 3, 4, 5, 6, 7, 8
@@ -837,7 +837,7 @@ local function Show(index)
         frame.heading:SetText(L["Installed"])
     else
         frame.kicker:SetText(string.format("%d / %d", index, #STEPS))
-        frame.heading:SetText(index == PAGE_WELCOME and "Aritlok UI" or L[STEPS[index]])
+        frame.heading:SetText(index == PAGE_WELCOME and "AritlokUI" or L[STEPS[index]])
     end
 
     PaintSidebar(finished and (#STEPS + 1) or index)
@@ -895,7 +895,7 @@ local function BuildSidebar()
 
     local name = Label(side, 15, TEXT)
     name:SetPoint("LEFT", logo, "RIGHT", 12, 0)
-    name:SetText("Aritlok UI")
+    name:SetText("AritlokUI")
 
     local y = -92
     for i = 1, #STEPS do

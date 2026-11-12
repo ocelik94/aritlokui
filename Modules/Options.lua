@@ -237,16 +237,65 @@ local function BuildBarPage(W, parent, y)
     return y
 end
 
+-- The release notes from Core/Changelog.lua: a section header per version,
+-- then its notes as wrapped text. EllesmereUI has no plain-text widget, so the
+-- text is this addon's own font strings on one holder frame per page build.
+local function BuildChangelogPage(W, parent, y)
+    local eui = _G.EllesmereUI
+    local prebuild = eui.IsSearchPrebuild and eui.IsSearchPrebuild()
+    local pad = type(eui.CONTENT_PAD) == "number" and eui.CONTENT_PAD or 45
+    local width = 0
+    local holder
+    if not prebuild then
+        -- A page can be built more than once; the last build's text goes.
+        if parent._auiChangelog then parent._auiChangelog:Hide() end
+        holder = CreateFrame("Frame", nil, parent)
+        holder:SetAllPoints(parent)
+        parent._auiChangelog = holder
+        width = (parent:GetWidth() or 0) - pad * 2
+        if width < 200 then width = 700 end
+    end
+
+    local function Line(text, r, g, b)
+        if not holder then return end
+        local fs = holder:CreateFontString(nil, "OVERLAY")
+        ns.SetFont(fs, 12)
+        fs:SetJustifyH("LEFT")
+        fs:SetJustifyV("TOP")
+        fs:SetWordWrap(true)
+        fs:SetSpacing(3)
+        fs:SetTextColor(r, g, b)
+        fs:SetWidth(width)
+        fs:SetPoint("TOPLEFT", parent, "TOPLEFT", pad, y)
+        fs:SetText(text)
+        y = y - (fs:GetStringHeight() or 14) - 8
+    end
+
+    local ar, ag, ab = ns.GetAccent()
+    local list = ns.changelog
+    for i = 1, #list do
+        local entry = list[i]
+        local _, h = W:SectionHeader(parent, entry.version, y)
+        y = y - h - 4
+        for j = 1, #entry.items do
+            Line("-  " .. entry.items[j], 0.86, 0.86, 0.88)
+        end
+        if entry.note then Line(entry.note, ar, ag, ab) end
+        y = y - 10
+    end
+    return y
+end
+
 local function RegisterPlugin()
     local eui = _G.EllesmereUI
     if type(eui) ~= "table" or not eui.RegisterPlugin then return end
     if eui.IsPluginRegistered and eui.IsPluginRegistered(PLUGIN_ID) then return end
     eui.RegisterPlugin(PLUGIN_ID, {
-        label = "Aritlok UI",
+        label = "AritlokUI",
         modules = {
             {
                 key = "General",
-                title = "Aritlok UI",
+                title = L["General"],
                 description = L["Theme, bar gradients and the menu bar."],
                 pages = { L[PAGE_THEME], L[PAGE_BAR] },
                 buildPage = function(pageName, parent, yOffset)
@@ -269,6 +318,18 @@ local function RegisterPlugin()
                     db.install = nil
                     ns.MergeDefaults(db, ns.defaults)
                     Refresh()
+                end,
+            },
+            {
+                key = "Changelog",
+                title = L["Changelog"],
+                description = L["What changed in each version."],
+                pages = { L["Changelog"] },
+                buildPage = function(_, parent, yOffset)
+                    local W = _G.EllesmereUI.Widgets
+                    if not W then return 0 end
+                    -- Not the translating proxy: versions and notes are shown as written.
+                    return math.abs(BuildChangelogPage(W, parent, yOffset))
                 end,
             },
         },

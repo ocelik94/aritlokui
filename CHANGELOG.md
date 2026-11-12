@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+
+- RestedXP Guides: a new "AritlokUI" theme for its guide window, arrow, map pins and tooltips, in your accent color and interface font. The installer selects it when RestedXP is loaded; it can also be picked in RestedXP's own theme list
+- The installer's Addons page is a plain list with one switch per addon; Questie's two switches are now one
+- The name is written "AritlokUI" everywhere, including the addon list
+- Settings: AritlokUI's pages are now listed as "General", and there is a new "Changelog" page next to it
+
+Run `/aui install` again to apply the RestedXP theme.
+
 ## 0.2.0
 
 - The pet frame's health bar now uses your class color, a shade darker than the player frame, instead of green

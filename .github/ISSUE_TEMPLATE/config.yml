@@ -2,4 +2,4 @@ blank_issues_enabled: false
 contact_links:
   - name: EllesmereUI problem
     url: https://github.com/EllesmereGaming/EllesmereUI
-    about: If the problem is also there on your old profile (try /aui restore), it belongs to EllesmereUI rather than Aritlok UI.
+    about: If the problem is also there on your old profile (try /aui restore), it belongs to EllesmereUI rather than AritlokUI.

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="Assets/icon.png" alt="Aritlok UI" width="160">
+  <img src="Assets/icon.png" alt="AritlokUI" width="160">
 </p>
 
-<h1 align="center">Aritlok UI</h1>
+<h1 align="center">AritlokUI</h1>
 
 <p align="center">
   A dark, flat interface overhaul for <b>World of Warcraft: Forever</b>, built on EllesmereUI.
@@ -12,12 +12,12 @@
   <a href="https://www.curseforge.com/wow/addons/aritlokui"><b>Download on CurseForge</b></a>
 </p>
 
-![Aritlok UI in game](Assets/gameplay.jpg)
+![AritlokUI in game](Assets/gameplay.jpg)
 
 <details>
 <summary>The layout, shown in EllesmereUI's unlock mode</summary>
 
-![Aritlok UI layout](Assets/layout.jpg)
+![AritlokUI layout](Assets/layout.jpg)
 
 </details>
 
@@ -32,6 +32,7 @@
 - **Step-by-step installer** – short pages, every part optional, with a check that your EllesmereUI version is the tested one
 - **Shared or own profile** – install into the shared `AritlokUI` profile or one with a name you choose
 - **Out-of-combat hiding** – choose whether action bars, pet bar, unit frames and meters hide outside combat
+- **RestedXP Guides** – adds an "AritlokUI" theme to RestedXP: guide window, arrow, map pins and tooltips in your accent color and interface font
 - **Questie** – when Questie is loaded, its quest tracker can take the place of EllesmereUI's, in the same font and spot
 - **Pixel-perfect scale** – one UI unit per screen pixel (0.5333 at 2560 × 1440)
 - **Monaspace Neon** font, with Argon bundled as an alternative
@@ -44,7 +45,7 @@
 
 - [EllesmereUI](https://github.com/EllesmereGaming/EllesmereUI)
 
-Aritlok UI styles and arranges these EllesmereUI modules, so keep them enabled:
+AritlokUI styles and arranges these EllesmereUI modules, so keep them enabled:
 
 | Module | Used for |
 | --- | --- |
@@ -68,12 +69,12 @@ World of Warcraft: Forever, interface `16001`.
 
 - Make a backup of your `WTF` folder
 - Install EllesmereUI and log in once with it enabled
-- Install Aritlok UI from [CurseForge](https://www.curseforge.com/wow/addons/aritlokui), or put this folder into `World of Warcraft/_forever_/Interface/AddOns/` and make sure it is named `AritlokUI` (the name has to match `AritlokUI.toc`)
+- Install AritlokUI from [CurseForge](https://www.curseforge.com/wow/addons/aritlokui), or put this folder into `World of Warcraft/_forever_/Interface/AddOns/` and make sure it is named `AritlokUI` (the name has to match `AritlokUI.toc`)
 - Restart the game client (a new addon folder is not picked up by `/reload`)
 - Type `/aui install` and follow the steps
 - Click **Reload UI** on the last page
 
-The installer copies your active EllesmereUI profile to a new one and writes its settings there: either the shared `AritlokUI` profile or one you name yourself. Your original profile is left as it was; you can switch back to it under `/eui` → Profiles. A profile that already exists and was not made by Aritlok UI is never written into.
+The installer copies your active EllesmereUI profile to a new one and writes its settings there: either the shared `AritlokUI` profile or one you name yourself. Your original profile is left as it was; you can switch back to it under `/eui` → Profiles. A profile that already exists and was not made by AritlokUI is never written into.
 
 ## Commands
 
@@ -138,7 +139,7 @@ Releases are made by pushing a tag from `main`:
 | `v0.2.0-beta.1` | beta file |
 | `v0.2.0` | stable file (the tag must match `## Version:` in the TOC) |
 
-Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/Core.lua`, and `CHANGELOG.md`.
+Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/Core.lua`, `CHANGELOG.md`, and `Core/Changelog.lua` (the same notes, shown in game).
 
 ### Layout of the addon
 
@@ -146,11 +147,13 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | --- | --- |
 | `AritlokUI.toc` | load order and metadata (has to stay in the root) |
 | `Core/Core.lua` | namespace, saved variables, the single event frame, combat queue, probe |
+| `Core/Changelog.lua` | release notes for the in-game Changelog page |
 | `Core/Locale.lua` | the translation table |
 | `Locales/` | German and French texts |
 | `Core/Media.lua` | textures, fonts, color and gradient helpers |
 | `Modules/Shade.lua` | gradient overlays on EllesmereUI's unit frame bars |
 | `Modules/InfoBar.lua` | the menu bar's fading backdrop and the long experience bar |
+| `Modules/RestedXP.lua` | the theme registered with RestedXP Guides |
 | `Modules/Options.lua` | settings page, slash command, addon compartment entry |
 | `Modules/Installer/Core.lua` | the option list, screen geometry, and the install run |
 | `Modules/Installer/Look.lua` | style, font, accent color, UI scale |
@@ -160,7 +163,7 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Modules/Installer/Chat.lua` | chat position, fonts and docking |
 | `Modules/Installer/RightEdge.lua` | minimap, quest tracker, tooltip, meters |
 | `Modules/Installer/Combat.lua` | what is hidden out of combat |
-| `Modules/Installer/Addons.lua` | settings for other addons (Questie) |
+| `Modules/Installer/Addons.lua` | settings for other addons (Questie, RestedXP) |
 | `Modules/Installer/Wizard.lua` | the installer window |
 | `Media/` | textures and fonts used in game |
 | `Assets/` | images for this README (left out of releases) |
@@ -175,13 +178,13 @@ Texts are written in English in the code and looked up through `ns.L["English te
 
 ## Credits
 
-- **Ellesmere** for [EllesmereUI](https://github.com/EllesmereGaming/EllesmereUI), which Aritlok UI is built on
+- **Ellesmere** for [EllesmereUI](https://github.com/EllesmereGaming/EllesmereUI), which AritlokUI is built on
 - **Toxi** and the [ToxiUI](https://github.com/Toxicom/toxiui) contributors, whose layout this one is modeled on
 - **Smokenoaken** for [OakUI](https://github.com/Smokenoaken/OakUI_Installer), the reference for the menu bar
 - **GitHub Next** for the [Monaspace](https://github.com/githubnext/monaspace) typeface
 
 ## License
 
-Aritlok UI is released under the [MIT License](LICENSE).
+AritlokUI is released under the [MIT License](LICENSE).
 
 The Monaspace fonts in `Media/Fonts` are © GitHub and distributed unmodified under the SIL Open Font License 1.1. The license text is in `Media/Fonts/Monaspace-LICENSE.txt`.

@@ -21,4 +21,4 @@ Screenshots or references to another interface that does this well.
 
 ---
 
-Aritlok UI is for World of Warcraft: Forever only. It styles and arranges EllesmereUI; it does not read the combat log and does not automate combat decisions, so requests in those directions will be declined.
+AritlokUI is for World of Warcraft: Forever only. It styles and arranges EllesmereUI; it does not read the combat log and does not automate combat decisions, so requests in those directions will be declined.

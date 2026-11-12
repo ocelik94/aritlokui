@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Something in Aritlok UI is broken or looks wrong
+about: Something in AritlokUI is broken or looks wrong
 title: ''
 labels: bug
 assignees: ''

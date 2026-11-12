@@ -1,10 +1,10 @@
 # AGENTS.md
 
-Guidance for AI coding agents working on Aritlok UI. Read this before changing anything.
+Guidance for AI coding agents working on AritlokUI. Read this before changing anything.
 
 ## What this is
 
-Aritlok UI is an addon for **World of Warcraft: Forever**. It does not draw its own unit frames or action bars. It sits on top of **EllesmereUI** and does two things:
+AritlokUI is an addon for **World of Warcraft: Forever**. It does not draw its own unit frames or action bars. It sits on top of **EllesmereUI** and does two things:
 
 1. **Installs a look.** A step-by-step installer copies the active EllesmereUI profile and writes settings into the copy (layout, fonts, colors, visibility).
 2. **Adds what EllesmereUI cannot do.** Gradient overlays on unit frame bars, and a fading backdrop plus a long experience bar behind the menu bar.
@@ -51,11 +51,13 @@ These are not style preferences. Breaking one produces errors or "Interface acti
 | --- | --- |
 | `AritlokUI.toc` | load order and metadata (has to stay in the root) |
 | `Core/Core.lua` | namespace, secret-value guards, saved variables, events, combat queue, probe |
+| `Core/Changelog.lua` | release notes for the in-game Changelog page (English only, mirrors `CHANGELOG.md`) |
 | `Core/Locale.lua` | the translation table `ns.L` |
 | `Core/Media.lua` | textures, fonts, color and gradient helpers |
 | `Locales/` | `deDE.lua`, `frFR.lua` |
 | `Modules/Shade.lua` | gradient overlays on EllesmereUI's unit frame bars |
 | `Modules/InfoBar.lua` | menu bar backdrop and the long experience bar |
+| `Modules/RestedXP.lua` | theme registered with RestedXP Guides (through its own theme list) |
 | `Modules/Options.lua` | settings page, `/aui` command, addon compartment entry |
 | `Modules/Installer/Core.lua` | option list, profile choice, screen geometry, `ns.Install` |
 | `Modules/Installer/*.lua` | one installer step per file (see below) |
@@ -113,7 +115,7 @@ The **Test** workflow (`.github/workflows/test.yml`) also runs luacheck, the fir
 
 ## Releases
 
-- Version lives in three places that must agree: `## Version:` in the TOC, `ns.VERSION` in `Core/Core.lua`, and the top entry of `CHANGELOG.md`.
+- Version lives in four places that must agree: `## Version:` in the TOC, `ns.VERSION` in `Core/Core.lua`, the top entry of `CHANGELOG.md`, and the top entry of `Core/Changelog.lua` (the same notes for the in-game Changelog page; the client cannot read the Markdown file).
 - Tags are pushed from `main`: `v0.2.0-beta.1` for a beta, `v0.2.0` for a stable release. The stable workflow refuses a tag that does not match the TOC version.
 - `.pkgmeta` lists what is left out of a release. Add repository-only files there.
 

@@ -15,12 +15,7 @@ L["written for interface %s, this client reports %s. Run /aui probe and retest."
 L["%d%% to level %d"] = "%d%% avant le niveau %d"
 L["action bars"] = "barres d'action"
 L["action bars (module has no settings in this profile)"] = "barres d'action (le module n'a aucun réglage dans ce profil)"
-L["Questie tracker look"] = "apparence du suivi de Questie"
 L["Questie quest tracker in place of EllesmereUI's"] = "suivi des quêtes de Questie à la place de celui d'EllesmereUI"
-L["Questie tracker style"] = "Style du suivi de Questie"
-L["Interface font, no backdrop."] = "Police de l'interface, sans fond."
-L["Use Questie's quest tracker"] = "Utiliser le suivi des quêtes de Questie"
-L["Replaces EllesmereUI's tracker."] = "Remplace le suivi d'EllesmereUI."
 L["chat"] = "discussion"
 L["%d chat window(s) docked as tabs"] = "%d fenêtre(s) de discussion ancrée(s) en onglets"
 L["combat visibility"] = "visibilité en combat"
@@ -33,8 +28,8 @@ L["Player, target, pet, target of target and focus."] = "Joueur, cible, familier
 L["Damage and healing meters"] = "Compteurs de dégâts et de soins"
 L["Enter a profile name."] = "Saisissez un nom de profil."
 L["The profile name is too long (40 characters at most)."] = "Le nom du profil est trop long (40 caractères au maximum)."
-L['A profile named "%s" already exists and was not made by Aritlok UI. Pick another name.'] =
-    'Un profil nommé "%s" existe déjà et n\'a pas été créé par Aritlok UI. Choisissez un autre nom.'
+L['A profile named "%s" already exists and was not made by AritlokUI. Pick another name.'] =
+    'Un profil nommé "%s" existe déjà et n\'a pas été créé par AritlokUI. Choisissez un autre nom.'
 L["EllesmereUI is not loaded."] = "EllesmereUI n'est pas chargé."
 L["EllesmereUI has no profile data yet. Log in once with it enabled, then try again."] =
     "EllesmereUI n'a pas encore de données de profil. Connectez-vous une fois avec EllesmereUI activé, puis réessayez."
@@ -115,12 +110,12 @@ L["Look"] = "Apparence"
 L["Combat"] = "Combat"
 L["Addons"] = "Addons"
 L["Install"] = "Installer"
-L["This installer sets up Aritlok UI on top of EllesmereUI in a few steps. Your current profile is copied, never changed."] =
-    "Cet installateur configure Aritlok UI par-dessus EllesmereUI en quelques étapes. Votre profil actuel est copié, jamais modifié."
-L["Important: after a larger Aritlok UI update you may need to run the installer again."] =
-    "Important : après une mise à jour majeure d'Aritlok UI, vous devrez peut-être relancer l'installateur."
-L["Aritlok UI writes its settings into a copy of your current EllesmereUI profile. Use the shared profile, or create one with its own name."] =
-    "Aritlok UI écrit ses réglages dans une copie de votre profil EllesmereUI actuel. Utilisez le profil partagé ou créez-en un avec son propre nom."
+L["This installer sets up AritlokUI on top of EllesmereUI in a few steps. Your current profile is copied, never changed."] =
+    "Cet installateur configure AritlokUI par-dessus EllesmereUI en quelques étapes. Votre profil actuel est copié, jamais modifié."
+L["Important: after a larger AritlokUI update you may need to run the installer again."] =
+    "Important : après une mise à jour majeure d'AritlokUI, vous devrez peut-être relancer l'installateur."
+L["AritlokUI writes its settings into a copy of your current EllesmereUI profile. Use the shared profile, or create one with its own name."] =
+    "AritlokUI écrit ses réglages dans une copie de votre profil EllesmereUI actuel. Utilisez le profil partagé ou créez-en un avec son propre nom."
 L["Pick how the unit frame bars are colored. You can switch later by running the installer again."] =
     "Choisissez la façon dont les barres des cadres d'unité sont colorées. Vous pourrez changer plus tard en relançant l'installateur."
 L["Choose which parts of the screen are arranged. Anything you switch off stays exactly as it is now."] =
@@ -130,8 +125,14 @@ L["Important: the UI scale applies to your whole account, not just this profile.
     "Important : l'échelle de l'interface s'applique à tout votre compte, pas seulement à ce profil."
 L["Switch on what should be hidden while you are out of combat. It shows again in a fight, and whenever the mouse is over it."] =
     "Activez ce qui doit être masqué hors combat. Cela réapparaît en combat et dès que la souris passe dessus."
-L["Aritlok UI can adjust other addons so they match. Currently supported: Questie."] =
-    "Aritlok UI peut ajuster d'autres addons pour qu'ils s'accordent avec le reste. Actuellement pris en charge : Questie."
+L["AritlokUI can adjust other addons so they match."] =
+    "AritlokUI peut ajuster d'autres addons pour qu'ils s'accordent avec le reste."
+L["Its quest tracker replaces EllesmereUI's."] = "Son suivi des quêtes remplace celui d'EllesmereUI."
+L["Guide window in the AritlokUI theme."] = "Fenêtre du guide dans le thème AritlokUI."
+L["General"] = "Général"
+L["Changelog"] = "Nouveautés"
+L["What changed in each version."] = "Ce qui a changé dans chaque version."
+L["RestedXP theme"] = "Thème RestedXP"
 L["Check your choices, then press Install. Nothing is changed before that."] =
     "Vérifiez vos choix, puis appuyez sur Installer. Rien n'est modifié avant cela."
 L["Class colors, deep left to bright right."] = "Couleurs de classe, profondes à gauche, lumineuses à droite."
