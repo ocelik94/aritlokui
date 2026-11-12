@@ -64,7 +64,8 @@ These are not style preferences. Breaking one produces errors or "Interface acti
 | `Modules/Installer/*.lua` | one installer step per file (see below) |
 | `Modules/Installer/Wizard.lua` | the installer window |
 | `Media/` | textures (`.tga`) and fonts used in game |
-| `Assets/` | images for the README; excluded from releases |
+| `Assets/` | the README icon; excluded from releases |
+| `.previews/` | screenshots for the README and the WowUp Hub, which reads this folder from the tagged commit; excluded from releases |
 
 A new Lua file has to be listed in `AritlokUI.toc` (backslashes in paths). CI fails if the TOC and the files on disk disagree.
 

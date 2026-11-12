@@ -10,6 +10,7 @@ ignore:
   - .gitignore
   - .luacheckrc
   - .pkgmeta
+  - .previews
   - .stylua.toml
   - AGENTS.md
   - Assets

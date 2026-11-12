@@ -12,12 +12,12 @@
   <a href="https://www.curseforge.com/wow/addons/aritlokui"><b>Download on CurseForge</b></a>
 </p>
 
-![AritlokUI in game](Assets/gameplay.jpg)
+![AritlokUI in game](.previews/gameplay.jpg)
 
 <details>
 <summary>The layout, shown in EllesmereUI's unlock mode</summary>
 
-![AritlokUI layout](Assets/layout.jpg)
+![AritlokUI layout](.previews/layout.jpg)
 
 </details>
 
@@ -167,7 +167,8 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Modules/Installer/Addons.lua` | settings for other addons (Questie, RestedXP) |
 | `Modules/Installer/Wizard.lua` | the installer window |
 | `Media/` | textures and fonts used in game |
-| `Assets/` | images for this README (left out of releases) |
+| `Assets/` | the icon for this README (left out of releases) |
+| `.previews/` | screenshots, shown by this README and by the WowUp Hub (left out of releases) |
 | `.pkgmeta` | what a release contains |
 | `CHANGELOG.md` | shown on CurseForge with each release |
 
