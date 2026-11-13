@@ -41,7 +41,7 @@ I.GAP = 6
 --  settings page. `key` is the field in AritlokUIDB.install.
 -------------------------------------------------------------------------------
 I.options = {
-    { key = "unitFrames", group = "layout", title = "Unit frames", desc = "Player, target and cooldown rows." },
+    { key = "unitFrames", group = "layout", title = "Unit frames", desc = "Player, target, party, raid and nameplates." },
     { key = "actionBars", group = "layout", title = "Action bars", desc = "Bottom rows, side blocks, mouse-over bar." },
     { key = "dataBar", group = "layout", title = "Menu bar", desc = "Needs EllesmereUI DataBars." },
     { key = "chat", group = "layout", title = "Chat", desc = "Bottom left, smaller text." },
@@ -190,6 +190,9 @@ local function Geometry(scale)
     g.btnH = g.btnW * 0.8
     g.step = g.btnH + g.pad
     g.rowW = 12 * g.btnW + 11 * g.pad
+    -- Bars 4 and 5: 4 x 3 blocks either side of the main stack.
+    g.blockW = 4 * g.btnW + 3 * g.pad
+    g.blockX = g.rowW / 2 + 4 * g.pad + g.blockW / 2
     -- Bar 1's bottom edge is 100 up; two more rows hang below it. Lift the
     -- whole stack if the lowest row would touch the menu bar.
     local lowest = 100 * k - 2 * g.step
@@ -199,8 +202,14 @@ local function Geometry(scale)
 
     -- Chat text area: bottom-left corner, clear of the menu bar. Shared by
     -- the chat step and the side bar placed next to it.
+    -- On a narrow screen (4:3, 5:4) the full width would run into the Bar 4
+    -- block, so the chat is narrowed to what fits beside it together with the
+    -- 2-wide side bar (ActionBars.lua) and a gap either side of that.
     g.chatX, g.chatY = 44, g.reserved + g.S(40)
-    g.chatW, g.chatH = g.S(520), g.S(200)
+    local sideW = 2 * g.btnW + g.pad
+    local fit = uiW / 2 - g.blockX - g.blockW / 2 - g.S(14) - sideW - g.S(14) - g.chatX
+    g.chatW = math.max(g.S(240), math.min(g.S(520), math.floor(fit)))
+    g.chatH = g.S(200)
 
     -- Unit frames: 300 x 36, centerd 390 left and right, bottom edge 420 up.
     g.frameW, g.frameH = g.S(300), g.S(36)

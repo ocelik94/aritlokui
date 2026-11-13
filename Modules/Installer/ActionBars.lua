@@ -70,8 +70,7 @@ local function Write(ctx, g)
 
     -- A 4 x 3 block on each side, as tall as the three rows. (Blizzard's two
     -- right-hand bars: here bars 4 and 5.)
-    local blockW = 4 * g.btnW + 3 * g.pad
-    local blockX = g.rowW / 2 + 4 * g.pad + blockW / 2
+    local blockW, blockX = g.blockW, g.blockX
     local blockY = g.row1 - g.step
     ShapeBar(Sub(bars, "Bar4"), 3)
     positions.Bar4 = Center(-blockX, blockY)

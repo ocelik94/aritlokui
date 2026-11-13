@@ -8,7 +8,9 @@ local addonName, ns = ...
 --
 --    * a post-hook on each button's OnClick (HookScript), which opens the
 --      profession window the same way EllesmereUI's own left-click does
---      (C_TradeSkillUI.OpenTradeSkill with the skill line), and
+--      (C_TradeSkillUI.OpenTradeSkill with the skill line),
+--    * a post-hook on its OnEnter that changes the tooltip's right-click line
+--      from "Open Profession Book" to the profession it now opens, and
 --    * the button's own right-click (a click on the profession micro button)
 --      is switched off by clearing its "*type2" attribute, and put back when
 --      the option is turned off.
@@ -51,11 +53,56 @@ local function Toggle(skillLine)
     end
 end
 
+-- The profession's name in the client's language: from the character's own
+-- professions when it has learned it, otherwise this addon's translation.
+local FALLBACK = { [FIRST_AID] = "First Aid", [COOKING] = "Cooking" }
+local function ProfessionName(skillLine)
+    if GetProfessions and GetProfessionInfo then
+        local list = { GetProfessions() }
+        for i = 1, 6 do
+            local index = list[i]
+            if index then
+                local name, _, _, _, _, _, id = GetProfessionInfo(index)
+                if id == skillLine and type(name) == "string" and name ~= "" and not ns.IsSecret(name) then return name end
+            end
+        end
+    end
+    return ns.L[FALLBACK[skillLine]]
+end
+
+-- EllesmereUI's tooltip for these buttons still says right-click opens the
+-- profession book. After it has drawn the tooltip (this runs after its
+-- OnEnter), that one line is relabelled. The tooltip is EllesmereUI's named
+-- frame; the line is found by its text, which EllesmereUI passes through its
+-- own translation (EllesmereUI.L), so the same lookup gives the text to find.
+local BOOK = "Open Profession Book"
+local function Relabel(skillLine)
+    local tip = _G.EllesmereUIDataBarsTip
+    if type(tip) ~= "table" or not tip.GetRegions or not tip:IsShown() then return end
+    local eui = _G.EllesmereUI
+    local book = BOOK
+    if type(eui) == "table" and type(eui.L) == "function" then book = eui.L(BOOK) or BOOK end
+    local regions = { tip:GetRegions() }
+    for i = 1, #regions do
+        local region = regions[i]
+        if region.GetObjectType and region:GetObjectType() == "FontString" then
+            local text = region:GetText()
+            if text ~= nil and not ns.IsSecret(text) and (text == book or text == BOOK) then
+                region:SetText(string.format(ns.L["Open %s"], ProfessionName(skillLine)))
+                return
+            end
+        end
+    end
+end
+
 local function Prepare(button, skillLine, on)
     if not hooked[button] then
         hooked[button] = { cleared = false }
         button:HookScript("OnClick", function(_, mouseButton)
             if mouseButton == "RightButton" and Enabled() then Toggle(skillLine) end
+        end)
+        button:HookScript("OnEnter", function()
+            if Enabled() then Relabel(skillLine) end
         end)
     end
     local state = hooked[button]

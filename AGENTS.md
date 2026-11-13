@@ -61,9 +61,10 @@ These are not style preferences. Breaking one produces errors or "Interface acti
 | `Modules/Professions.lua` | right-click on the menu bar's profession buttons (First Aid, Cooking) |
 | `Modules/Options.lua` | settings page, `/aui` command, addon compartment entry |
 | `Modules/Installer/Core.lua` | option list, profile choice, screen geometry, `ns.Install` |
-| `Modules/Installer/*.lua` | one installer step per file (see below) |
+| `Modules/Installer/*.lua` | one installer step per file (see below); `GroupFrames.lua` styles party/raid frames and nameplates |
 | `Modules/Installer/Wizard.lua` | the installer window |
 | `Media/` | textures (`.tga`) and fonts used in game |
+| `scripts/` | repository checks (`check.py`); excluded from releases |
 | `Assets/` | the README icon; excluded from releases |
 | `.previews/` | screenshots for the README and the WowUp Hub, which reads this folder from the tagged commit; excluded from releases |
 
@@ -98,7 +99,7 @@ Things to know before touching it:
 
 - English text is written in the code and is the lookup key: `ns.L["English text"]`. Use **US spelling**.
 - Text with changing parts uses `string.format` placeholders (`%s`, `%d`). A translation must keep them in the same order.
-- **Every new visible string needs a line in both `Locales/deDE.lua` and `Locales/frFR.lua`.** CI checks that the two files translate the same set of strings. It does **not** check that every string in the code is in them, so check that yourself.
+- **Every new visible string needs a line in both `Locales/deDE.lua` and `Locales/frFR.lua`.** `scripts/check.py` fails on a string in the code that reads like text and has no translation.
 - Strings stored in tables (option titles, step names) stay English there and are translated where they are shown.
 - `/aui probe` output is diagnostic and stays in English on purpose.
 - Keep installer text short: one opening paragraph per page, one line per option. German and French run longer than English, and labels are single-line.
@@ -109,9 +110,10 @@ Run these before saying a change is done.
 
 ```bash
 stylua --check .
+python3 scripts/check.py
 ```
 
-The **Test** workflow (`.github/workflows/test.yml`) also runs luacheck, the first-line check, a scan for forbidden APIs, the TOC check and the locale parity check. Its shell steps can be run locally by copying them out of the workflow file.
+`scripts/check.py` (Python 3, standard library only) checks the first line of every Lua file, forbidden APIs, that the TOC lists exactly the Lua files on disk, that German and French translate the same strings with the same placeholders, that **every text string in the code has a translation**, and that the version agrees in the TOC, `Core/Core.lua`, `CHANGELOG.md` and `Core/Changelog.lua`. Strings that look like text but are not shown translated (font and addon names, probe output) are listed in `NOT_TEXT` at the top of the script. The **Test** workflow runs StyLua, luacheck and this script.
 
 **What no check can tell you:** whether the addon works. There is no way to run the game client from here. State plainly what was verified by tooling and what has not been seen in game, and ask for a screenshot or the output of `/aui probe` when a result depends on the client.
 

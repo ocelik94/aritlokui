@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0
+
+- Party and raid frames and nameplates get the unit frame look: flat bar texture, the same dark bar background and a thin black border (part of the "Unit frames" switch). Party and raid frames follow the Dark theme too
+- On narrow screens (4:3, 5:4) the chat is narrower, so it and the side bar next to it no longer overlap the action bars
+- The tooltip of the menu bar's profession buttons now says what right-click opens (First Aid or Cooking) instead of the profession book
+
+Run `/aui install` again to apply these.
+
 ## 0.5.0
 
 - One background color for every window: bags, the Blizzard windows EllesmereUI skins (switched to its flat "Modern" style), tooltips and the RestedXP guide. New "One window color" switch on the Look page; the window and tooltip part applies to every EllesmereUI profile

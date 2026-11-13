@@ -23,11 +23,14 @@
 
 ## Features
 
-- **Gradient unit frames** – class-colored bars that run from a deep left end to a bright right end, on health, power and cast bars
+- **Gradient unit frames** – class-colored bars that run from a deep left end to a bright right end, on health, power and cast bars; the pet frame in a darker shade of your class color
 - **Two themes** – Gradient (default) and Dark
+- **Party, raid frames and nameplates** in the same flat look as the unit frames
+- **One window color** – bags, the Blizzard windows EllesmereUI skins, and tooltips share one dark background
+- **Compact bags** – EllesmereUI's compact view, opening as one bag
 - **Clean center layout** – player and target frames either side of a free center, with the power bar and cooldown manager in between
 - **Compact action bars** – three rows at the bottom center, two side blocks, and a mouse-over bar next to chat
-- **Menu bar** – a slim strip along the bottom edge with a fading backdrop: micro menu, a long experience bar, durability, clock, professions, gold and performance
+- **Menu bar** – a slim strip along the bottom edge with a fading backdrop: micro menu, a long experience bar, durability, clock, professions, gold and performance; right-click the professions for First Aid and Cooking
 - **Tidy screen edges** – chat bottom left; minimap, quest tracker, tooltip and damage / healing meters down the right
 - **Step-by-step installer** – short pages, every part optional, with a check that your EllesmereUI version is the tested one
 - **Shared or own profile** – install into the shared `AritlokUI` profile or one with a name you choose
@@ -37,6 +40,7 @@
 - **Pixel-perfect scale** – one UI unit per screen pixel (0.5333 at 2560 × 1440)
 - **Monaspace Neon** font, with Argon bundled as an alternative
 - **Non-destructive** – your EllesmereUI profile is copied, never overwritten
+- **Changelog in game** – what changed in each version, on its own page in EllesmereUI's settings
 - **English, German and French** – the installer, settings page and chat messages follow your client language
 
 ## Requirements
@@ -50,6 +54,8 @@ AritlokUI styles and arranges these EllesmereUI modules, so keep them enabled:
 | Module | Used for |
 | --- | --- |
 | Unit Frames | player, target, pet, target-of-target, focus |
+| Raid Frames | party and raid frame look |
+| Nameplates | nameplate look |
 | Action Bars | bars 1–6, stance and pet bars |
 | Resource Bars | its standalone cast bar is switched off in favor of the one under the player frame |
 | DataBars | the menu bar |
@@ -58,6 +64,8 @@ AritlokUI styles and arranges these EllesmereUI modules, so keep them enabled:
 | Damage Meters | damage and healing windows |
 | Quest Tracker | tracker position and size |
 | Minimap | minimap position |
+| Bags | compact one-bag view, window color |
+| Blizzard Skin | window and tooltip color |
 
 A module that is switched off is simply skipped by the installer.
 
@@ -139,7 +147,7 @@ Releases are made by pushing a tag from `main`:
 | `v0.2.0-beta.1` | beta file |
 | `v0.2.0` | stable file (the tag must match `## Version:` in the TOC) |
 
-Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/Core.lua`, `CHANGELOG.md`, and `Core/Changelog.lua` (the same notes, shown in game).
+Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/Core.lua`, `CHANGELOG.md`, and `Core/Changelog.lua` (the same notes, shown in game). `python3 scripts/check.py` fails when they disagree, and checks translations and the TOC as well.
 
 ### Layout of the addon
 
@@ -160,6 +168,7 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Modules/Installer/Look.lua` | style, font, accent color, UI scale |
 | `Modules/Installer/MenuBar.lua` | the menu bar (EllesmereUI DataBars) |
 | `Modules/Installer/UnitFrames.lua` | unit frames, cast bars, cooldown manager rows |
+| `Modules/Installer/GroupFrames.lua` | party and raid frames, nameplates |
 | `Modules/Installer/ActionBars.lua` | action, stance and pet bars |
 | `Modules/Installer/Chat.lua` | chat position, fonts and docking |
 | `Modules/Installer/RightEdge.lua` | minimap, quest tracker, tooltip, meters |
@@ -167,6 +176,7 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Modules/Installer/Addons.lua` | settings for other addons (Questie, RestedXP) |
 | `Modules/Installer/Wizard.lua` | the installer window |
 | `Media/` | textures and fonts used in game |
+| `scripts/` | repository checks run by CI (left out of releases) |
 | `Assets/` | the icon for this README (left out of releases) |
 | `.previews/` | screenshots, shown by this README and by the WowUp Hub (left out of releases) |
 | `.pkgmeta` | what a release contains |
