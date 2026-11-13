@@ -8,7 +8,6 @@ ignore:
   - .editorconfig
   - .github
   - .gitignore
-  - .luacheckrc
   - .pkgmeta
   - .previews
   - .stylua.toml

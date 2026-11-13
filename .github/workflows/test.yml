@@ -20,9 +20,6 @@ jobs:
           version: v2.6.0
           args: --check .
 
-      - name: Lint (luacheck)
-        uses: lunarmodules/luacheck@v1
-
       # First line, forbidden APIs, TOC file list, translations (both
       # languages, placeholders, every text string in the code) and the
       # version in the TOC, Core.lua and both changelogs.

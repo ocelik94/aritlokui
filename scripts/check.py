@@ -4,7 +4,7 @@ repository root:
 
     python3 scripts/check.py
 
-The Test workflow runs the same script. StyLua and luacheck run separately.
+The Test workflow runs the same script. StyLua runs separately.
 Exits non-zero when a check fails; warnings do not fail the run.
 """
 

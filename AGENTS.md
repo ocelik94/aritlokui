@@ -113,7 +113,7 @@ stylua --check .
 python3 scripts/check.py
 ```
 
-`scripts/check.py` (Python 3, standard library only) checks the first line of every Lua file, forbidden APIs, that the TOC lists exactly the Lua files on disk, that German and French translate the same strings with the same placeholders, that **every text string in the code has a translation**, and that the version agrees in the TOC, `Core/Core.lua`, `CHANGELOG.md` and `Core/Changelog.lua`. Strings that look like text but are not shown translated (font and addon names, probe output) are listed in `NOT_TEXT` at the top of the script. The **Test** workflow runs StyLua, luacheck and this script.
+`scripts/check.py` (Python 3, standard library only) checks the first line of every Lua file, forbidden APIs, that the TOC lists exactly the Lua files on disk, that German and French translate the same strings with the same placeholders, that **every text string in the code has a translation**, and that the version agrees in the TOC, `Core/Core.lua`, `CHANGELOG.md` and `Core/Changelog.lua`. Strings that look like text but are not shown translated (font and addon names, probe output) are listed in `NOT_TEXT` at the top of the script. The **Test** workflow runs StyLua and this script.
 
 **What no check can tell you:** whether the addon works. There is no way to run the game client from here. State plainly what was verified by tooling and what has not been seen in game, and ask for a screenshot or the output of `/aui probe` when a result depends on the client.
 

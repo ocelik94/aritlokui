@@ -138,7 +138,7 @@ Changes to existing files load with `/reload`. New files, and changes to the `.t
 
 ### Checks and releases
 
-Every push to `main` and every pull request runs the **Test** workflow: a StyLua formatting check (run `stylua .` before committing), luacheck, plus checks that each Lua file starts with the namespace line, that nothing forbidden is used (combat log, secure snippets), and that the TOC matches the files.
+Every push to `main` and every pull request runs the **Test** workflow: a StyLua formatting check (run `stylua .` before committing) and `scripts/check.py`, which checks that each Lua file starts with the namespace line, that nothing forbidden is used (combat log, secure snippets), that the TOC matches the files, that every text is translated, and that the version agrees everywhere.
 
 Releases are made by pushing a tag from `main`:
 
