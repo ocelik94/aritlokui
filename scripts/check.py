@@ -123,7 +123,8 @@ def check_locales(files):
         src = read(path)
         strings, _ = lualex.scan(src)
         for idx, (value, line, start, _end) in enumerate(strings):
-            if value in tables[path] and tables[path][value] == line and idx + 1 < len(strings):
+            is_key = src[max(0, start - 2):start] == "L["
+            if is_key and value in tables[path] and idx + 1 < len(strings):
                 translation = strings[idx + 1][0]
                 if placeholders(value) != placeholders(translation):
                     error(f"{path}:{line}", f"placeholders differ from the English text: {value!r}")

@@ -168,6 +168,40 @@ L["Party and raid frames in the center."] = "Cadres de groupe et de raid au cent
 L["healer layout (EllesmereUI Raid Frames is not loaded)"] = "disposition soigneur (EllesmereUI Raid Frames n'est pas chargé)"
 L["party and raid frames back where they were"] = "cadres de groupe et de raid remis à leur place"
 L["healer layout"] = "disposition soigneur"
+L["%s: %s %d%%"] = "%s : %s %d%%"
+L["%d%% rested"] = "%d%% reposé"
+L["Standing"] = "Réputation"
+L["Progress"] = "Progression"
+L["Level %d"] = "Niveau %d"
+L["Experience"] = "Expérience"
+L["To next level"] = "Jusqu'au niveau suivant"
+L["Rested"] = "Reposé"
+L["Resting: rested experience builds up."] = "Repos : l'expérience de repos s'accumule."
+L["Rested experience"] = "Expérience de repos"
+L["A lighter section on the bar shows how far your rested bonus reaches."] =
+    "Une partie plus claire de la barre montre jusqu'où va votre bonus de repos."
+L["Reputation at max level"] = "Réputation au niveau maximum"
+L["At max level the bar shows the faction you watch in the reputation window."] =
+    "Au niveau maximum, la barre affiche la faction suivie dans la fenêtre de réputation."
+L["Menu bar"] = "Barre de menu"
+L["Micro menu, durability, professions, gold and the clock. Right-click a profession for First Aid or Cooking. Hover the experience bar for rested experience; at max level it shows your watched reputation."] =
+    "Micro-menu, durabilité, métiers, or et horloge. Clic droit sur un métier pour Secourisme ou Cuisine. Survolez la barre d'expérience pour l'expérience de repos ; au niveau maximum, elle affiche la réputation suivie."
+L["Side bar"] = "Barre latérale"
+L["Twelve more action buttons next to the chat. They only show while the mouse is over them."] =
+    "Douze boutons d'action de plus à côté du chat. Ils n'apparaissent que lorsque la souris les survole."
+L["Out of combat"] = "Hors combat"
+L["Some parts of the screen are hidden while you are out of combat. They come back in a fight, and whenever the mouse is over them. Change this with /aui install."] =
+    "Certaines parties de l'écran sont masquées hors combat. Elles reviennent en combat et dès que la souris les survole. Modifiable avec /aui install."
+L["Settings"] = "Réglages"
+L["Type /aui for AritlokUI's settings inside EllesmereUI's options: theme, accent color, AFK screen and the changelog. /aui install runs the installer again, /aui tour shows this tour."] =
+    "Tapez /aui pour les réglages d'AritlokUI dans les options d'EllesmereUI : thème, couleur d'accent, écran AFK et nouveautés. /aui install relance l'installateur, /aui tour affiche cette visite."
+L["Next"] = "Suivant"
+L["Done"] = "Terminé"
+L["Skip tour"] = "Passer la visite"
+L["Show the tour"] = "Afficher la visite"
+L["the tour cannot start in combat."] = "la visite ne peut pas démarrer en combat."
+L["/aui tour                 show the tour of the layout again"] =
+    "/aui tour                 afficher à nouveau la visite de la disposition"
 L["General"] = "Général"
 L["Changelog"] = "Nouveautés"
 L["What changed in each version."] = "Ce qui a changé dans chaque version."

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0
+
+- Rested experience on the long XP bar: a lighter section shows how far your rested bonus reaches, and the label shows it in percent. Hover the bar for experience, rested amount and resting status
+- At max level the XP bar shows your watched faction's reputation instead, in the standing's color (with a tooltip). Both can be switched off under Menu Bar in the settings
+- First-run tour: after installing, a few short steps point out the menu bar, the mouse-over side bar, what hides out of combat, and where the settings are. `/aui tour` or the button on the Theme page shows it again
+
 ## 0.7.0
 
 - AFK screen: while you are away the interface fades out, the camera turns slowly, and a panel shows your character, level, guild, time away and the clock. Ends when you come back, on a click, or when combat starts. Settings on the Theme page; `/aui afk` shows a preview

@@ -60,6 +60,7 @@ These are not style preferences. Breaking one produces errors or "Interface acti
 | `Modules/RestedXP.lua` | theme registered with RestedXP Guides (through its own theme list) |
 | `Modules/Professions.lua` | right-click on the menu bar's profession buttons (First Aid, Cooking) |
 | `Modules/AFK.lua` | AFK screen (UIParent alpha, a frame on WorldFrame, camera turn) |
+| `Modules/Tour.lua` | first-run tour (highlights placed at a target's screen position, never anchored to it) |
 | `Modules/Options.lua` | settings page, `/aui` command, addon compartment entry |
 | `Modules/Installer/Core.lua` | option list, profile choice, screen geometry, `ns.Install` |
 | `Modules/Installer/*.lua` | one installer step per file (see below); `GroupFrames.lua` styles party/raid frames and nameplates and places them for the healer layout |

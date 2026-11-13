@@ -33,7 +33,8 @@
 - **Compact bags** – EllesmereUI's compact view, opening as one bag
 - **Clean center layout** – player and target frames either side of a free center, with the power bar and cooldown manager in between
 - **Compact action bars** – three rows at the bottom center, two side blocks, and a mouse-over bar next to chat
-- **Menu bar** – a slim strip along the bottom edge with a fading backdrop: micro menu, a long experience bar, durability, clock, professions, gold and performance; right-click the professions for First Aid and Cooking
+- **Menu bar** – a slim strip along the bottom edge with a fading backdrop: micro menu, a long experience bar with rested experience (your watched reputation at max level), durability, clock, professions, gold and performance; right-click the professions for First Aid and Cooking
+- **First-run tour** – a few short steps after installing point out the parts that are easy to miss
 - **Tidy screen edges** – chat bottom left; minimap, quest tracker, tooltip and damage / healing meters down the right
 - **Step-by-step installer** – short pages, every part optional, with a check that your EllesmereUI version is the tested one
 - **Shared or own profile** – install into the shared `AritlokUI` profile or one with a name you choose
@@ -99,6 +100,7 @@ The installer copies your active EllesmereUI profile to a new one and writes its
 | `/aui status` | what is switched on |
 | `/aui probe` | print which client and EllesmereUI functions this build has |
 | `/aui afk` | preview the AFK screen for ten seconds |
+| `/aui tour` | show the tour of the layout again |
 | `/aui help` | list the commands |
 
 `/aritlokui` works as an alias for `/aui`.
@@ -168,6 +170,7 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Modules/RestedXP.lua` | the theme registered with RestedXP Guides |
 | `Modules/Professions.lua` | right-click on the menu bar's profession buttons |
 | `Modules/AFK.lua` | the AFK screen |
+| `Modules/Tour.lua` | the first-run tour |
 | `Modules/Options.lua` | settings page, slash command, addon compartment entry |
 | `Modules/Installer/Core.lua` | the option list, screen geometry, and the install run |
 | `Modules/Installer/Look.lua` | style, font, accent color, UI scale |

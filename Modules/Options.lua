@@ -236,6 +236,15 @@ local function BuildThemePage(W, parent, y)
         ns.OpenInstaller()
     end)
     y = y - h
+    _, h = W:WideButton(parent, "Show the tour", y, function()
+        if prebuild then return end
+        -- The settings panel sits on top of everything; close it so the
+        -- tour's highlights can be seen.
+        local eui = _G.EllesmereUI
+        if type(eui) == "table" and eui.Hide then eui:Hide() end
+        ns.StartTour()
+    end)
+    y = y - h
 
     return y
 end
@@ -283,6 +292,16 @@ local function BuildBarPage(W, parent, y)
         cfg.xpOffset = v
         Refresh()
     end)
+    y = y - h
+    _, h = W:Toggle(parent, "Rested experience", y, function() return cfg.showRested end, function(v)
+        cfg.showRested = v
+        Refresh()
+    end, "A lighter section on the bar shows how far your rested bonus reaches.")
+    y = y - h
+    _, h = W:Toggle(parent, "Reputation at max level", y, function() return cfg.repAtMax end, function(v)
+        cfg.repAtMax = v
+        Refresh()
+    end, "At max level the bar shows the faction you watch in the reputation window.")
     y = y - h
 
     _, h = W:SectionHeader(parent, "PROFESSIONS", y)
@@ -419,6 +438,7 @@ local HELP = {
     "/aui status               what is switched on",
     "/aui probe                print which client and EllesmereUI functions this build has",
     "/aui afk                  preview the AFK screen for ten seconds",
+    "/aui tour                 show the tour of the layout again",
     "/aui help                 this list",
 }
 
@@ -524,6 +544,10 @@ commands.status = function()
 end
 
 commands.probe = function() ns.Probe() end
+
+commands.tour = function()
+    if not ns.StartTour() then ns.Print(L["the tour cannot start in combat."]) end
+end
 
 commands.afk = function()
     if InCombatLockdown() then

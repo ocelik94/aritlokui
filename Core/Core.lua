@@ -5,7 +5,7 @@ local addonName, ns = ...
 --  event frame with its handler table, and the combat queue.
 -------------------------------------------------------------------------------
 
-ns.VERSION = "0.7.0"
+ns.VERSION = "0.8.0"
 ns.TAG = "|cff18a8ffAritlok|r|cffffffffUI|r"
 
 -- Interface number this addon was written against. RETEST when the TOC number
@@ -97,6 +97,8 @@ ns.defaults = {
         xpLength = 320, -- length of the long XP bar
         xpOffset = 320, -- how far from the left screen edge it starts
         xpLong = false, -- set by the installer once EllesmereUI's own XP block is replaced
+        showRested = true, -- rested experience on the XP bar
+        repAtMax = true, -- the watched faction's reputation at max level
         clock24 = true,
         profRightClick = true, -- right-click the profession buttons: First Aid, Cooking
     },
@@ -149,6 +151,7 @@ ns.defaults = {
     questieOwnsTracker = false, -- the installer switched EllesmereUI's quest tracker off for Questie's
     installed = false,
     wizardSeen = false, -- the installer has been shown once on this account
+    tourSeen = false, -- the first-run tour has been shown (Modules/Tour.lua)
 }
 
 local function MergeDefaults(dst, src)
@@ -328,6 +331,11 @@ function ns.Probe()
         "C_TradeSkillUI.GetBaseProfessionInfo",
         "UnitXP",
         "UnitXPMax",
+        "GetXPExhaustion",
+        "IsPlayerAtEffectiveMaxLevel",
+        "GetMaxLevelForPlayerExpansion",
+        "C_Reputation.GetWatchedFactionData",
+        "GetWatchedFactionInfo",
         "UnitLevel",
         "FCF_DockFrame",
         "Enum.DamageMeterType",
