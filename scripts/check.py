@@ -141,7 +141,9 @@ def check_locales(files):
             used.add(value)
             if f in NOT_TRANSLATED_FILES or value in known:
                 continue
-            if not looks_like_text(value):
+            # A direct lookup, L["..."], is text whatever it looks like.
+            direct = src[max(0, start - 2):start] == "L["
+            if not direct and not looks_like_text(value):
                 continue
             before = src[max(0, start - 40):start]
             if before.rstrip().endswith(NOT_TEXT_CALLS) or before.rstrip().endswith('LSM:Register("font",'):

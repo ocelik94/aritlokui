@@ -1070,10 +1070,42 @@ end
 -- EllesmereUI's own first-run pickers quiet until a profile import stamps
 -- them done, and this installer copies a profile instead of importing one.
 local offered = false
+-- EllesmereUI's own first-run windows come first. On a fresh EllesmereUI
+-- install it shows a module picker (which always ends in a reload) and, on
+-- Forever, a style picker on the login after. While either is due this window
+-- waits: it checks again every few seconds and opens once they are done,
+-- which may be a login or two later. The installer also needs the profile
+-- data EllesmereUI only writes after that first run.
+--
+-- RETEST after an EllesmereUI update (read from 9.8.4,
+-- EllesmereUI_FirstInstall.lua and EllesmereUI_StyleChoicePopup.lua):
+-- EllesmereUI._firstInstallPending (module picker due this session) and
+-- EllesmereUIDB.styleChoicePending (style picker due).
+local function EllesmereUIFirstRunDue()
+    local eui = _G.EllesmereUI
+    if type(eui) == "table" and eui._firstInstallPending then return true end
+    local db = _G.EllesmereUIDB
+    if type(db) ~= "table" or db.styleChoicePending then return true end
+    return type(db.profiles) ~= "table" or next(db.profiles) == nil
+end
+
 ns.On("PLAYER_ENTERING_WORLD", function()
     if offered then return end
     offered = true
     local db = ns.db
     if not db or db.installed or db.wizardSeen then return end
-    if C_Timer and C_Timer.After then C_Timer.After(3, function() ns.RunOutOfCombat(ns.OpenInstaller) end) end
+    if not (C_Timer and C_Timer.After) then return end
+
+    local tries = 0
+    local function Try()
+        if ns.db.installed or ns.db.wizardSeen then return end
+        if EllesmereUIFirstRunDue() then
+            -- Up to five minutes this session; after that, the next login.
+            tries = tries + 1
+            if tries < 100 then C_Timer.After(3, Try) end
+            return
+        end
+        ns.RunOutOfCombat(ns.OpenInstaller)
+    end
+    C_Timer.After(3, Try)
 end)

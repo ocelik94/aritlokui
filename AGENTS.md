@@ -59,9 +59,10 @@ These are not style preferences. Breaking one produces errors or "Interface acti
 | `Modules/InfoBar.lua` | menu bar backdrop and the long experience bar |
 | `Modules/RestedXP.lua` | theme registered with RestedXP Guides (through its own theme list) |
 | `Modules/Professions.lua` | right-click on the menu bar's profession buttons (First Aid, Cooking) |
+| `Modules/AFK.lua` | AFK screen (UIParent alpha, a frame on WorldFrame, camera turn) |
 | `Modules/Options.lua` | settings page, `/aui` command, addon compartment entry |
 | `Modules/Installer/Core.lua` | option list, profile choice, screen geometry, `ns.Install` |
-| `Modules/Installer/*.lua` | one installer step per file (see below); `GroupFrames.lua` styles party/raid frames and nameplates |
+| `Modules/Installer/*.lua` | one installer step per file (see below); `GroupFrames.lua` styles party/raid frames and nameplates and places them for the healer layout |
 | `Modules/Installer/Wizard.lua` | the installer window |
 | `Media/` | textures (`.tga`) and fonts used in game |
 | `scripts/` | repository checks (`check.py`); excluded from releases |

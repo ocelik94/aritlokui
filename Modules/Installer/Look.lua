@@ -45,16 +45,33 @@ I.AddStep({
 
 -- The accent is what EllesmereUI's quest tracker headers, damage meter title
 -- and bars, chat underline and DataBar labels are all colored with, so one
--- setting keeps them the same color: the player's class color.
+-- setting keeps them the same color: the player's class color, or one fixed
+-- color for every character (AritlokUIDB.accent, set on the settings page).
+--
+-- EllesmereUI.SetActiveProfileAccent(custom, useClass) stores the choice in
+-- the ACTIVE profile (euiAccent.custom / euiAccent.useClass; useClass wins
+-- over custom, so it is passed as false for a fixed color) and applies
+-- nothing by itself; RefreshAccent repaints live. Read from 9.8.4,
+-- EllesmereUI_UICore.lua.
+function I.ApplyAccent(eui)
+    if type(eui) ~= "table" or not (eui.SetActiveProfileAccent and eui.RefreshAccent) then return false end
+    local accent = ns.db.accent
+    if accent.mode == "fixed" and type(accent.color) == "table" then
+        local c = accent.color
+        eui.SetActiveProfileAccent({ r = c.r, g = c.g, b = c.b }, false)
+    else
+        eui.SetActiveProfileAccent(nil, true)
+    end
+    eui.RefreshAccent()
+    return true
+end
+
 I.AddStep({
     order = 30,
     option = "accent",
     run = function(ctx)
-        local eui = ctx.eui
-        if eui.SetActiveProfileAccent and eui.RefreshAccent then
-            eui.SetActiveProfileAccent(nil, true) -- useClass = true, on this profile
-            eui.RefreshAccent()
-            ctx:Done("class-color accent")
+        if I.ApplyAccent(ctx.eui) then
+            ctx:Done(ns.db.accent.mode == "fixed" and "fixed accent color" or "class-color accent")
         else
             ctx:Skip("accent color")
         end

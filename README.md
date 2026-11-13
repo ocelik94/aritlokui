@@ -25,7 +25,10 @@
 
 - **Gradient unit frames** – class-colored bars that run from a deep left end to a bright right end, on health, power and cast bars; the pet frame in a darker shade of your class color
 - **Two themes** – Gradient (default) and Dark
-- **Party, raid frames and nameplates** in the same flat look as the unit frames
+- **Accent color** – your class color on every character, or one fixed color of your choice
+- **Party, raid frames and nameplates** in the same flat look as the unit frames, with the same gradients on party and raid health bars
+- **Healer layout** – optional: party and raid frames in the center of the screen, below the cooldown manager
+- **AFK screen** – while you are away, the interface fades out and your character, time away and the clock are shown
 - **One window color** – bags, the Blizzard windows EllesmereUI skins, and tooltips share one dark background
 - **Compact bags** – EllesmereUI's compact view, opening as one bag
 - **Clean center layout** – player and target frames either side of a free center, with the power bar and cooldown manager in between
@@ -95,6 +98,7 @@ The installer copies your active EllesmereUI profile to a new one and writes its
 | `/aui xp <length> [offset]` | length of the experience bar on the menu bar, and where it starts |
 | `/aui status` | what is switched on |
 | `/aui probe` | print which client and EllesmereUI functions this build has |
+| `/aui afk` | preview the AFK screen for ten seconds |
 | `/aui help` | list the commands |
 
 `/aritlokui` works as an alias for `/aui`.
@@ -163,12 +167,13 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Modules/InfoBar.lua` | the menu bar's fading backdrop and the long experience bar |
 | `Modules/RestedXP.lua` | the theme registered with RestedXP Guides |
 | `Modules/Professions.lua` | right-click on the menu bar's profession buttons |
+| `Modules/AFK.lua` | the AFK screen |
 | `Modules/Options.lua` | settings page, slash command, addon compartment entry |
 | `Modules/Installer/Core.lua` | the option list, screen geometry, and the install run |
 | `Modules/Installer/Look.lua` | style, font, accent color, UI scale |
 | `Modules/Installer/MenuBar.lua` | the menu bar (EllesmereUI DataBars) |
 | `Modules/Installer/UnitFrames.lua` | unit frames, cast bars, cooldown manager rows |
-| `Modules/Installer/GroupFrames.lua` | party and raid frames, nameplates |
+| `Modules/Installer/GroupFrames.lua` | party and raid frames, nameplates, the healer layout |
 | `Modules/Installer/ActionBars.lua` | action, stance and pet bars |
 | `Modules/Installer/Chat.lua` | chat position, fonts and docking |
 | `Modules/Installer/RightEdge.lua` | minimap, quest tracker, tooltip, meters |

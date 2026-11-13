@@ -74,3 +74,104 @@ I.AddStep({
         end
     end,
 })
+
+-------------------------------------------------------------------------------
+--  Healer layout (option "healer"): party and raid frames move to the center
+--  of the screen, in the band between the cooldown manager rows (which end 366
+--  up) and the stance bar over the action bars, so the frames you heal sit
+--  where you are already looking. They get smaller to fit: 88 x 36, party in
+--  one row of five, raid in groups of five going down, groups side by side.
+--  A 40-player raid grows to the right from there, still below the unit
+--  frames.
+--
+--  The values it replaces are kept (AritlokUIDB.healerBefore) and put back
+--  when the option is switched off and the installer runs again.
+--
+--  RETEST after an EllesmereUI update (read from 9.8.4):
+--    raid: unlockPos {point, relPoint, x, y} on UIParent, the TOP LEFT of the
+--      20-player footprint (EUI_RaidFrames_Reload.lua _RFBaseTopLeft);
+--      frameWidth, frameHeight, unitGrowth, groupGrowth.
+--    party: partyUnlockPos (same shape, the party container's own point),
+--      partyFrameWidth, partyFrameHeight, partyHorizontal.
+--    EllesmereUIDB._capturedOnce_RF: until it is set, EllesmereUI replaces
+--      unlockPos with its first-install default at login
+--      (EUI_RaidFrames_Lifecycle.lua OnEnable).
+--    An element anchor set in unlock mode (EllesmereUIDB.unlockAnchors)
+--    takes priority over these positions.
+-------------------------------------------------------------------------------
+local KEPT = { "unlockPos", "partyUnlockPos", "frameWidth", "frameHeight", "unitGrowth", "groupGrowth" }
+local KEPT_PARTY = { "partyFrameWidth", "partyFrameHeight", "partyHorizontal" }
+
+local function Copy(v)
+    if type(v) ~= "table" then return v end
+    local out = {}
+    for k, x in pairs(v) do
+        out[k] = x
+    end
+    return out
+end
+
+local function Keep(db, rf)
+    if db.healerBefore then return end -- already kept by an earlier install
+    local before = {}
+    for _, list in ipairs({ KEPT, KEPT_PARTY }) do
+        for i = 1, #list do
+            before[list[i]] = Copy(rf[list[i]])
+        end
+    end
+    db.healerBefore = before
+end
+
+local function Restore(db, rf)
+    local before = db.healerBefore
+    if type(before) ~= "table" then return false end
+    for _, list in ipairs({ KEPT, KEPT_PARTY }) do
+        for i = 1, #list do
+            local key = list[i]
+            rf[key] = Copy(before[key]) -- nil when it was unset before
+        end
+    end
+    db.healerBefore = nil
+    return true
+end
+
+I.AddStep({
+    order = 106,
+    option = nil, -- runs either way: placing, or putting back
+    run = function(ctx)
+        local rf = ctx.addons.EllesmereUIRaidFrames
+        if type(rf) ~= "table" then
+            if ctx.want.healer then ctx:Skip("healer layout (EllesmereUI Raid Frames is not loaded)") end
+            return
+        end
+        if not ctx.want.healer then
+            if Restore(ctx.db, rf) then ctx:Done("party and raid frames back where they were") end
+            return
+        end
+        local g = ctx:Geometry()
+        if not g then
+            ctx:Skip("healer layout")
+            return
+        end
+
+        Keep(ctx.db, rf)
+        local S = g.S
+        local w, h = S(88), S(36)
+        local top = g.Y(366) - S(10) -- just under the cooldown manager rows
+
+        rf.frameWidth, rf.frameHeight = w, h
+        rf.unitGrowth, rf.groupGrowth = "DOWN", "RIGHT"
+        -- The point is the top of the 20-player footprint (four groups side
+        -- by side), so the usual raid size sits centered.
+        rf.unlockPos = { point = "TOP", relPoint = "CENTER", x = 0, y = top }
+
+        rf.partyFrameWidth, rf.partyFrameHeight = w, h
+        rf.partyHorizontal = true
+        rf.partyUnlockPos = { point = "TOP", relPoint = "CENTER", x = 0, y = top }
+
+        -- Without this, EllesmereUI's first-install pass would move the raid
+        -- frames back to its default spot at the next login.
+        if type(_G.EllesmereUIDB) == "table" then _G.EllesmereUIDB._capturedOnce_RF = true end
+        ctx:Done("healer layout")
+    end,
+})

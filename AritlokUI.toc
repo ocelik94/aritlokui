@@ -4,7 +4,7 @@
 ## Notes-deDE: Ein dunkles, flaches Interface auf Basis von EllesmereUI: Einheitenfenster, Aktionsleisten, Menüleiste, Chat, Taschen und Fenster in einem Look, eingerichtet über einen Installer in wenigen Schritten.
 ## Notes-frFR: Une interface sombre et épurée basée sur EllesmereUI : cadres d'unité, barres d'action, barre de menu, chat, sacs et fenêtres dans un même style, configurée par un installateur pas à pas.
 ## Author: Aritlok
-## Version: 0.6.0
+## Version: 0.7.0
 ## SavedVariables: AritlokUIDB
 ## Category: User Interface
 ## IconTexture: Interface\AddOns\AritlokUI\Media\AritlokIcon.tga
@@ -26,6 +26,7 @@ Modules\Shade.lua
 Modules\InfoBar.lua
 Modules\RestedXP.lua
 Modules\Professions.lua
+Modules\AFK.lua
 
 Modules\Installer\Core.lua
 Modules\Installer\Look.lua

@@ -93,6 +93,40 @@ local function BuildThemePage(W, parent, y)
     )
     y = y - h
 
+    _, h = W:SectionHeader(parent, "ACCENT COLOR", y)
+    y = y - h
+    -- Applied live only to a profile this addon made; otherwise at the next
+    -- install (the installer never writes into a profile it did not make).
+    local function ApplyAccentNow()
+        local eui = _G.EllesmereUI
+        local name = eui.GetActiveProfileName and eui.GetActiveProfileName()
+        if name and not ns.IsSecret(name) and db.createdProfiles[name] and db.install.accent then ns.Installer.ApplyAccent(eui) end
+    end
+    _, h = W:Dropdown(
+        parent,
+        "Accent color",
+        y,
+        { class = "Class color", fixed = "Fixed color" },
+        function() return db.accent.mode end,
+        function(v)
+            db.accent.mode = v
+            if not prebuild then ApplyAccentNow() end
+        end,
+        { "class", "fixed" },
+        "Colors quests, meters, chat, the menu bar and RestedXP. Class color follows each character; a fixed color is the same on all of them."
+    )
+    y = y - h
+    if W.ColorPicker then
+        _, h = W:ColorPicker(parent, "Fixed color", y, function()
+            local c = db.accent.color
+            return c.r, c.g, c.b, 1
+        end, function(r, g, b)
+            db.accent.color = { r = r, g = g, b = b }
+            if not prebuild and db.accent.mode == "fixed" then ApplyAccentNow() end
+        end, false)
+        y = y - h
+    end
+
     _, h = W:SectionHeader(parent, "BAR GRADIENTS", y)
     y = y - h
     _, h = W:Toggle(
@@ -150,6 +184,35 @@ local function BuildThemePage(W, parent, y)
         )
         y = y - h
     end
+
+    _, h = W:SectionHeader(parent, "AFK SCREEN", y)
+    y = y - h
+    _, h = W:Toggle(
+        parent,
+        "AFK screen",
+        y,
+        function() return db.afk.enabled end,
+        function(v)
+            db.afk.enabled = v
+            if not v then ns.StopAFKScreen() end
+        end,
+        "While you are away: the interface fades out and your character, time away and the clock are shown. Ends when you come back, on a click, or when combat starts."
+    )
+    y = y - h
+    _, h = W:Toggle(
+        parent,
+        "Turn the camera",
+        y,
+        function() return db.afk.spin end,
+        function(v) db.afk.spin = v end,
+        "The camera turns slowly around your character while the AFK screen shows."
+    )
+    y = y - h
+    _, h = W:WideButton(parent, "Preview the AFK screen", y, function()
+        if prebuild then return end
+        ns.PreviewAFKScreen()
+    end)
+    y = y - h
 
     _, h = W:SectionHeader(parent, "OTHER ADDONS", y)
     y = y - h
@@ -355,6 +418,7 @@ local HELP = {
     "/aui xp <length> [offset] length of the XP bar on the menu bar, and where it starts",
     "/aui status               what is switched on",
     "/aui probe                print which client and EllesmereUI functions this build has",
+    "/aui afk                  preview the AFK screen for ten seconds",
     "/aui help                 this list",
 }
 
@@ -460,6 +524,14 @@ commands.status = function()
 end
 
 commands.probe = function() ns.Probe() end
+
+commands.afk = function()
+    if InCombatLockdown() then
+        ns.Print(L["the AFK screen cannot be previewed in combat."])
+        return
+    end
+    ns.PreviewAFKScreen()
+end
 
 SLASH_ARITLOKUI1 = "/aui"
 SLASH_ARITLOKUI2 = "/aritlokui"

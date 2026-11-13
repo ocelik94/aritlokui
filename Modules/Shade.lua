@@ -3,8 +3,8 @@ local addonName, ns = ...
 -------------------------------------------------------------------------------
 --  Bar gradients
 --  The gradient look: every EllesmereUI unit frame bar (health, power, cast)
---  runs from a deepened left end to a brightened right end of whatever color
---  EllesmereUI gave it.
+--  and the health bar of every party and raid frame runs from a deepened
+--  left end to a brightened right end of whatever color EllesmereUI gave it.
 --
 --  It is done with two extra textures per bar, both pinned to the bar's own
 --  fill texture: a "shade" painted black -> clear from the left, and a "glow"
@@ -35,6 +35,51 @@ local FRAME_NAMES = {
 }
 
 local PET_FRAME = "EllesmereUIUnitFrames_Pet"
+
+-------------------------------------------------------------------------------
+--  Party and raid frames (EllesmereUIRaidFrames). Their buttons are listed by
+--  the module itself; a button's health bar is not a field on the button but
+--  in the module's per-frame data table, read through its GetFFD(button).
+--  Both are internal: everything is checked and a miss just leaves those
+--  frames without gradients. The buttons are secure, so the overlays are only
+--  added outside combat; overlays already there keep following the fill.
+--
+--  RETEST after an EllesmereUI update (read from 9.8.4):
+--  EllesmereUI._ModuleNS.EllesmereUIRaidFrames with _partyAllButtons
+--  (EUI_RaidFrames_Party.lua), _internals.allButtons
+--  (EllesmereUIRaidFrames.lua) and GetFFD(button).health, a StatusBar
+--  (EUI_RaidFrames_Style.lua).
+-------------------------------------------------------------------------------
+local groupQueued = false
+
+local function RaidModule()
+    local eui = _G.EllesmereUI
+    local registry = type(eui) == "table" and eui._ModuleNS
+    local mod = type(registry) == "table" and registry.EllesmereUIRaidFrames
+    if type(mod) == "table" and type(mod.GetFFD) == "function" then return mod end
+    return nil
+end
+
+local function ForEachGroupHealthBar(fn)
+    local mod = RaidModule()
+    if not mod then return end
+    local lists = { mod._partyAllButtons }
+    -- _internals refuses unknown keys with an error; that is an ordinary Lua
+    -- error, so pcall is the right tool for reading it.
+    local ok, raid = pcall(function() return mod._internals.allButtons end)
+    if ok then lists[#lists + 1] = raid end
+    for i = 1, #lists do
+        local list = lists[i]
+        if type(list) == "table" then
+            for j = 1, #list do
+                local button = list[j]
+                local got, data = pcall(mod.GetFFD, button)
+                local bar = got and type(data) == "table" and data.health
+                if type(bar) == "table" then fn(bar) end
+            end
+        end
+    end
+end
 
 -- Fields on an EllesmereUI unit frame that hold a StatusBar.
 local BAR_FIELDS = { "Health", "Power", "Castbar" }
@@ -158,6 +203,20 @@ function ns.RefreshShades()
         end
     end
 
+    -- Party and raid frames: health bars only. In combat this waits for the
+    -- end of the fight; refreshes meanwhile (target changes) queue it once.
+    if InCombatLockdown() then
+        if not groupQueued then
+            groupQueued = true
+            ns.RunOutOfCombat(function()
+                groupQueued = false
+                ns.RefreshShades()
+            end)
+        end
+    else
+        ForEachGroupHealthBar(function(bar) ApplyBar(bar, show, shadeAlpha, glowAlpha) end)
+    end
+
     -- The pet's health bar, darkened. Not in the dark theme, where bars are
     -- not class-colored in the first place.
     local pet = _G[PET_FRAME]
@@ -184,3 +243,9 @@ ns.On("PLAYER_FOCUS_CHANGED", Refresh) -- rejected harmlessly if this client has
 ns.On("UNIT_PET", Refresh)
 ns.On("INSTANCE_ENCOUNTER_ENGAGE_UNIT", Refresh) -- boss frames
 ns.On("PLAYER_REGEN_ENABLED", Refresh) -- EllesmereUI re-applies settings after combat
+-- Party and raid buttons get their unit (and on first use their health bar)
+-- when the group changes; EllesmereUI styles them a moment later.
+ns.On("GROUP_ROSTER_UPDATE", function()
+    Refresh()
+    if C_Timer and C_Timer.After then C_Timer.After(1, Refresh) end
+end)

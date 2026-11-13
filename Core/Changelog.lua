@@ -9,6 +9,22 @@ local addonName, ns = ...
 
 ns.changelog = {
     {
+        version = "0.7.0",
+        items = {
+            "AFK screen: while you are away the interface fades out, the camera turns slowly, and a panel shows your "
+                .. "character, level, guild, time away and the clock. Ends when you come back, on a click, or when combat "
+                .. "starts. Settings on the Theme page; /aui afk shows a preview.",
+            "Healer layout: a new switch on the installer's Layout page puts the party and raid frames in the center, below "
+                .. "the cooldown manager. Switching it off and installing again puts them back where they were.",
+            "Party and raid frames get the same bar gradients as the unit frames.",
+            "On a fresh EllesmereUI install, the AritlokUI installer now waits until EllesmereUI's own first-run windows "
+                .. "(module picker, then style picker) are done and opens after them, instead of on top of them.",
+            "Accent color: class color (as before) or one fixed color for every character, chosen on the Theme page. It "
+                .. "applies right away on an AritlokUI profile, otherwise at the next install.",
+        },
+        note = "Run /aui install again for the healer layout and a fixed accent color.",
+    },
+    {
         version = "0.6.0",
         items = {
             "Party and raid frames and nameplates get the unit frame look: flat bar texture, the same dark bar background "

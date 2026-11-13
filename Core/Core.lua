@@ -5,7 +5,7 @@ local addonName, ns = ...
 --  event frame with its handler table, and the combat queue.
 -------------------------------------------------------------------------------
 
-ns.VERSION = "0.6.0"
+ns.VERSION = "0.7.0"
 ns.TAG = "|cff18a8ffAritlok|r|cffffffffUI|r"
 
 -- Interface number this addon was written against. RETEST when the TOC number
@@ -100,9 +100,21 @@ ns.defaults = {
         clock24 = true,
         profRightClick = true, -- right-click the profession buttons: First Aid, Cooking
     },
+    -- AFK screen (Modules/AFK.lua).
+    afk = {
+        enabled = true,
+        spin = true, -- turn the camera slowly
+    },
+    -- Accent color the installer gives EllesmereUI: "class" (each character's
+    -- class color) or "fixed" (this color on every character).
+    accent = {
+        mode = "class",
+        color = { r = 0.094, g = 0.659, b = 1.0 },
+    },
     -- What the installer applies; one key per entry in ns.Installer.options.
     install = {
         unitFrames = true,
+        healer = false, -- party and raid frames in the screen center
         actionBars = true,
         dataBar = true,
         chat = true,
@@ -307,6 +319,10 @@ function ns.Probe()
         "issecretvalue",
         "CreateColor",
         "C_Timer.After",
+        "C_Timer.NewTicker",
+        "UnitIsAFK",
+        "MoveViewLeftStart",
+        "MoveViewLeftStop",
         "C_TradeSkillUI.OpenTradeSkill",
         "C_TradeSkillUI.CloseTradeSkill",
         "C_TradeSkillUI.GetBaseProfessionInfo",
@@ -326,6 +342,7 @@ function ns.Probe()
         "EllesmereUI.GetActiveProfileName",
         "EllesmereUI.GetActiveProfileData",
         "EllesmereUI.SetActiveProfileAccent",
+        "EllesmereUI.SetAccentColor",
         "EllesmereUI.RefreshAccent",
         "EllesmereUI.GetAccentColor",
         "EllesmereUI.RegAccent",

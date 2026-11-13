@@ -42,13 +42,14 @@ I.GAP = 6
 -------------------------------------------------------------------------------
 I.options = {
     { key = "unitFrames", group = "layout", title = "Unit frames", desc = "Player, target, party, raid and nameplates." },
+    { key = "healer", group = "layout", title = "Healer layout", desc = "Party and raid frames in the center." },
     { key = "actionBars", group = "layout", title = "Action bars", desc = "Bottom rows, side blocks, mouse-over bar." },
     { key = "dataBar", group = "layout", title = "Menu bar", desc = "Needs EllesmereUI DataBars." },
     { key = "chat", group = "layout", title = "Chat", desc = "Bottom left, smaller text." },
     { key = "rightSide", group = "layout", title = "Right edge", desc = "Minimap, quests, tooltip, meters." },
     { key = "style", group = "look", title = "Flat style", desc = "Replaces the bronze WoW Forever look." },
     { key = "font", group = "look", title = "Monaspace Neon font", desc = "Chat tabs keep a narrower font." },
-    { key = "accent", group = "look", title = "Class-color accent", desc = "Colors quests, meters, chat and menu bar." },
+    { key = "accent", group = "look", title = "Accent color", desc = "Class color, or a fixed one from the settings." },
     { key = "scale", group = "look", title = "Pixel-perfect scale", desc = "Sharper and slightly smaller." },
     { key = "bags", group = "look", title = "Compact bags", desc = "Compact view, opening as one bag." },
     { key = "panels", group = "look", title = "One window color", desc = "Bags, windows and tooltips in one dark color." },
