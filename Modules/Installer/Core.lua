@@ -51,6 +51,7 @@ I.options = {
     { key = "accent", group = "look", title = "Class-color accent", desc = "Colors quests, meters, chat and menu bar." },
     { key = "scale", group = "look", title = "Pixel-perfect scale", desc = "Sharper and slightly smaller." },
     { key = "bags", group = "look", title = "Compact bags", desc = "Compact view, opening as one bag." },
+    { key = "panels", group = "look", title = "One window color", desc = "Bags, windows and tooltips in one dark color." },
 }
 
 -------------------------------------------------------------------------------

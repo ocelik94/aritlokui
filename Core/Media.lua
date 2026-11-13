@@ -51,6 +51,11 @@ end
 
 ns.DEFAULT_ACCENT = { r = 0.094, g = 0.659, b = 1.0 }
 
+-- The one background color for windows: bags, Blizzard windows skinned by
+-- EllesmereUI, tooltips and the RestedXP guide. The same blue-black as the
+-- unit frame bar backgrounds.
+ns.PANEL = { r = 0.05, g = 0.055, b = 0.065, a = 0.95 }
+
 -- Current EllesmereUI accent color, or this addon's blue without it.
 function ns.GetAccent()
     local eui = _G.EllesmereUI

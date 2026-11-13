@@ -9,6 +9,15 @@ local addonName, ns = ...
 
 ns.changelog = {
     {
+        version = "0.5.0",
+        items = {
+            "One background color for every window: bags, the Blizzard windows EllesmereUI skins (switched to its flat "
+                .. 'Modern style), tooltips and the RestedXP guide. New "One window color" switch on the Look page; the window '
+                .. "and tooltip part applies to every EllesmereUI profile.",
+        },
+        note = "Run /aui install again to apply it.",
+    },
+    {
         version = "0.4.0",
         items = {
             "Cast bars no longer draw over windows such as the bags.",

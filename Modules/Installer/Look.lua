@@ -1,7 +1,8 @@
 local addonName, ns = ...
 
 -------------------------------------------------------------------------------
---  Installer steps: style, font, accent color, UI scale and the bag view.
+--  Installer steps: style, font, accent color, UI scale, the bag view and
+--  the window color.
 --  These run before the layout steps: the scale decides the screen size the
 --  layout is computed for.
 -------------------------------------------------------------------------------
@@ -107,5 +108,71 @@ I.AddStep({
         bags.bagDisplayMode = "compact"
         bags.bagDefaultBagType = "onebag"
         ctx:Done("compact bags")
+    end,
+})
+
+-------------------------------------------------------------------------------
+--  One background color (ns.PANEL) for every window: the bags, every Blizzard
+--  window EllesmereUI skins, and tooltips.
+--
+--  Windows: EllesmereUI skins each one in one of two styles, its textured
+--  "EllesmereUI" look or a flat "Modern" one, and every Modern window takes
+--  one shared color. So each skinned window is switched to Modern and that
+--  color is set. A window set to Blizzard's own look, or with its skin off,
+--  is left alone.
+--
+--  These window and tooltip settings are account-wide in EllesmereUI (the top
+--  level of EllesmereUIDB, shared by every profile), like the UI scale; the
+--  bag settings are synced across profiles by EllesmereUI.
+--
+--  RETEST after an EllesmereUI update (read from 9.8.4): the window keys are
+--  WINDOW_ENABLE_KEYS in EllesmereUIBlizzardSkin.lua, which it does not
+--  publish, so they are copied here. A key missing from this list just keeps
+--  its current look; one that no longer exists is ignored by EllesmereUI.
+--  Settings: blizzWindowSkinStyles, blizzWindowModernDefault (WindowEngine),
+--  tooltipBgColor / tooltipBgOpacity (0-1, EllesmereUI.lua GetTooltipBg),
+--  bagBgColor / bagBgOpacity (0-100, EUI_Bags_Shared.lua).
+-------------------------------------------------------------------------------
+local WINDOWS = {
+    "charsheet", "inspect", "lfg", "greatvault", "collections", "playerspells", "adventureguide",
+    "professionsbook", "guild", "calendar", "achievements", "mail", "catalyst", "socket", "itemupgrade",
+    "loot", "loottoast", "bnettoast", "lootroll", "loothistory", "groupinvite", "readycheck", "micromenu",
+    "housing", "professions", "worldmap", "dressup", "transmog", "merchant", "auctionhouse", "macros",
+    "settings", "addonlist", "craftorders", "trainer", "gossip", "quest", "inspectrecipe", "delves",
+    "socialui", "queuestatus", "delvepicker", "playerchoice", "trade", "bagbar", "legacysystem",
+}
+
+local function Color(a) return { r = ns.PANEL.r, g = ns.PANEL.g, b = ns.PANEL.b, a = a } end
+
+I.AddStep({
+    order = 70,
+    option = "panels",
+    run = function(ctx)
+        local db = _G.EllesmereUIDB
+        if type(db) ~= "table" then
+            ctx:Skip("window color")
+            return
+        end
+
+        if type(db.blizzWindowSkinStyles) ~= "table" then db.blizzWindowSkinStyles = {} end
+        local styles = db.blizzWindowSkinStyles
+        for i = 1, #WINDOWS do
+            local key = WINDOWS[i]
+            if styles[key] ~= "blizzard" then styles[key] = "modern" end
+        end
+        db.blizzWindowModernDefault = Color(ns.PANEL.a)
+
+        db.tooltipBgColor = Color(1)
+        db.tooltipBgOpacity = ns.PANEL.a
+
+        -- Bags: a textured backdrop with a tint on top. A fully opaque tint
+        -- hides the texture, so the window reads as the flat color.
+        local bags = ctx.addons.EllesmereUIBags
+        if type(bags) ~= "table" and ctx.eui._bagsDB then bags = I.Sub(ctx.addons, "EllesmereUIBags") end
+        if type(bags) == "table" then
+            bags.bagBgColor = Color(1)
+            bags.bagBgOpacity = math.floor(ns.PANEL.a * 100 + 0.5)
+        end
+        ctx:Done("one window color")
     end,
 })

@@ -35,8 +35,8 @@ local theme = {
     texturePath = TEXTURES,
     headerTexture = "rxp-banner",
     textColor = { 1, 1, 1 },
-    background = { 0.05, 0.05, 0.06, 0.92 },
-    bottomFrameBG = { 0.09, 0.09, 0.1, 0.92 },
+    background = { ns.PANEL.r, ns.PANEL.g, ns.PANEL.b, ns.PANEL.a },
+    bottomFrameBG = { ns.PANEL.r + 0.04, ns.PANEL.g + 0.04, ns.PANEL.b + 0.04, ns.PANEL.a }, -- step rows, a shade lighter
     bgTextures = { edge = ns.media.white, bottom = ns.media.white },
     edges = { edge = TEXTURES .. "rxp-borders", guideName = TEXTURES .. "rxp-borders" },
 }
