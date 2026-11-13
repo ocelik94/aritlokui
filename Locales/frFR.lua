@@ -124,8 +124,7 @@ L["Important: the UI scale applies to your whole account, not just this profile.
     "Important : l'échelle de l'interface s'applique à tout votre compte, pas seulement à ce profil."
 L["Switch on what should be hidden while you are out of combat. It shows again in a fight, and whenever the mouse is over it."] =
     "Activez ce qui doit être masqué hors combat. Cela réapparaît en combat et dès que la souris passe dessus."
-L["AritlokUI can adjust other addons so they match."] =
-    "AritlokUI peut ajuster d'autres addons pour qu'ils s'accordent avec le reste."
+L["AritlokUI can adjust other addons so they match."] = "AritlokUI peut ajuster d'autres addons pour qu'ils s'accordent avec le reste."
 L["Its quest tracker replaces EllesmereUI's."] = "Son suivi des quêtes remplace celui d'EllesmereUI."
 L["Guide window in the AritlokUI theme."] = "Fenêtre du guide dans le thème AritlokUI."
 L["PROFESSIONS"] = "MÉTIERS"

@@ -136,9 +136,7 @@ local function Scan()
                 if type(block) == "table" and block.type == "profession" then
                     for n = 1, #SKILL do
                         local button = _G[string.format(NAME, n, tostring(bar.id), tostring(block.id))]
-                        if type(button) == "table" and button.HookScript and button.SetAttribute then
-                            Prepare(button, SKILL[n], on)
-                        end
+                        if type(button) == "table" and button.HookScript and button.SetAttribute then Prepare(button, SKILL[n], on) end
                     end
                 end
             end
