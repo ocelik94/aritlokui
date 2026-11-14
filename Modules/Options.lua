@@ -169,6 +169,45 @@ local function BuildThemePage(W, parent, y)
         y = y - h
     end
 
+    do
+        local values, order = {}, {}
+        for i = 1, #ns.Installer.shapes do
+            local shape = ns.Installer.shapes[i]
+            values[shape.key] = shape.title
+            order[i] = shape.key
+        end
+        _, h = W:Dropdown(
+            parent,
+            "Frame shape",
+            y,
+            values,
+            function() return db.install.shape end,
+            function(v) db.install.shape = v end,
+            order,
+            "Corners of the unit frames, party and raid frames and nameplates. Applied the next time you run the installer."
+        )
+        y = y - h
+    end
+    do
+        local values, order = {}, {}
+        for i = 1, #ns.Installer.roles do
+            local role = ns.Installer.roles[i]
+            values[role.key] = role.title
+            order[i] = role.key
+        end
+        _, h = W:Dropdown(
+            parent,
+            "Role",
+            y,
+            values,
+            function() return db.install.role end,
+            function(v) db.install.role = v end,
+            order,
+            "Healers get the party and raid frames in the center of the screen. Applied the next time you run the installer."
+        )
+        y = y - h
+    end
+
     _, h = W:SectionHeader(parent, "HIDDEN OUT OF COMBAT", y)
     y = y - h
     local combat = ns.Installer.combatOptions

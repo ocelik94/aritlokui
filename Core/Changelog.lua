@@ -9,6 +9,22 @@ local addonName, ns = ...
 
 ns.changelog = {
     {
+        version = "1.0.0",
+        items = {
+            "The healer layout is now a choice on its own Role page of the installer (Damage & Tank or Healer) instead of "
+                .. "a switch on the Layout page. Your earlier choice carries over.",
+            "Frame shape: a new Shape page in the installer rounds the unit frames, party and raid frames and nameplates. "
+                .. "Choose Rectangle, Leaf (two opposite corners rounded and mirrored on the target side; the default) or Rounded. "
+                .. "It uses EllesmereUI's "
+                .. "own rounded corners.",
+            "The accent color is now chosen on the installer's Theme page (class color, or one fixed color with a color "
+                .. "picker) instead of being a switch on the Look page.",
+            "The installer no longer spells out the EllesmereUI version; a small tick (or cross) next to AritlokUI's version "
+                .. "in its corner shows whether EllesmereUI's major version matches.",
+        },
+        note = "Run /aui install again to pick your role, frame shape and accent color.",
+    },
+    {
         version = "0.8.0",
         items = {
             "Rested experience on the long XP bar: a lighter section shows how far your rested bonus reaches, and the label "

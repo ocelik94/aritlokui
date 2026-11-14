@@ -40,9 +40,6 @@ L["EllesmereUI did not switch to the %s profile. Nothing was changed."] =
     "EllesmereUI n'est pas passé au profil %s. Rien n'a été modifié."
 L["EllesmereUI returned no profile data. Nothing was changed."] =
     "EllesmereUI n'a renvoyé aucune donnée de profil. Rien n'a été modifié."
-L["note: written for EllesmereUI %s, you have %s. Some settings may not apply."] =
-    "remarque : écrit pour EllesmereUI %s, vous avez %s. Certains réglages peuvent ne pas s'appliquer."
-L["an unknown version"] = "une version inconnue"
 L['installed the %s theme into EllesmereUI profile "%s": %s.'] = 'thème %s installé dans le profil EllesmereUI "%s" : %s.'
 L["nothing"] = "rien"
 L["skipped: %s."] = "ignoré : %s."
@@ -84,8 +81,6 @@ L["tooltip"] = "infobulle"
 L["unit frames"] = "cadres d'unité"
 L["unit frames (module has no settings in this profile)"] = "cadres d'unité (le module n'a aucun réglage dans ce profil)"
 L["cooldown manager"] = "gestionnaire de temps de recharge"
-L["EllesmereUI version unknown"] = "Version d'EllesmereUI inconnue"
-L["tested with %s"] = "testé avec %s"
 L['Shared profile "%s"'] = 'Profil partagé "%s"'
 L["One profile for every character you install on."] = "Un seul profil pour chaque personnage sur lequel vous installez."
 L["New profile"] = "Nouveau profil"
@@ -94,9 +89,6 @@ L["EllesmereUI uses one active profile per account."] = "EllesmereUI utilise un 
 L["No supported addon is loaded."] = "Aucun addon pris en charge n'est chargé."
 L["%d of %d"] = "%d sur %d"
 L["none"] = "aucun"
-L["The settings are written. Press Reload UI to apply them."] =
-    "Les réglages sont écrits. Appuyez sur Recharger l'interface pour les appliquer."
-L["Installed"] = "Installé"
 L["Unknown reason."] = "Raison inconnue."
 L["Skipped: %s."] = "Ignoré : %s."
 L["Welcome"] = "Bienvenue"
@@ -113,8 +105,6 @@ L["Important: after a larger AritlokUI update you may need to run the installer 
     "Important : après une mise à jour majeure d'AritlokUI, vous devrez peut-être relancer l'installateur."
 L["AritlokUI writes its settings into a copy of your current EllesmereUI profile. Use the shared profile, or create one with its own name."] =
     "AritlokUI écrit ses réglages dans une copie de votre profil EllesmereUI actuel. Utilisez le profil partagé ou créez-en un avec son propre nom."
-L["Pick how the unit frame bars are colored. You can switch later by running the installer again."] =
-    "Choisissez la façon dont les barres des cadres d'unité sont colorées. Vous pourrez changer plus tard en relançant l'installateur."
 L["Choose which parts of the screen are arranged. Anything you switch off stays exactly as it is now."] =
     "Choisissez les parties de l'écran à organiser. Tout ce que vous désactivez reste exactement comme maintenant."
 L["Style, font, accent color and scale."] = "Style, police, couleur d'accentuation et échelle."
@@ -143,7 +133,6 @@ L["party and raid frames (EllesmereUI Raid Frames is not loaded)"] =
 L["nameplates"] = "barres d'info"
 L["nameplates (EllesmereUI Nameplates is not loaded)"] = "barres d'info (EllesmereUI Nameplates n'est pas chargé)"
 L["Accent color"] = "Couleur d'accent"
-L["Class color, or a fixed one from the settings."] = "Couleur de classe, ou une couleur fixe des réglages."
 L["fixed accent color"] = "couleur d'accent fixe"
 L["ACCENT COLOR"] = "COULEUR D'ACCENT"
 L["Class color"] = "Couleur de classe"
@@ -163,8 +152,6 @@ L["/aui afk                  preview the AFK screen for ten seconds"] =
 L["Level %s %s"] = "Niveau %s %s"
 L["AWAY"] = "ABSENT"
 L["the AFK screen cannot be previewed in combat."] = "l'écran AFK ne peut pas être prévisualisé en combat."
-L["Healer layout"] = "Disposition soigneur"
-L["Party and raid frames in the center."] = "Cadres de groupe et de raid au centre."
 L["healer layout (EllesmereUI Raid Frames is not loaded)"] = "disposition soigneur (EllesmereUI Raid Frames n'est pas chargé)"
 L["party and raid frames back where they were"] = "cadres de groupe et de raid remis à leur place"
 L["healer layout"] = "disposition soigneur"
@@ -202,6 +189,38 @@ L["Show the tour"] = "Afficher la visite"
 L["the tour cannot start in combat."] = "la visite ne peut pas démarrer en combat."
 L["/aui tour                 show the tour of the layout again"] =
     "/aui tour                 afficher à nouveau la visite de la disposition"
+L["Role"] = "Rôle"
+L["Damage & Tank"] = "Dégâts & Tank"
+L["Healer"] = "Soigneur"
+L["Party and raid frames stay at the side of the screen."] = "Les cadres de groupe et de raid restent sur le côté de l'écran."
+L["Party and raid frames in the center, below the cooldown manager."] =
+    "Cadres de groupe et de raid au centre, sous le gestionnaire de temps de recharge."
+L["Pick what you play. Healers get the party and raid frames where they are already looking."] =
+    "Choisissez ce que vous jouez. Les soigneurs ont les cadres de groupe et de raid là où ils regardent déjà."
+L["Healers get the party and raid frames in the center of the screen. Applied the next time you run the installer."] =
+    "Les soigneurs ont les cadres de groupe et de raid au centre de l'écran. Appliqué au prochain passage de l'installateur."
+L["Rectangle"] = "Rectangle"
+L["Square corners."] = "Coins carrés."
+L["Leaf"] = "Feuille"
+L["Rounded"] = "Arrondi"
+L["frame shape (%s)"] = "forme des cadres (%s)"
+L["frame shape"] = "forme des cadres"
+L["Shape"] = "Forme"
+L["Pick how the unit frame bars are colored, and the accent color for text, meters and the menu bar."] =
+    "Choisissez la couleur des barres des cadres d'unité et la couleur d'accent du texte, des compteurs et de la barre de menu."
+L["Pick the corners of the unit frames, party and raid frames and nameplates."] =
+    "Choisissez les coins des cadres d'unité, des cadres de groupe et de raid et des barres d'info."
+L["Each character in its own class color."] = "Chaque personnage dans sa propre couleur de classe."
+L["One color on every character. Click the swatch to change it."] =
+    "Une seule couleur sur tous les personnages. Cliquez sur l'échantillon pour la changer."
+L["Frame shape"] = "Forme des cadres"
+L["Corners of the unit frames, party and raid frames and nameplates. Applied the next time you run the installer."] =
+    "Coins des cadres d'unité, des cadres de groupe et de raid et des barres d'info. Appliqué au prochain passage de l'installateur."
+L["AritlokUI is ready."] = "AritlokUI est prêt."
+L["Reload once to see your new interface."] = "Rechargez une fois pour voir votre nouvelle interface."
+L["All set"] = "Tout est prêt"
+L["Two opposite corners rounded."] = "Deux coins opposés arrondis."
+L["All corners rounded."] = "Tous les coins arrondis."
 L["General"] = "Général"
 L["Changelog"] = "Nouveautés"
 L["What changed in each version."] = "Ce qui a changé dans chaque version."

@@ -26,7 +26,7 @@ local PAD = 36
 local HEADER, FOOTER = 92, 70
 
 -- Sidebar name and page heading are the same word.
-local STEPS = { "Welcome", "Profile", "Theme", "Layout", "Look", "Combat", "Addons", "Install" }
+local STEPS = { "Welcome", "Profile", "Theme", "Shape", "Layout", "Role", "Look", "Combat", "Addons", "Install" }
 
 -- What each page opens with: a short paragraph, and optionally a highlighted
 -- note under it.
@@ -38,8 +38,10 @@ local INTROS = {
     {
         "AritlokUI writes its settings into a copy of your current EllesmereUI profile. Use the shared profile, or create one with its own name.",
     },
-    { "Pick how the unit frame bars are colored. You can switch later by running the installer again." },
+    { "Pick how the unit frame bars are colored, and the accent color for text, meters and the menu bar." },
+    { "Pick the corners of the unit frames, party and raid frames and nameplates." },
     { "Choose which parts of the screen are arranged. Anything you switch off stays exactly as it is now." },
+    { "Pick what you play. Healers get the party and raid frames where they are already looking." },
     {
         "Style, font, accent color and scale.",
         "Important: the UI scale applies to your whole account, not just this profile.",
@@ -48,7 +50,8 @@ local INTROS = {
     { "AritlokUI can adjust other addons so they match." },
     { "Check your choices, then press Install. Nothing is changed before that." },
 }
-local PAGE_WELCOME, PAGE_PROFILE, PAGE_THEME, PAGE_LAYOUT, PAGE_LOOK, PAGE_COMBAT, PAGE_ADDONS, PAGE_INSTALL = 1, 2, 3, 4, 5, 6, 7, 8
+local PAGE_WELCOME, PAGE_PROFILE, PAGE_THEME, PAGE_SHAPE, PAGE_LAYOUT, PAGE_ROLE, PAGE_LOOK, PAGE_COMBAT, PAGE_ADDONS, PAGE_INSTALL =
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 local DONE = #STEPS + 1
 
 -- Palette
@@ -333,44 +336,12 @@ local function SwitchRow(page, y, title, description, get, set)
     return row
 end
 
--- EllesmereUI version: text, whether it is not the tested one, and the
--- tested version.
-local function VersionLine()
-    local current, tested, matches = I.EUIVersion()
-    if not current then return L["EllesmereUI version unknown"], true, tested end
-    return "EllesmereUI " .. current, not matches, tested
-end
-
-local function BuildWelcome()
-    local page = NewPage(PAGE_WELCOME)
-
-    -- EllesmereUI version check.
-    local badge = Disc(page, 18)
-    badge:SetPoint("TOPLEFT", 0, page.top - 6)
-    local tick = Tick(badge, 8, 0.05, 0.06, 0.08)
-    local version = Label(page, 12, TEXT)
-    version:SetPoint("LEFT", badge, "RIGHT", 10, 0)
-    version:SetPoint("RIGHT", page, "RIGHT", 0, 0)
-
-    refreshers[PAGE_WELCOME] = function()
-        local text, warn, tested = VersionLine()
-        SetShown(tick, not warn)
-        if warn then
-            badge.fill:SetVertexColor(WARN[1], WARN[2], WARN[3], 1)
-            version:SetTextColor(WARN[1], WARN[2], WARN[3])
-            version:SetText(text .. "  -  " .. string.format(L["tested with %s"], tested))
-        else
-            local _, _, _, rr, rg, rb = ns.ClassGradient()
-            badge.fill:SetVertexColor(rr, rg, rb, 1)
-            version:SetTextColor(DIM[1], DIM[2], DIM[3])
-            version:SetText(text)
-        end
-    end
-end
+local function BuildWelcome() NewPage(PAGE_WELCOME) end
 
 -- A radio choice: the same compact row as a switch, with a radio marker on
 -- the left instead of a switch on the right.
-local function RadioRow(page, y, title, description)
+local function RadioRow(page, y, title, description, rightInset)
+    rightInset = rightInset or 16
     local row = CreateFrame("Button", nil, page)
     row:SetPoint("TOPLEFT", 0, y)
     row:SetPoint("TOPRIGHT", 0, y)
@@ -393,12 +364,12 @@ local function RadioRow(page, y, title, description)
 
     local name = Label(row, 14, TEXT)
     name:SetPoint("TOPLEFT", 44, -10)
-    name:SetPoint("RIGHT", row, "RIGHT", -16, 0)
+    name:SetPoint("RIGHT", row, "RIGHT", -rightInset, 0)
     name:SetText(title)
 
     local desc = Label(row, 11, DIM)
     desc:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -4)
-    desc:SetPoint("RIGHT", row, "RIGHT", -16, 0)
+    desc:SetPoint("RIGHT", row, "RIGHT", -rightInset, 0)
     desc:SetText(description)
 
     function row:SetSelected(selected)
@@ -588,7 +559,143 @@ local function BuildTheme()
             Paint()
         end)
     end
-    refreshers[PAGE_THEME] = Paint
+
+    -- Accent color: class color, or one fixed color (AritlokUIDB.accent).
+    local accentY = page.top - 196 - 14
+    local classRow = RadioRow(page, accentY, L["Class color"], L["Each character in its own class color."])
+    local fixedRow = RadioRow(page, accentY - 58, L["Fixed color"], L["One color on every character. Click the swatch to change it."], 72)
+
+    -- The swatch opens the game's color picker, where the client has it.
+    local swatch = CreateFrame("Button", nil, fixedRow)
+    swatch:SetSize(36, 22)
+    swatch:SetPoint("RIGHT", -16, 0)
+    local swatchBorder = Solid(swatch, "BACKGROUND", 1, 1, 1, 0.25)
+    swatchBorder:SetAllPoints()
+    local swatchFill = swatch:CreateTexture(nil, "ARTWORK")
+    swatchFill:SetPoint("TOPLEFT", 1, -1)
+    swatchFill:SetPoint("BOTTOMRIGHT", -1, 1)
+    local picker = _G.ColorPickerFrame
+    local canPick = type(picker) == "table" and type(picker.SetupColorPickerAndShow) == "function"
+
+    local function PaintAccent()
+        local accent = ns.db.accent
+        classRow:SetSelected(accent.mode ~= "fixed")
+        fixedRow:SetSelected(accent.mode == "fixed")
+        local c = accent.color
+        swatchFill:SetColorTexture(c.r, c.g, c.b, 1)
+        swatch:SetShown(canPick)
+    end
+    classRow:SetScript("OnClick", function()
+        ns.db.accent.mode = "class"
+        PaintAccent()
+    end)
+    fixedRow:SetScript("OnClick", function()
+        ns.db.accent.mode = "fixed"
+        PaintAccent()
+    end)
+    swatch:SetScript("OnClick", function()
+        if not canPick then return end
+        local accent = ns.db.accent
+        accent.mode = "fixed"
+        local before = { r = accent.color.r, g = accent.color.g, b = accent.color.b }
+        picker:SetupColorPickerAndShow({
+            r = before.r,
+            g = before.g,
+            b = before.b,
+            hasOpacity = false,
+            swatchFunc = function()
+                local r, g, b = picker:GetColorRGB()
+                accent.color = { r = r, g = g, b = b }
+                PaintAccent()
+            end,
+            cancelFunc = function()
+                accent.color = before
+                PaintAccent()
+            end,
+        })
+        -- Above the installer window.
+        picker:SetFrameStrata("FULLSCREEN_DIALOG")
+        picker:Raise()
+        PaintAccent()
+    end)
+
+    refreshers[PAGE_THEME] = function()
+        Paint()
+        PaintAccent()
+    end
+end
+
+-- One choice: the frame shape (I.shapes), each row with a small preview bar
+-- rounded by EllesmereUI's own corner function where it is available.
+local function BuildShape()
+    local page = NewPage(PAGE_SHAPE)
+    local rows = {}
+    local y = page.top
+    local eui = _G.EllesmereUI
+    local canRound = type(eui) == "table" and type(eui.RoundCorners) == "function"
+    for i = 1, #I.shapes do
+        local shape = I.shapes[i]
+        local row = RadioRow(page, y, L[shape.title], L[shape.desc], 150)
+        row.key = shape.key
+
+        local preview = CreateFrame("Frame", nil, row)
+        preview:SetSize(110, 24)
+        preview:SetPoint("RIGHT", -18, 0)
+        row.fill = preview:CreateTexture(nil, "ARTWORK")
+        row.fill:SetAllPoints()
+        row.fill:SetColorTexture(1, 1, 1, 1)
+        if canRound and shape.radius > 0 then
+            -- Plain Lua errors inside EllesmereUI are contained; a failed
+            -- preview is just square.
+            pcall(eui.RoundCorners, preview, shape.radius, { style = "solid", textures = { row.fill }, corners = shape.corners })
+        end
+
+        row:SetScript("OnClick", function(self)
+            ns.db.install.shape = self.key
+            refreshers[PAGE_SHAPE]()
+        end)
+        rows[i] = row
+        y = y - 58
+    end
+    refreshers[PAGE_SHAPE] = function()
+        local lr, lg, lb, rr, rg, rb = ns.ClassGradient()
+        for i = 1, #rows do
+            local selected = (ns.db.install.shape == rows[i].key)
+            rows[i]:SetSelected(selected)
+            ns.HGradient(rows[i].fill, lr, lg, lb, 1, rr, rg, rb, 1)
+            rows[i].fill:SetAlpha(selected and 1 or 0.45)
+        end
+    end
+end
+
+-- One choice: the role (I.roles).
+local function BuildRole()
+    local page = NewPage(PAGE_ROLE)
+    local rows = {}
+    local y = page.top
+    for i = 1, #I.roles do
+        local role = I.roles[i]
+        local row = RadioRow(page, y, L[role.title], L[role.desc])
+        row.key = role.key
+        row:SetScript("OnClick", function(self)
+            ns.db.install.role = self.key
+            refreshers[PAGE_ROLE]()
+        end)
+        rows[i] = row
+        y = y - 58
+    end
+    refreshers[PAGE_ROLE] = function()
+        for i = 1, #rows do
+            rows[i]:SetSelected(ns.db.install.role == rows[i].key)
+        end
+    end
+end
+
+local function RoleName()
+    for i = 1, #I.roles do
+        if I.roles[i].key == ns.db.install.role then return L[I.roles[i].title] end
+    end
+    return L[I.roles[1].title]
 end
 
 -- A page of switches for one group of installer options.
@@ -720,7 +827,7 @@ local function BuildInstall()
     local page = NewPage(PAGE_INSTALL)
 
     -- Left column: what; right column: the choice. One line each.
-    local keys = { "Profile", "Theme", "Layout", "Look", "Combat", "Addons", "EllesmereUI" }
+    local keys = { "Profile", "Theme", "Shape", "Layout", "Role", "Look", "Combat", "Addons" }
     local values = {}
     local y = page.top
     for i = 1, #keys do
@@ -746,16 +853,15 @@ local function BuildInstall()
     refreshers[PAGE_INSTALL] = function()
         local db = ns.db
         values[1]:SetText(I.ProfileName())
-        values[2]:SetText(L[db.theme == "dark" and "Dark" or "Gradient"])
-        values[3]:SetText(Count("layout"))
-        values[4]:SetText(Count("look"))
-        values[5]:SetText(CountCombat())
-        values[6]:SetText(CountAddons())
-        local text, warn, tested = VersionLine()
-        if warn then text = text .. "  -  " .. string.format(L["tested with %s"], tested) end
-        values[7]:SetText(text)
-        local c = warn and WARN or TEXT
-        values[7]:SetTextColor(c[1], c[2], c[3])
+        values[2]:SetText(
+            L[db.theme == "dark" and "Dark" or "Gradient"] .. ", " .. L[db.accent.mode == "fixed" and "Fixed color" or "Class color"]
+        )
+        values[3]:SetText(L[I.ShapeFor(db.install.shape).title])
+        values[4]:SetText(Count("layout"))
+        values[5]:SetText(RoleName())
+        values[6]:SetText(Count("look"))
+        values[7]:SetText(CountCombat())
+        values[8]:SetText(CountAddons())
         page:SetHint("")
     end
 end
@@ -771,11 +877,17 @@ local function BuildDone()
     head:SetPoint("TOP", badge, "BOTTOM", 0, -18)
     head:SetPoint("LEFT", page, "LEFT", 0, 0)
     head:SetPoint("RIGHT", page, "RIGHT", 0, 0)
-    head:SetText(L["The settings are written. Press Reload UI to apply them."])
+    head:SetText(L["AritlokUI is ready."])
+
+    local sub = Label(page, 12, DIM, "CENTER")
+    sub:SetPoint("TOP", head, "BOTTOM", 0, -8)
+    sub:SetPoint("LEFT", page, "LEFT", 0, 0)
+    sub:SetPoint("RIGHT", page, "RIGHT", 0, 0)
+    sub:SetText(L["Reload once to see your new interface."])
 
     -- Only what could not be applied is listed; the full list goes to chat.
     page.skipped = Label(page, 12, WARN, "CENTER", true)
-    page.skipped:SetPoint("TOP", head, "BOTTOM", 0, -14)
+    page.skipped:SetPoint("TOP", sub, "BOTTOM", 0, -14)
     page.skipped:SetPoint("LEFT", page, "LEFT", 20, 0)
     page.skipped:SetPoint("RIGHT", page, "RIGHT", -20, 0)
     page.skipped:SetSpacing(4)
@@ -834,7 +946,7 @@ local function Show(index)
     frame.kicker:SetTextColor(rr, rg, rb)
     if finished then
         frame.kicker:SetText("")
-        frame.heading:SetText(L["Installed"])
+        frame.heading:SetText(L["All set"])
     else
         frame.kicker:SetText(string.format("%d / %d", index, #STEPS))
         frame.heading:SetText(index == PAGE_WELCOME and "AritlokUI" or L[STEPS[index]])
@@ -947,6 +1059,24 @@ local function BuildSidebar()
     local version = Label(side, 11, FAINT)
     version:SetPoint("BOTTOMLEFT", 24, 22)
     version:SetText(ns.VERSION)
+
+    -- EllesmereUI check, for us: a green tick when its version is the one the
+    -- installer's settings were read from (I.TESTED_EUI), a red cross when
+    -- not. The versions are in its tooltip and in /aui status.
+    local check = CreateFrame("Frame", nil, side)
+    check:SetSize(14, 14)
+    check:SetPoint("LEFT", version, "RIGHT", 6, 0)
+    local icon = check:CreateTexture(nil, "ARTWORK")
+    icon:SetAllPoints()
+    local current, tested, matches = I.EUIVersion()
+    icon:SetTexture(matches and "Interface\\RaidFrame\\ReadyCheck-Ready" or "Interface\\RaidFrame\\ReadyCheck-NotReady")
+    check:EnableMouse(true)
+    check:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:AddLine(string.format(L["EllesmereUI %s, tested with %s."], ns.Text(current or "?"), tested), 1, 1, 1)
+        GameTooltip:Show()
+    end)
+    check:SetScript("OnLeave", function() GameTooltip:Hide() end)
 end
 
 local function Build()
@@ -1045,7 +1175,9 @@ local function Build()
     BuildWelcome()
     BuildProfile()
     BuildTheme()
+    BuildShape()
     BuildOptions(PAGE_LAYOUT, "layout")
+    BuildRole()
     BuildOptions(PAGE_LOOK, "look")
     BuildCombat()
     BuildAddons()

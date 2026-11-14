@@ -1,8 +1,8 @@
 local addonName, ns = ...
 
 -------------------------------------------------------------------------------
---  Installer steps: style, font, accent color, UI scale, the bag view and
---  the window color.
+--  Installer steps: style, font, accent color, UI scale, the bag view, the
+--  window color and the frame shape.
 --  These run before the layout steps: the scale decides the screen size the
 --  layout is computed for.
 -------------------------------------------------------------------------------
@@ -68,7 +68,8 @@ end
 
 I.AddStep({
     order = 30,
-    option = "accent",
+    -- Always: the choice itself (class or fixed) is on the Theme page.
+    option = nil,
     run = function(ctx)
         if I.ApplyAccent(ctx.eui) then
             ctx:Done(ns.db.accent.mode == "fixed" and "fixed accent color" or "class-color accent")
@@ -231,5 +232,80 @@ I.AddStep({
             bags.bagBgOpacity = math.floor(ns.PANEL.a * 100 + 0.5)
         end
         ctx:Done("one window color")
+    end,
+})
+
+-------------------------------------------------------------------------------
+--  Frame shape (AritlokUIDB.install.shape, I.shapes): the corners of the unit
+--  frames, party and raid frames and nameplates. EllesmereUI rounds them
+--  itself (EllesmereUI_RoundedCorners.lua); this only sets its two keys per
+--  frame type. Rounding needs a Solid, Glow or Shadow border, and Solid is
+--  what these modules default to.
+--
+--  RETEST after an EllesmereUI update (read from 9.8.4): cornerRadius (0-16)
+--  and cornerMask (bits 1 TL, 2 TR, 4 BL, 8 BR) on each unit's table in
+--  EllesmereUIUnitFrames (EUI_UnitFrames_Reload.lua; boss and the small
+--  frames take theirs from a donor unit unless set on their own), flat in
+--  EllesmereUIRaidFrames (party follows raid) and EllesmereUINameplates
+--  (health and cast bar).
+-------------------------------------------------------------------------------
+local SHAPE_UNITS = { "player", "target", "focus", "targettarget", "focustarget", "pet", "boss" }
+
+-- Frames on the right of the screen get the leaf mirrored (top right and
+-- bottom left), so the player and target frames face each other across the
+-- center. Shapes that are the same both ways (rectangle, rounded) are not
+-- changed by this.
+local MIRRORED = { target = true, targettarget = true, focus = true, focustarget = true }
+
+local function Mirror(corners)
+    if corners == 9 then return 6 end -- TL + BR -> TR + BL
+    return corners
+end
+
+function I.ShapeFor(key)
+    for i = 1, #I.shapes do
+        if I.shapes[i].key == key then return I.shapes[i] end
+    end
+    return I.shapes[2] -- leaf
+end
+
+local function SetCorners(t, radius, corners)
+    t.cornerRadius = radius
+    if radius > 0 then t.cornerMask = corners end
+end
+
+I.AddStep({
+    order = 65,
+    option = nil,
+    run = function(ctx)
+        local shape = I.ShapeFor(ctx.want.shape)
+        local g = ctx:Geometry()
+        local radius = 0
+        if shape.radius > 0 then
+            radius = g and g.S(shape.radius) or shape.radius
+            if radius > 16 then radius = 16 end
+        end
+        local done = false
+        local uf = ctx.addons.EllesmereUIUnitFrames
+        if type(uf) == "table" then
+            for i = 1, #SHAPE_UNITS do
+                local unit = SHAPE_UNITS[i]
+                local corners = MIRRORED[unit] and Mirror(shape.corners) or shape.corners
+                SetCorners(I.Sub(uf, unit), radius, corners)
+            end
+            done = true
+        end
+        for _, folder in ipairs({ "EllesmereUIRaidFrames", "EllesmereUINameplates" }) do
+            local t = ctx.addons[folder]
+            if type(t) == "table" then
+                SetCorners(t, radius, shape.corners)
+                done = true
+            end
+        end
+        if done then
+            ctx:Done("frame shape (%s)", ns.L[shape.title])
+        else
+            ctx:Skip("frame shape")
+        end
     end,
 })

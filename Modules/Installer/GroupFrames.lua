@@ -76,7 +76,7 @@ I.AddStep({
 })
 
 -------------------------------------------------------------------------------
---  Healer layout (option "healer"): party and raid frames move to the center
+--  Healer layout (role "healer"): party and raid frames move to the center
 --  of the screen, in the band between the cooldown manager rows (which end 366
 --  up) and the stance bar over the action bars, so the frames you heal sit
 --  where you are already looking. They get smaller to fit: 88 x 36, party in
@@ -85,7 +85,7 @@ I.AddStep({
 --  frames.
 --
 --  The values it replaces are kept (AritlokUIDB.healerBefore) and put back
---  when the option is switched off and the installer runs again.
+--  when the role is set back to Damage & Tank and the installer runs again.
 --
 --  RETEST after an EllesmereUI update (read from 9.8.4):
 --    raid: unlockPos {point, relPoint, x, y} on UIParent, the TOP LEFT of the
@@ -141,10 +141,10 @@ I.AddStep({
     run = function(ctx)
         local rf = ctx.addons.EllesmereUIRaidFrames
         if type(rf) ~= "table" then
-            if ctx.want.healer then ctx:Skip("healer layout (EllesmereUI Raid Frames is not loaded)") end
+            if ctx.want.role == "healer" then ctx:Skip("healer layout (EllesmereUI Raid Frames is not loaded)") end
             return
         end
-        if not ctx.want.healer then
+        if not ctx.want.role == "healer" then
             if Restore(ctx.db, rf) then ctx:Done("party and raid frames back where they were") end
             return
         end

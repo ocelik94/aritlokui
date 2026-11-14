@@ -5,7 +5,7 @@ local addonName, ns = ...
 --  event frame with its handler table, and the combat queue.
 -------------------------------------------------------------------------------
 
-ns.VERSION = "0.8.0"
+ns.VERSION = "1.0.0"
 ns.TAG = "|cff18a8ffAritlok|r|cffffffffUI|r"
 
 -- Interface number this addon was written against. RETEST when the TOC number
@@ -79,7 +79,7 @@ end
 --  Defaults only. AritlokUIDB itself is read and created inside ADDON_LOADED.
 -------------------------------------------------------------------------------
 ns.defaults = {
-    schema = 5,
+    schema = 6,
     theme = "gradient", -- "gradient" | "dark"
     shade = {
         enabled = true,
@@ -116,7 +116,8 @@ ns.defaults = {
     -- What the installer applies; one key per entry in ns.Installer.options.
     install = {
         unitFrames = true,
-        healer = false, -- party and raid frames in the screen center
+        role = "dps", -- "dps" | "healer": healers get party and raid frames in the center
+        shape = "leaf", -- "rect" | "leaf" | "round": corners of unit, party/raid frames and nameplates
         actionBars = true,
         dataBar = true,
         chat = true,
@@ -270,6 +271,15 @@ ns.On("ADDON_LOADED", function(loaded)
             addons.questieTracker = nil
         end
         saved.schema = 5
+    end
+    if saved.schema == 5 then
+        -- Schema 6: the healer switch became a role choice.
+        local install = saved.install
+        if type(install) == "table" then
+            if install.role == nil then install.role = install.healer and "healer" or "dps" end
+            install.healer = nil
+        end
+        saved.schema = 6
     end
     ns.db = MergeDefaults(AritlokUIDB, ns.defaults)
     eventFrame:UnregisterEvent("ADDON_LOADED")

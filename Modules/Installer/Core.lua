@@ -14,8 +14,8 @@ local addonName, ns = ...
 --
 --  Only EllesmereUI's own profile functions and saved settings are used.
 --  Every setting key written by the steps was read out of the EllesmereUI
---  version named in TESTED_EUI; the installer warns when another version is
---  running.
+--  version named in TESTED_EUI; the installer window shows a red cross in
+--  its corner when another major version is running.
 --
 --  Reload rule on Forever: addon code may reload only from inside a click or
 --  key press, and only as the first thing that click does. So nothing here
@@ -40,16 +40,32 @@ I.GAP = 6
 --  One list, shown by the installer window (grouped into its pages) and by the
 --  settings page. `key` is the field in AritlokUIDB.install.
 -------------------------------------------------------------------------------
+-- The shape page: one choice, stored as AritlokUIDB.install.shape. `radius`
+-- is at the 1440-tall reference size (scaled like every other size);
+-- `corners` is EllesmereUI's corner bits: 1 top left, 2 top right,
+-- 4 bottom left, 8 bottom right. Leaf is the middle entry and the default.
+I.shapes = {
+    { key = "rect", title = "Rectangle", desc = "Square corners.", radius = 0 },
+    { key = "leaf", title = "Leaf", desc = "Two opposite corners rounded.", radius = 8, corners = 9 },
+    { key = "round", title = "Rounded", desc = "All corners rounded.", radius = 6, corners = 15 },
+}
+
+-- The role page: one choice, stored as AritlokUIDB.install.role. Shown by
+-- the installer window and the settings page. Titles and descriptions are
+-- English here and translated where they are shown.
+I.roles = {
+    { key = "dps", title = "Damage & Tank", desc = "Party and raid frames stay at the side of the screen." },
+    { key = "healer", title = "Healer", desc = "Party and raid frames in the center, below the cooldown manager." },
+}
+
 I.options = {
     { key = "unitFrames", group = "layout", title = "Unit frames", desc = "Player, target, party, raid and nameplates." },
-    { key = "healer", group = "layout", title = "Healer layout", desc = "Party and raid frames in the center." },
     { key = "actionBars", group = "layout", title = "Action bars", desc = "Bottom rows, side blocks, mouse-over bar." },
     { key = "dataBar", group = "layout", title = "Menu bar", desc = "Needs EllesmereUI DataBars." },
     { key = "chat", group = "layout", title = "Chat", desc = "Bottom left, smaller text." },
     { key = "rightSide", group = "layout", title = "Right edge", desc = "Minimap, quests, tooltip, meters." },
     { key = "style", group = "look", title = "Flat style", desc = "Replaces the bronze WoW Forever look." },
     { key = "font", group = "look", title = "Monaspace Neon font", desc = "Chat tabs keep a narrower font." },
-    { key = "accent", group = "look", title = "Accent color", desc = "Class color, or a fixed one from the settings." },
     { key = "scale", group = "look", title = "Pixel-perfect scale", desc = "Sharper and slightly smaller." },
     { key = "bags", group = "look", title = "Compact bags", desc = "Compact view, opening as one bag." },
     { key = "panels", group = "look", title = "One window color", desc = "Bags, windows and tooltips in one dark color." },
@@ -78,12 +94,21 @@ function I.Hide(bar)
     bar.alwaysHidden = true
 end
 
--- Installed EllesmereUI version, the tested one, and whether they match.
+-- "9" from "9.8.4": the major part of a version. Minor and patch releases
+-- are expected to keep the settings the installer writes.
+local function Major(version)
+    if type(version) ~= "string" then return nil end
+    return string.match(version, "^v?(%d+)")
+end
+
+-- Installed EllesmereUI version, the tested one, and whether they share
+-- their major part (any 9.x matches 9.8.4).
 function I.EUIVersion()
     local eui = _G.EllesmereUI
     local current = type(eui) == "table" and eui.VERSION or nil
     if type(current) ~= "string" then current = nil end
-    return current, I.TESTED_EUI, current == I.TESTED_EUI
+    local mine = Major(current)
+    return current, I.TESTED_EUI, mine ~= nil and mine == Major(I.TESTED_EUI)
 end
 
 -------------------------------------------------------------------------------
@@ -301,17 +326,6 @@ function ns.Install(theme)
     function ctx:Geometry()
         if self.g == nil then self.g = Geometry(self.scale) or false end
         return self.g or nil
-    end
-
-    local current, tested, matches = I.EUIVersion()
-    if not matches then
-        ns.Print(
-            string.format(
-                L["note: written for EllesmereUI %s, you have %s. Some settings may not apply."],
-                tested,
-                ns.Text(current or L["an unknown version"])
-            )
-        )
     end
 
     for i = 1, #steps do

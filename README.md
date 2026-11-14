@@ -26,8 +26,9 @@
 - **Gradient unit frames** – class-colored bars that run from a deep left end to a bright right end, on health, power and cast bars; the pet frame in a darker shade of your class color
 - **Two themes** – Gradient (default) and Dark
 - **Accent color** – your class color on every character, or one fixed color of your choice
+- **Frame shape** – rectangle, leaf (two opposite corners rounded, the default) or rounded corners on unit frames, party and raid frames and nameplates
 - **Party, raid frames and nameplates** in the same flat look as the unit frames, with the same gradients on party and raid health bars
-- **Healer layout** – optional: party and raid frames in the center of the screen, below the cooldown manager
+- **Role** – pick Damage & Tank or Healer in the installer; healers get the party and raid frames in the center of the screen, below the cooldown manager
 - **AFK screen** – while you are away, the interface fades out and your character, time away and the clock are shown
 - **One window color** – bags, the Blizzard windows EllesmereUI skins, and tooltips share one dark background
 - **Compact bags** – EllesmereUI's compact view, opening as one bag
@@ -36,7 +37,7 @@
 - **Menu bar** – a slim strip along the bottom edge with a fading backdrop: micro menu, a long experience bar with rested experience (your watched reputation at max level), durability, clock, professions, gold and performance; right-click the professions for First Aid and Cooking
 - **First-run tour** – a few short steps after installing point out the parts that are easy to miss
 - **Tidy screen edges** – chat bottom left; minimap, quest tracker, tooltip and damage / healing meters down the right
-- **Step-by-step installer** – short pages, every part optional, with a check that your EllesmereUI version is the tested one
+- **Step-by-step installer** – short pages, every part optional
 - **Shared or own profile** – install into the shared `AritlokUI` profile or one with a name you choose
 - **Out-of-combat hiding** – choose whether action bars, pet bar, unit frames and meters hide outside combat
 - **RestedXP Guides** – adds an "AritlokUI" theme to RestedXP: guide window, arrow, map pins and tooltips in your accent color and interface font
@@ -116,7 +117,6 @@ The installer copies your active EllesmereUI profile to a new one and writes its
 
 - Bundled layout values are tuned on a 2560 × 1440 screen. Everything is scaled to your screen height, but other aspect ratios are less tested.
 - Unit names are not gradient-colored: that would mean altering the name text, which this addon never touches.
-- The installer writes EllesmereUI settings that were read from EllesmereUI 9.8.4. On another version it warns you, and some settings may not apply.
 - The menu bar is built through an internal EllesmereUI table. If an EllesmereUI update changes it, the installer leaves the menu bar out and says so.
 - The pixel-perfect UI scale is account-wide in EllesmereUI, so it also applies to your other profiles.
 - Action buttons are 36 × 29 rather than a flatter shape, because that is the flattest EllesmereUI draws without stretching the icons.
