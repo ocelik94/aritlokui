@@ -12,12 +12,23 @@
   <a href="https://www.curseforge.com/wow/addons/aritlokui"><b>Download on CurseForge</b></a>
 </p>
 
-![AritlokUI in game](.previews/gameplay.jpg)
+![AritlokUI in a party](.previews/01-party.jpg)
+
+<details>
+<summary>Raid frames: left or bottom</summary>
+
+![Raid frames on the left](.previews/02-raid-left.jpg)
+
+![Raid frames at the bottom](.previews/03-raid-bottom.jpg)
+
+</details>
 
 <details>
 <summary>The layout, shown in EllesmereUI's unlock mode</summary>
 
-![AritlokUI layout](.previews/layout.jpg)
+![Layout with the party and raid frames on the left](.previews/04-layout-left.jpg)
+
+![Layout with the party and raid frames at the bottom](.previews/05-layout-bottom.jpg)
 
 </details>
 
