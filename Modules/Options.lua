@@ -190,20 +190,20 @@ local function BuildThemePage(W, parent, y)
     end
     do
         local values, order = {}, {}
-        for i = 1, #ns.Installer.roles do
-            local role = ns.Installer.roles[i]
-            values[role.key] = role.title
-            order[i] = role.key
+        for i = 1, #ns.Installer.groupPositions do
+            local choice = ns.Installer.groupPositions[i]
+            values[choice.key] = choice.title
+            order[i] = choice.key
         end
         _, h = W:Dropdown(
             parent,
-            "Role",
+            "Party and raid frames",
             y,
             values,
-            function() return db.install.role end,
-            function(v) db.install.role = v end,
+            function() return db.install.groups end,
+            function(v) db.install.groups = v end,
             order,
-            "Healers get the party and raid frames in the center of the screen. Applied the next time you run the installer."
+            "Where the party and raid frames go. Applied the next time you run the installer."
         )
         y = y - h
     end

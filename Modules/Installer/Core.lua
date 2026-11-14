@@ -50,12 +50,12 @@ I.shapes = {
     { key = "round", title = "Rounded", desc = "All corners rounded.", radius = 6, corners = 15 },
 }
 
--- The role page: one choice, stored as AritlokUIDB.install.role. Shown by
--- the installer window and the settings page. Titles and descriptions are
--- English here and translated where they are shown.
-I.roles = {
-    { key = "dps", title = "Damage & Tank", desc = "Party and raid frames stay at the side of the screen." },
-    { key = "healer", title = "Healer", desc = "Party and raid frames in the center, below the cooldown manager." },
+-- The groups page: where the party and raid frames go, stored as
+-- AritlokUIDB.install.groups. Shown by the installer window and the settings
+-- page. Titles and descriptions are English here and translated where shown.
+I.groupPositions = {
+    { key = "left", title = "Left", desc = "At the left edge of the screen." },
+    { key = "bottom", title = "Bottom", desc = "Centered above the action bars." },
 }
 
 I.options = {

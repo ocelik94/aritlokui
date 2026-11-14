@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+- Fixed: choosing to keep the party and raid frames at the side still moved them to the center
+- The Role page is now called Groups and simply asks where the party and raid frames go: Left or Bottom. Your earlier choice carries over
+
+Run `/aui install` again with Left to put the frames back at the side.
+
 ## 1.0.0
 
 - The healer layout is now a choice on its own Role page of the installer (Damage & Tank or Healer) instead of a switch on the Layout page. Your earlier choice carries over

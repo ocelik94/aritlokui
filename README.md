@@ -23,30 +23,30 @@
 
 ## Features
 
-- **Gradient unit frames** – class-colored bars that run from a deep left end to a bright right end, on health, power and cast bars; the pet frame in a darker shade of your class color
-- **Two themes** – Gradient (default) and Dark
-- **Accent color** – your class color on every character, or one fixed color of your choice
-- **Frame shape** – rectangle, leaf (two opposite corners rounded, the default) or rounded corners on unit frames, party and raid frames and nameplates
+- **Gradient unit frames** - class-colored bars that run from a deep left end to a bright right end, on health, power and cast bars; the pet frame in a darker shade of your class color
+- **Two themes** - Gradient (default) and Dark
+- **Accent color** - your class color on every character, or one fixed color of your choice
+- **Frame shape** - rectangle, leaf (two opposite corners rounded, the default) or rounded corners on unit frames, party and raid frames and nameplates
 - **Party, raid frames and nameplates** in the same flat look as the unit frames, with the same gradients on party and raid health bars
-- **Role** – pick Damage & Tank or Healer in the installer; healers get the party and raid frames in the center of the screen, below the cooldown manager
-- **AFK screen** – while you are away, the interface fades out and your character, time away and the clock are shown
-- **One window color** – bags, the Blizzard windows EllesmereUI skins, and tooltips share one dark background
-- **Compact bags** – EllesmereUI's compact view, opening as one bag
-- **Clean center layout** – player and target frames either side of a free center, with the power bar and cooldown manager in between
-- **Compact action bars** – three rows at the bottom center, two side blocks, and a mouse-over bar next to chat
-- **Menu bar** – a slim strip along the bottom edge with a fading backdrop: micro menu, a long experience bar with rested experience (your watched reputation at max level), durability, clock, professions, gold and performance; right-click the professions for First Aid and Cooking
-- **First-run tour** – a few short steps after installing point out the parts that are easy to miss
-- **Tidy screen edges** – chat bottom left; minimap, quest tracker, tooltip and damage / healing meters down the right
-- **Step-by-step installer** – short pages, every part optional
-- **Shared or own profile** – install into the shared `AritlokUI` profile or one with a name you choose
-- **Out-of-combat hiding** – choose whether action bars, pet bar, unit frames and meters hide outside combat
-- **RestedXP Guides** – adds an "AritlokUI" theme to RestedXP: guide window, arrow, map pins and tooltips in your accent color and interface font
-- **Questie** – when Questie is loaded, its quest tracker can take the place of EllesmereUI's, in the same font and spot
-- **Pixel-perfect scale** – one UI unit per screen pixel (0.5333 at 2560 × 1440)
+- **Party and raid frames** - at the left edge, or at the bottom, centered above the action bars
+- **AFK screen** - while you are away, the interface fades out and your character, time away and the clock are shown
+- **One window color** - bags, the Blizzard windows EllesmereUI skins, and tooltips share one dark background
+- **Compact bags** - EllesmereUI's compact view, opening as one bag
+- **Clean center layout** - player and target frames either side of a free center, with the power bar and cooldown manager in between
+- **Compact action bars** - three rows at the bottom center, two side blocks, and a mouse-over bar next to chat
+- **Menu bar** - a slim strip along the bottom edge with a fading backdrop: micro menu, a long experience bar with rested experience (your watched reputation at max level), durability, clock, professions, gold and performance; right-click the professions for First Aid and Cooking
+- **First-run tour** - a few short steps after installing point out the parts that are easy to miss
+- **Tidy screen edges** - chat bottom left; minimap, quest tracker, tooltip and damage / healing meters down the right
+- **Step-by-step installer** - short pages, every part optional
+- **Shared or own profile** - install into the shared `AritlokUI` profile or one with a name you choose
+- **Out-of-combat hiding** - choose whether action bars, pet bar, unit frames and meters hide outside combat
+- **RestedXP Guides** - adds an "AritlokUI" theme to RestedXP: guide window, arrow, map pins and tooltips in your accent color and interface font
+- **Questie** - when Questie is loaded, its quest tracker can take the place of EllesmereUI's, in the same font and spot
+- **Pixel-perfect scale** - one UI unit per screen pixel (0.5333 at 2560 × 1440)
 - **Monaspace Neon** font, with Argon bundled as an alternative
-- **Non-destructive** – your EllesmereUI profile is copied, never overwritten
-- **Changelog in game** – what changed in each version, on its own page in EllesmereUI's settings
-- **English, German and French** – the installer, settings page and chat messages follow your client language
+- **Non-destructive** - your EllesmereUI profile is copied, never overwritten
+- **Changelog in game** - what changed in each version, on its own page in EllesmereUI's settings
+- **English, German and French** - the installer, settings page and chat messages follow your client language
 
 ## Requirements
 
@@ -61,7 +61,7 @@ AritlokUI styles and arranges these EllesmereUI modules, so keep them enabled:
 | Unit Frames | player, target, pet, target-of-target, focus |
 | Raid Frames | party and raid frame look |
 | Nameplates | nameplate look |
-| Action Bars | bars 1–6, stance and pet bars |
+| Action Bars | bars 1-6, stance and pet bars |
 | Resource Bars | its standalone cast bar is switched off in favor of the one under the player frame |
 | DataBars | the menu bar |
 | Cooldown Manager | the rows between the player and target frames |
@@ -77,34 +77,6 @@ A module that is switched off is simply skipped by the installer.
 ### Game version
 
 World of Warcraft: Forever, interface `16001`.
-
-## Installation
-
-- Make a backup of your `WTF` folder
-- Install EllesmereUI and log in once with it enabled
-- Install AritlokUI from [CurseForge](https://www.curseforge.com/wow/addons/aritlokui), or put this folder into `World of Warcraft/_forever_/Interface/AddOns/` and make sure it is named `AritlokUI` (the name has to match `AritlokUI.toc`)
-- Restart the game client (a new addon folder is not picked up by `/reload`)
-- Type `/aui install` and follow the steps
-- Click **Reload UI** on the last page
-
-The installer copies your active EllesmereUI profile to a new one and writes its settings there: either the shared `AritlokUI` profile or one you name yourself. Your original profile is left as it was; you can switch back to it under `/eui` → Profiles. A profile that already exists and was not made by AritlokUI is never written into.
-
-## Commands
-
-| Command | What it does |
-| --- | --- |
-| `/aui` | open the settings page inside the EllesmereUI panel |
-| `/aui install` | open the installer |
-| `/aui shade on\|off\|<0-90>` | bar gradients, and how deep the left end gets |
-| `/aui bar on\|off\|top\|bottom` | the menu bar's backdrop and experience bar |
-| `/aui xp <length> [offset]` | length of the experience bar on the menu bar, and where it starts |
-| `/aui status` | what is switched on |
-| `/aui probe` | print which client and EllesmereUI functions this build has |
-| `/aui afk` | preview the AFK screen for ten seconds |
-| `/aui tour` | show the tour of the layout again |
-| `/aui help` | list the commands |
-
-`/aritlokui` works as an alias for `/aui`.
 
 ## What it does not do
 
@@ -200,7 +172,7 @@ Texts are written in English in the code and looked up through `ns.L["English te
 
 - **Ellesmere** for [EllesmereUI](https://github.com/EllesmereGaming/EllesmereUI), which AritlokUI is built on
 - **Toxi** and the [ToxiUI](https://github.com/Toxicom/toxiui) contributors, whose layout this one is modeled on
-- **Smokenoaken** for [OakUI](https://github.com/Smokenoaken/OakUI_Installer), the reference for the menu bar
+- **Smokenoaken** for [OakUI](https://github.com/Smokenoaken/OakUI_Installer), the reference for the menu bar and the installer
 - **GitHub Next** for the [Monaspace](https://github.com/githubnext/monaspace) typeface
 
 ## License

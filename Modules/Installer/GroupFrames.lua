@@ -76,7 +76,7 @@ I.AddStep({
 })
 
 -------------------------------------------------------------------------------
---  Healer layout (role "healer"): party and raid frames move to the center
+--  Party and raid frames at the bottom (install.groups = "bottom"): they move to the center
 --  of the screen, in the band between the cooldown manager rows (which end 366
 --  up) and the stance bar over the action bars, so the frames you heal sit
 --  where you are already looking. They get smaller to fit: 88 x 36, party in
@@ -84,8 +84,8 @@ I.AddStep({
 --  A 40-player raid grows to the right from there, still below the unit
 --  frames.
 --
---  The values it replaces are kept (AritlokUIDB.healerBefore) and put back
---  when the role is set back to Damage & Tank and the installer runs again.
+--  The values it replaces are kept (AritlokUIDB.groupsBefore) and put back
+--  when Left is chosen again and the installer runs.
 --
 --  RETEST after an EllesmereUI update (read from 9.8.4):
 --    raid: unlockPos {point, relPoint, x, y} on UIParent, the TOP LEFT of the
@@ -112,18 +112,18 @@ local function Copy(v)
 end
 
 local function Keep(db, rf)
-    if db.healerBefore then return end -- already kept by an earlier install
+    if db.groupsBefore then return end -- already kept by an earlier install
     local before = {}
     for _, list in ipairs({ KEPT, KEPT_PARTY }) do
         for i = 1, #list do
             before[list[i]] = Copy(rf[list[i]])
         end
     end
-    db.healerBefore = before
+    db.groupsBefore = before
 end
 
 local function Restore(db, rf)
-    local before = db.healerBefore
+    local before = db.groupsBefore
     if type(before) ~= "table" then return false end
     for _, list in ipairs({ KEPT, KEPT_PARTY }) do
         for i = 1, #list do
@@ -131,7 +131,7 @@ local function Restore(db, rf)
             rf[key] = Copy(before[key]) -- nil when it was unset before
         end
     end
-    db.healerBefore = nil
+    db.groupsBefore = nil
     return true
 end
 
@@ -141,16 +141,16 @@ I.AddStep({
     run = function(ctx)
         local rf = ctx.addons.EllesmereUIRaidFrames
         if type(rf) ~= "table" then
-            if ctx.want.role == "healer" then ctx:Skip("healer layout (EllesmereUI Raid Frames is not loaded)") end
+            if ctx.want.groups == "bottom" then ctx:Skip("party and raid frames at the bottom (EllesmereUI Raid Frames is not loaded)") end
             return
         end
-        if not ctx.want.role == "healer" then
+        if ctx.want.groups ~= "bottom" then
             if Restore(ctx.db, rf) then ctx:Done("party and raid frames back where they were") end
             return
         end
         local g = ctx:Geometry()
         if not g then
-            ctx:Skip("healer layout")
+            ctx:Skip("party and raid frames at the bottom")
             return
         end
 
@@ -172,6 +172,6 @@ I.AddStep({
         -- Without this, EllesmereUI's first-install pass would move the raid
         -- frames back to its default spot at the next login.
         if type(_G.EllesmereUIDB) == "table" then _G.EllesmereUIDB._capturedOnce_RF = true end
-        ctx:Done("healer layout")
+        ctx:Done("party and raid frames at the bottom")
     end,
 })

@@ -26,7 +26,7 @@ local PAD = 36
 local HEADER, FOOTER = 92, 70
 
 -- Sidebar name and page heading are the same word.
-local STEPS = { "Welcome", "Profile", "Theme", "Shape", "Layout", "Role", "Look", "Combat", "Addons", "Install" }
+local STEPS = { "Welcome", "Profile", "Theme", "Shape", "Layout", "Groups", "Look", "Combat", "Addons", "Install" }
 
 -- What each page opens with: a short paragraph, and optionally a highlighted
 -- note under it.
@@ -41,7 +41,7 @@ local INTROS = {
     { "Pick how the unit frame bars are colored, and the accent color for text, meters and the menu bar." },
     { "Pick the corners of the unit frames, party and raid frames and nameplates." },
     { "Choose which parts of the screen are arranged. Anything you switch off stays exactly as it is now." },
-    { "Pick what you play. Healers get the party and raid frames where they are already looking." },
+    { "Choose where the party and raid frames go." },
     {
         "Style, font, accent color and scale.",
         "Important: the UI scale applies to your whole account, not just this profile.",
@@ -50,7 +50,7 @@ local INTROS = {
     { "AritlokUI can adjust other addons so they match." },
     { "Check your choices, then press Install. Nothing is changed before that." },
 }
-local PAGE_WELCOME, PAGE_PROFILE, PAGE_THEME, PAGE_SHAPE, PAGE_LAYOUT, PAGE_ROLE, PAGE_LOOK, PAGE_COMBAT, PAGE_ADDONS, PAGE_INSTALL =
+local PAGE_WELCOME, PAGE_PROFILE, PAGE_THEME, PAGE_SHAPE, PAGE_LAYOUT, PAGE_GROUPS, PAGE_LOOK, PAGE_COMBAT, PAGE_ADDONS, PAGE_INSTALL =
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 local DONE = #STEPS + 1
 
@@ -668,34 +668,34 @@ local function BuildShape()
     end
 end
 
--- One choice: the role (I.roles).
-local function BuildRole()
-    local page = NewPage(PAGE_ROLE)
+-- One choice: where the party and raid frames go (I.groupPositions).
+local function BuildGroups()
+    local page = NewPage(PAGE_GROUPS)
     local rows = {}
     local y = page.top
-    for i = 1, #I.roles do
-        local role = I.roles[i]
-        local row = RadioRow(page, y, L[role.title], L[role.desc])
-        row.key = role.key
+    for i = 1, #I.groupPositions do
+        local choice = I.groupPositions[i]
+        local row = RadioRow(page, y, L[choice.title], L[choice.desc])
+        row.key = choice.key
         row:SetScript("OnClick", function(self)
-            ns.db.install.role = self.key
-            refreshers[PAGE_ROLE]()
+            ns.db.install.groups = self.key
+            refreshers[PAGE_GROUPS]()
         end)
         rows[i] = row
         y = y - 58
     end
-    refreshers[PAGE_ROLE] = function()
+    refreshers[PAGE_GROUPS] = function()
         for i = 1, #rows do
-            rows[i]:SetSelected(ns.db.install.role == rows[i].key)
+            rows[i]:SetSelected(ns.db.install.groups == rows[i].key)
         end
     end
 end
 
-local function RoleName()
-    for i = 1, #I.roles do
-        if I.roles[i].key == ns.db.install.role then return L[I.roles[i].title] end
+local function GroupsName()
+    for i = 1, #I.groupPositions do
+        if I.groupPositions[i].key == ns.db.install.groups then return L[I.groupPositions[i].title] end
     end
-    return L[I.roles[1].title]
+    return L[I.groupPositions[1].title]
 end
 
 -- A page of switches for one group of installer options.
@@ -827,7 +827,7 @@ local function BuildInstall()
     local page = NewPage(PAGE_INSTALL)
 
     -- Left column: what; right column: the choice. One line each.
-    local keys = { "Profile", "Theme", "Shape", "Layout", "Role", "Look", "Combat", "Addons" }
+    local keys = { "Profile", "Theme", "Shape", "Layout", "Groups", "Look", "Combat", "Addons" }
     local values = {}
     local y = page.top
     for i = 1, #keys do
@@ -858,7 +858,7 @@ local function BuildInstall()
         )
         values[3]:SetText(L[I.ShapeFor(db.install.shape).title])
         values[4]:SetText(Count("layout"))
-        values[5]:SetText(RoleName())
+        values[5]:SetText(GroupsName())
         values[6]:SetText(Count("look"))
         values[7]:SetText(CountCombat())
         values[8]:SetText(CountAddons())
@@ -1177,7 +1177,7 @@ local function Build()
     BuildTheme()
     BuildShape()
     BuildOptions(PAGE_LAYOUT, "layout")
-    BuildRole()
+    BuildGroups()
     BuildOptions(PAGE_LOOK, "look")
     BuildCombat()
     BuildAddons()

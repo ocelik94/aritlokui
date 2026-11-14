@@ -80,6 +80,25 @@ def check_forbidden(files):
                 error(f"{f}:{n}", f"uses {m.group(0)}, which this addon must not use")
 
 
+# `not a == b` is `(not a) == b` in Lua, which is almost never what was meant
+# (write `a ~= b`). Strings are blanked first so text cannot trigger it.
+NOT_COMPARE = re.compile(r"\bnot\s+[\w.:\[\]()]+\s*[=~]=")
+
+
+def check_not_compare(files):
+    for f in files:
+        src = read(f)
+        strings, _ = lualex.scan(src)
+        code = list(lualex.without_comments(src))
+        for _value, _line, start, end in strings:
+            for k in range(start, end):
+                if code[k] != "\n":
+                    code[k] = " "
+        for n, text in enumerate("".join(code).split("\n"), 1):
+            if NOT_COMPARE.search(text):
+                error(f"{f}:{n}", "`not a == b` compares (not a) with b; write `a ~= b`")
+
+
 def check_toc(files):
     listed = []
     for raw in read("AritlokUI.toc").splitlines():
@@ -182,6 +201,7 @@ def main():
     files = lua_files()
     check_first_line(files)
     check_forbidden(files)
+    check_not_compare(files)
     check_toc(files)
     check_locales(files)
     check_versions()
