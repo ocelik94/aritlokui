@@ -23,7 +23,10 @@ local addonName, ns = ...
 --      healthBarTexture, bgColor, bgAlpha (0-1), showBorder, borderSize,
 --      borderColor, levelDifficultyColor(Friendly), textSlotLeft, threatPctEnabled,
 --      threatPctMode, threatPctPosition, threatPctColorByThreat
---      (EUI_Nameplates_Overlays.lua).
+--      (EUI_Nameplates_Overlays.lua), questTextSlot, classificationSlot
+--      (default "topleft"), classificationHideQuest,
+--      replaceQuestIconWithObjective (EUI_Nameplates_Layout.lua Legacy,
+--      QuestTextSlot).
 --  Textures are stored as "sm:<LibSharedMedia name>", which both resolve
 --  through EllesmereUI.ResolveTexturePath.
 -------------------------------------------------------------------------------
@@ -72,6 +75,25 @@ local function WriteNameplates(ctx)
     np.threatPctMode = "percent"
     np.threatPctPosition = "CENTER"
     np.threatPctColorByThreat = true
+    -- Quest objective text (2/6, 40%): on Forever it takes the Rare/Quest
+    -- slot on the bar's top-left corner, where it runs into the centered
+    -- name, so it moves to the right of the bar. Unset questTextSlot is
+    -- EllesmereUI's legacy reading (Replace Quest Icon on, Quest Indicator
+    -- on in a slot); it is written out the way EllesmereUI does it
+    -- (NP_MaterializeQuestText), with the quest icon half switched off.
+    -- Text in another slot, or switched off, is kept.
+    local questSlot = np.questTextSlot
+    if questSlot == nil then
+        local legacy = np.replaceQuestIconWithObjective ~= false and np.classificationSlot ~= "none" and not np.classificationHideQuest
+        if legacy then
+            questSlot = np.classificationSlot or "topleft"
+            np.classificationHideQuest = true
+        else
+            questSlot = "none"
+        end
+        np.questTextSlot = questSlot
+    end
+    if questSlot == "topleft" or questSlot == "topright" then np.questTextSlot = "right" end
     return true
 end
 

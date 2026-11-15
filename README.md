@@ -53,6 +53,7 @@
 - **Shared or own profile** - install into the shared `AritlokUI` profile or one with a name you choose
 - **Out-of-combat hiding** - choose whether action bars, pet bar, unit frames and meters hide outside combat
 - **RestedXP Guides** - adds an "AritlokUI" theme to RestedXP: guide window, arrow, map pins and tooltips in your accent color and interface font
+- **BugSack** - its error window in the AritlokUI look, with caught errors mentioned in chat
 - **Questie** - when Questie is loaded, its quest tracker can take the place of EllesmereUI's, in the same font and spot
 - **Pixel-perfect scale** - one UI unit per screen pixel (0.5333 at 2560 × 1440)
 - **Monaspace Neon** font, with Argon bundled as an alternative
@@ -153,6 +154,7 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Modules/InfoBar.lua` | the menu bar's fading backdrop and the long experience bar |
 | `Modules/XPGains.lua` | experience per kill and per quest, for the XP bar tooltip |
 | `Modules/RestedXP.lua` | the theme registered with RestedXP Guides |
+| `Modules/BugSack.lua` | the AritlokUI look for BugSack's window |
 | `Modules/Professions.lua` | right-click on the menu bar's profession buttons |
 | `Modules/AFK.lua` | the AFK screen |
 | `Modules/Tour.lua` | the first-run tour |
@@ -166,7 +168,7 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Modules/Installer/Chat.lua` | chat position, fonts and docking |
 | `Modules/Installer/RightEdge.lua` | minimap, quest tracker, tooltip, meters |
 | `Modules/Installer/Combat.lua` | what is hidden out of combat |
-| `Modules/Installer/Addons.lua` | settings for other addons (Questie, RestedXP) |
+| `Modules/Installer/Addons.lua` | settings for other addons (Questie, RestedXP, BugSack) |
 | `Modules/Installer/Wizard.lua` | the installer window |
 | `Media/` | textures and fonts used in game |
 | `scripts/` | repository checks run by CI (left out of releases) |

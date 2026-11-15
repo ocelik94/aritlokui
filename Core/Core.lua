@@ -5,7 +5,7 @@ local addonName, ns = ...
 --  event frame with its handler table, and the combat queue.
 -------------------------------------------------------------------------------
 
-ns.VERSION = "1.0.3"
+ns.VERSION = "1.0.4"
 ns.TAG = "|cff18a8ffAritlok|r|cffffffffUI|r"
 
 -- Interface number this addon was written against. RETEST when the TOC number
@@ -134,6 +134,7 @@ ns.defaults = {
         addons = {
             questie = true,
             restedxp = true,
+            bugsack = true,
         },
         -- Hidden while out of combat; one key per entry in
         -- ns.Installer.combatOptions.
@@ -155,6 +156,7 @@ ns.defaults = {
     wizardSeen = false, -- the installer has been shown once on this account
     lootFeedOn = false, -- the installer switched EllesmereUI's Loot Feed on
     tourSeen = false, -- the first-run tour has been shown (Modules/Tour.lua)
+    bugSackSkin = false, -- the installer gave BugSack's window the AritlokUI look (Modules/BugSack.lua)
     xpGains = {}, -- last kill and quest experience, by character GUID (Modules/XPGains.lua)
 }
 

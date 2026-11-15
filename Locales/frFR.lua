@@ -228,6 +228,9 @@ L["loot feed (EllesmereUI Forever Essentials is not loaded)"] = "flux de butin (
 L["Kills to level"] = "Victimes jusqu'au niveau"
 L["Quests to level"] = "Quêtes jusqu'au niveau"
 L["~%d (%s each)"] = "~%d (%s chacune)"
+L["Error window in the AritlokUI look; errors are mentioned in chat."] =
+    "Fenêtre d'erreurs au style AritlokUI ; les erreurs sont signalées dans le chat."
+L["BugSack window"] = "fenêtre de BugSack"
 L["General"] = "Général"
 L["Changelog"] = "Nouveautés"
 L["What changed in each version."] = "Ce qui a changé dans chaque version."

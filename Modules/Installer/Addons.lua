@@ -7,7 +7,7 @@ local addonName, ns = ...
 --  and only writes that addon's own saved settings; everything takes effect
 --  with the reload at the end of the install.
 --
---  Covered so far: Questie and RestedXP Guides.
+--  Covered so far: Questie, RestedXP Guides and BugSack.
 --
 --  RETEST after a Questie update: the setting names below were read from
 --  Questie's source as installed, and it is reached through the global it
@@ -123,6 +123,38 @@ I.addons[#I.addons + 1] = {
         local before = ctx.db.rxpThemeBefore
         p.activeTheme = type(before) == "string" and before or "Default"
         ctx.db.rxpThemeBefore = nil
+    end,
+}
+
+-- BugSack: its window in the AritlokUI look (Modules/BugSack.lua), and a
+-- line in chat when an error is caught, since its window does not pop up by
+-- itself. BugSack's global only exists while BugGrabber is loaded too.
+--
+-- RETEST after a BugSack update: BugSackDB.chatframe (core.lua, v12.1.9).
+local function BugSackDB()
+    local db = _G.BugSackDB
+    if type(_G.BugSack) == "table" and type(db) == "table" then return db end
+    return nil
+end
+
+I.addons[#I.addons + 1] = {
+    key = "bugsack",
+    title = "BugSack",
+    desc = "Error window in the AritlokUI look; errors are mentioned in chat.",
+    detect = function() return BugSackDB() ~= nil end,
+    apply = function(ctx)
+        local db = BugSackDB()
+        if not ctx.db.bugSackSkin then ctx.db.bugSackChatBefore = db.chatframe end -- remembered, so it can be handed back
+        db.chatframe = true
+        ctx.db.bugSackSkin = true
+        ctx:Done("BugSack window")
+    end,
+    revert = function(ctx)
+        if not ctx.db.bugSackSkin then return end
+        local db = BugSackDB()
+        db.chatframe = ctx.db.bugSackChatBefore == true
+        ctx.db.bugSackSkin = false
+        ctx.db.bugSackChatBefore = nil
     end,
 }
 

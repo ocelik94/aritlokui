@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.4
+
+- Nameplates: a quest mob's objective text (2/6, 40%) now shows to the right of the bar instead of on its top-left corner, where it ran into the name
+- BugSack: a new entry on the installer's Addons page gives BugSack's error window the AritlokUI look (dark panel, accent line, the interface font for the error text) and mentions caught errors in chat
+- Fixed: with the Leaf shape the pet frame was rounded the mirrored way, like the frames on the target side
+
+Run `/aui install` again to apply these.
+
 ## 1.0.3
 
 - Loot feed: EllesmereUI's Loot Feed is switched on and placed left of the damage meters. Looted items, money, reputation and skill-ups (professions and weapon skills) show there as short rows that fade out after a few seconds. New "Loot feed by the meters" switch on the installer's Layout page

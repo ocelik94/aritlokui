@@ -245,7 +245,8 @@ I.AddStep({
 --  RETEST after an EllesmereUI update (read from 9.8.4): cornerRadius (0-16)
 --  and cornerMask (bits 1 TL, 2 TR, 4 BL, 8 BR) on each unit's table in
 --  EllesmereUIUnitFrames (EUI_UnitFrames_Reload.lua; boss and the small
---  frames take theirs from a donor unit unless set on their own), flat in
+--  frames always take theirs from a donor unit: their lookSource, else focus,
+--  then target, then player, EUI_UnitFrames_Layout.lua UF_MiniDonorKey), flat in
 --  EllesmereUIRaidFrames (party follows raid) and EllesmereUINameplates
 --  (health and cast bar).
 -------------------------------------------------------------------------------
@@ -256,6 +257,11 @@ local SHAPE_UNITS = { "player", "target", "focus", "targettarget", "focustarget"
 -- center. Shapes that are the same both ways (rectangle, rounded) are not
 -- changed by this.
 local MIRRORED = { target = true, targettarget = true, focus = true, focustarget = true }
+
+-- The small frames' donor, so each takes its corners from the frame on its
+-- own side: left unset, the pet would copy the focus frame's mirrored leaf.
+-- A Copy Look From the player chose is kept.
+local DONOR = { pet = "player", targettarget = "target", focustarget = "focus" }
 
 local function Mirror(corners)
     if corners == 9 then return 6 end -- TL + BR -> TR + BL
@@ -291,7 +297,9 @@ I.AddStep({
             for i = 1, #SHAPE_UNITS do
                 local unit = SHAPE_UNITS[i]
                 local corners = MIRRORED[unit] and Mirror(shape.corners) or shape.corners
-                SetCorners(I.Sub(uf, unit), radius, corners)
+                local t = I.Sub(uf, unit)
+                SetCorners(t, radius, corners)
+                if DONOR[unit] and t.lookSource == nil then t.lookSource = DONOR[unit] end
             end
             done = true
         end
