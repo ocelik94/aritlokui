@@ -106,3 +106,72 @@ I.AddStep({
         ctx:Done("tooltip")
     end,
 })
+
+-------------------------------------------------------------------------------
+--  Loot feed (option "lootFeed"): EllesmereUI's own Loot Feed from its Forever
+--  Essentials module, switched on and placed left of the damage meters, at
+--  chat height, growing up. Short rows for looted items, money, reputation,
+--  currencies and skill-ups (professions and weapon skills), each fading out
+--  after a few seconds. It is off in EllesmereUI by default.
+--
+--  Its settings are account-wide (EllesmereUIDB.lootFeed, every profile), like
+--  the window color. The feed is only switched off again by this installer if
+--  it was this installer that switched it on (AritlokUIDB.lootFeedOn).
+--
+--  RETEST after an EllesmereUI update (read from 9.8.4,
+--  EllesmereUIForeverEssentials_LootFeed.lua and its Feature kit in
+--  EllesmereUIForeverEssentials.lua): enabled, items, money, reputation,
+--  currency, skills, style ("BAR"), width, rowHeight, maxRows, duration, grow,
+--  bgR/G/B/A, and pos {point, relPoint, x, y} (where unlock mode puts it).
+-------------------------------------------------------------------------------
+local function LootFeedLoaded(eui)
+    local registry = type(eui) == "table" and eui._ModuleNS
+    return type(registry) == "table" and registry.EllesmereUIForeverEssentials ~= nil
+end
+
+I.AddStep({
+    order = 135,
+    option = nil, -- runs either way: switching on, or back off
+    run = function(ctx)
+        local db = _G.EllesmereUIDB
+        if type(db) ~= "table" then return end
+        if not ctx.want.lootFeed then
+            if ctx.db.lootFeedOn and type(db.lootFeed) == "table" then
+                db.lootFeed.enabled = false
+                ctx.db.lootFeedOn = false
+                ctx:Done("loot feed switched off")
+            end
+            return
+        end
+        if not LootFeedLoaded(ctx.eui) then
+            ctx:Skip("loot feed (EllesmereUI Forever Essentials is not loaded)")
+            return
+        end
+        if type(db.lootFeed) ~= "table" then db.lootFeed = {} end
+        local feed = db.lootFeed
+        if not feed.enabled then ctx.db.lootFeedOn = true end
+        feed.enabled = true
+        feed.items, feed.money, feed.reputation, feed.currency, feed.skills = true, true, true, true, true
+        feed.style = "BAR"
+        feed.duration = 5
+        feed.grow = "UP"
+        feed.bgR, feed.bgG, feed.bgB, feed.bgA = ns.PANEL.r, ns.PANEL.g, ns.PANEL.b, 0.6
+
+        local g = ctx:Geometry()
+        if g then
+            local S = g.S
+            feed.rowHeight = S(32)
+            feed.maxRows = 6
+            -- Between the Bar 5 block and the meters (394 wide at the right
+            -- edge, see above), as low as the chat.
+            local right = g.uiW - S(394) - S(12)
+            local bar5Right = g.uiW / 2 + g.blockX + g.blockW / 2
+            local width = math.min(S(300), math.floor(right - bar5Right - S(12)))
+            if width >= S(180) then
+                feed.width = width
+                feed.pos = { point = "BOTTOMRIGHT", relPoint = "BOTTOMLEFT", x = right, y = g.chatY }
+            end
+        end
+        ctx:Done("loot feed by the meters")
+    end,
+})

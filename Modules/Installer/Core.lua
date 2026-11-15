@@ -64,6 +64,7 @@ I.options = {
     { key = "dataBar", group = "layout", title = "Menu bar", desc = "Needs EllesmereUI DataBars." },
     { key = "chat", group = "layout", title = "Chat", desc = "Bottom left, smaller text." },
     { key = "rightSide", group = "layout", title = "Right edge", desc = "Minimap, quests, tooltip, meters." },
+    { key = "lootFeed", group = "layout", title = "Loot feed by the meters", desc = "Loot, reputation and skill-ups, fading out." },
     { key = "style", group = "look", title = "Flat style", desc = "Replaces the bronze WoW Forever look." },
     { key = "font", group = "look", title = "Monaspace Neon font", desc = "Chat tabs keep a narrower font." },
     { key = "scale", group = "look", title = "Pixel-perfect scale", desc = "Sharper and slightly smaller." },

@@ -167,6 +167,11 @@ local function UpdateXP()
     if mode then UpdateRested() end
 end
 
+local TO_LEVEL = {
+    { kind = "kill", label = "Kills to level" },
+    { kind = "quest", label = "Quests to level" },
+}
+
 -- The tooltip on the bar.
 local function ShowTooltip(owner)
     if not mode then return end
@@ -199,6 +204,23 @@ local function ShowTooltip(owner)
             1
         )
         GameTooltip:AddDoubleLine(L["To next level"], Big(state.max - state.cur), 0.7, 0.7, 0.75, 1, 1, 1)
+        -- From the average of the last kills and quests (Modules/XPGains.lua).
+        local left = state.max - state.cur
+        for _, row in ipairs(TO_LEVEL) do
+            local average = ns.XPAverage and ns.XPAverage(row.kind)
+            if average and average > 0 then
+                GameTooltip:AddDoubleLine(
+                    L[row.label],
+                    string.format(L["~%d (%s each)"], math.ceil(left / average), Big(math.floor(average + 0.5))),
+                    0.7,
+                    0.7,
+                    0.75,
+                    1,
+                    1,
+                    1
+                )
+            end
+        end
         if state.rested > 0 then
             local restedPercent = math.floor(state.rested / state.max * 100)
             GameTooltip:AddDoubleLine(

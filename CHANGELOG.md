@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.3
+
+- Loot feed: EllesmereUI's Loot Feed is switched on and placed left of the damage meters. Looted items, money, reputation and skill-ups (professions and weapon skills) show there as short rows that fade out after a few seconds. New "Loot feed by the meters" switch on the installer's Layout page
+- Threat on nameplates: your share of a mob's threat shows as a percentage in the middle of its nameplate, colored by threat (EllesmereUI's Forever threat display)
+- XP bar tooltip: how many kills and how many quests the level still takes, from the average experience of your last ten kills and last ten quests
+
+Run `/aui install` again to switch these on.
+
 ## 1.0.2
 
 - Level colors: the level on the target and focus frames and on nameplates is now shown in its difficulty color (gray, green, yellow, orange, red) for mobs you can attack

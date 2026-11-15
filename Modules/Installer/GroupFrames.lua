@@ -21,7 +21,9 @@ local addonName, ns = ...
 --      default).
 --    EllesmereUINameplates (EllesmereUINameplates.lua, defaults ~l.485-630):
 --      healthBarTexture, bgColor, bgAlpha (0-1), showBorder, borderSize,
---      borderColor, levelDifficultyColor(Friendly), textSlotLeft.
+--      borderColor, levelDifficultyColor(Friendly), textSlotLeft, threatPctEnabled,
+--      threatPctMode, threatPctPosition, threatPctColorByThreat
+--      (EUI_Nameplates_Overlays.lua).
 --  Textures are stored as "sm:<LibSharedMedia name>", which both resolve
 --  through EllesmereUI.ResolveTexturePath.
 -------------------------------------------------------------------------------
@@ -62,6 +64,14 @@ local function WriteNameplates(ctx)
     np.levelDifficultyColor = true
     np.levelDifficultyColorFriendly = false
     if np.textSlotLeft == nil or np.textSlotLeft == "none" then np.textSlotLeft = "level" end
+    -- Threat: your share of the mob's threat as a percentage in the middle of
+    -- the bar, colored by threat state (EllesmereUI's Forever-only Threat %,
+    -- off by default; it reads Blizzard's threat API, not the combat log). The
+    -- bar's own threat colors are EllesmereUI's default on Forever and stay.
+    np.threatPctEnabled = true
+    np.threatPctMode = "percent"
+    np.threatPctPosition = "CENTER"
+    np.threatPctColorByThreat = true
     return true
 end
 

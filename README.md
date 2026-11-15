@@ -38,16 +38,17 @@
 - **Two themes** - Gradient (default) and Dark
 - **Accent color** - your class color on every character, or one fixed color of your choice
 - **Frame shape** - rectangle, leaf (two opposite corners rounded, the default) or rounded corners on unit frames, party and raid frames and nameplates
-- **Party, raid frames and nameplates** in the same flat look as the unit frames, with the same gradients on party and raid health bars
+- **Party, raid frames and nameplates** in the same flat look as the unit frames, with the same gradients on party and raid health bars; nameplates show the level in its difficulty color and your threat in percent
 - **Party and raid frames** - at the left edge, or at the bottom, centered above the action bars
 - **AFK screen** - while you are away, the interface fades out and your character, time away and the clock are shown
 - **One window color** - bags, the Blizzard windows EllesmereUI skins, and tooltips share one dark background
 - **Compact bags** - EllesmereUI's compact view, opening as one bag
 - **Clean center layout** - player and target frames either side of a free center, with the power bar and cooldown manager in between
 - **Compact action bars** - three rows at the bottom center, two side blocks, and a mouse-over bar next to chat
-- **Menu bar** - a slim strip along the bottom edge with a fading backdrop: micro menu, a long experience bar with rested experience (your watched reputation at max level), durability, clock, professions, gold and performance; right-click the professions for First Aid and Cooking
+- **Menu bar** - a slim strip along the bottom edge with a fading backdrop: micro menu, a long experience bar with rested experience and kills / quests to level on hover (your watched reputation at max level), durability, clock, professions, gold and performance; right-click the professions for First Aid and Cooking
 - **First-run tour** - a few short steps after installing point out the parts that are easy to miss
 - **Tidy screen edges** - chat bottom left; minimap, quest tracker, tooltip and damage / healing meters down the right
+- **Loot feed** - loot, money, reputation and skill-ups as short, fading rows beside the meters (EllesmereUI's own Loot Feed)
 - **Step-by-step installer** - short pages, every part optional
 - **Shared or own profile** - install into the shared `AritlokUI` profile or one with a name you choose
 - **Out-of-combat hiding** - choose whether action bars, pet bar, unit frames and meters hide outside combat
@@ -150,6 +151,7 @@ Before tagging, update `## Version:` in `AritlokUI.toc`, `ns.VERSION` in `Core/C
 | `Core/Media.lua` | textures, fonts, color and gradient helpers |
 | `Modules/Shade.lua` | gradient overlays on EllesmereUI's unit frame bars |
 | `Modules/InfoBar.lua` | the menu bar's fading backdrop and the long experience bar |
+| `Modules/XPGains.lua` | experience per kill and per quest, for the XP bar tooltip |
 | `Modules/RestedXP.lua` | the theme registered with RestedXP Guides |
 | `Modules/Professions.lua` | right-click on the menu bar's profession buttons |
 | `Modules/AFK.lua` | the AFK screen |
@@ -183,7 +185,7 @@ Texts are written in English in the code and looked up through `ns.L["English te
 
 - **Ellesmere** for [EllesmereUI](https://github.com/EllesmereGaming/EllesmereUI), which AritlokUI is built on
 - **Toxi** and the [ToxiUI](https://github.com/Toxicom/toxiui) contributors, whose layout this one is modeled on
-- **Smokenoaken** for [OakUI](https://github.com/Smokenoaken/OakUI_Installer), the reference for the menu bar and the installer
+- **Smokenoaken** for [OakUI](https://github.com/Smokenoaken/OakUI_Installer), the inspiration for the menu bar and the installer
 - **GitHub Next** for the [Monaspace](https://github.com/githubnext/monaspace) typeface
 
 ## License

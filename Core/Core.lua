@@ -5,7 +5,7 @@ local addonName, ns = ...
 --  event frame with its handler table, and the combat queue.
 -------------------------------------------------------------------------------
 
-ns.VERSION = "1.0.2"
+ns.VERSION = "1.0.3"
 ns.TAG = "|cff18a8ffAritlok|r|cffffffffUI|r"
 
 -- Interface number this addon was written against. RETEST when the TOC number
@@ -122,6 +122,7 @@ ns.defaults = {
         dataBar = true,
         chat = true,
         rightSide = true,
+        lootFeed = true, -- EllesmereUI's Loot Feed, left of the meters
         style = true,
         font = true,
         accent = true,
@@ -152,7 +153,9 @@ ns.defaults = {
     questieOwnsTracker = false, -- the installer switched EllesmereUI's quest tracker off for Questie's
     installed = false,
     wizardSeen = false, -- the installer has been shown once on this account
+    lootFeedOn = false, -- the installer switched EllesmereUI's Loot Feed on
     tourSeen = false, -- the first-run tour has been shown (Modules/Tour.lua)
+    xpGains = {}, -- last kill and quest experience, by character GUID (Modules/XPGains.lua)
 }
 
 local function MergeDefaults(dst, src)
@@ -352,6 +355,7 @@ function ns.Probe()
         "C_TradeSkillUI.GetBaseProfessionInfo",
         "UnitXP",
         "UnitXPMax",
+        "UnitGUID",
         "GetXPExhaustion",
         "IsPlayerAtEffectiveMaxLevel",
         "GetMaxLevelForPlayerExpansion",
