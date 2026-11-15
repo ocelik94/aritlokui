@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- Level colors: the level on the target and focus frames and on nameplates is now shown in its difficulty color (gray, green, yellow, orange, red) for mobs you can attack
+
+Run `/aui install` again to apply it.
+
 ## 1.0.1
 
 - Fixed: choosing to keep the party and raid frames at the side still moved them to the center

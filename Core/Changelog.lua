@@ -9,6 +9,14 @@ local addonName, ns = ...
 
 ns.changelog = {
     {
+        version = "1.0.2",
+        items = {
+            "Level colors: the level on the target and focus frames and on nameplates is now shown in its difficulty color "
+                .. "(gray, green, yellow, orange, red) for mobs you can attack.",
+        },
+        note = "Run /aui install again to apply it.",
+    },
+    {
         version = "1.0.1",
         items = {
             "Fixed: choosing to keep the party and raid frames at the side still moved them to the center.",

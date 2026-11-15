@@ -68,6 +68,12 @@ local function WriteUnitFrames(ctx, g)
     t.rightTextContent, t.rightTextSize, t.rightTextX, t.rightTextY = "name", nameSize, -S(6), nameY
     t.leftTextClassColor, t.rightTextClassColor = false, true
     t.extraTextContent, t.extraTextAlign, t.extraTextSize = "level", "right", smallSize
+    -- The level in its difficulty color (gray, green, yellow, orange, red) for
+    -- units you can attack; friendly units keep the slot's color. EllesmereUI
+    -- ships this off (levelDifficultyColor, EUI_UnitFrames_Text.lua).
+    t.levelDifficultyColor = true
+    t.levelDifficultyColorFriendly = false
+    Sub(uf, "focus").levelDifficultyColor = true
     t.extraTextX, t.extraTextY = -S(22), lowY
     t.centerTextContent, t.centerTextSize = "curhpshort", smallSize
     t.centerTextX, t.centerTextY = -(g.frameW / 2 - S(40)), lowY

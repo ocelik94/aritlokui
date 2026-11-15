@@ -5,7 +5,7 @@ local addonName, ns = ...
 --  event frame with its handler table, and the combat queue.
 -------------------------------------------------------------------------------
 
-ns.VERSION = "1.0.1"
+ns.VERSION = "1.0.2"
 ns.TAG = "|cff18a8ffAritlok|r|cffffffffUI|r"
 
 -- Interface number this addon was written against. RETEST when the TOC number

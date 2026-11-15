@@ -21,7 +21,7 @@ local addonName, ns = ...
 --      default).
 --    EllesmereUINameplates (EllesmereUINameplates.lua, defaults ~l.485-630):
 --      healthBarTexture, bgColor, bgAlpha (0-1), showBorder, borderSize,
---      borderColor.
+--      borderColor, levelDifficultyColor(Friendly), textSlotLeft.
 --  Textures are stored as "sm:<LibSharedMedia name>", which both resolve
 --  through EllesmereUI.ResolveTexturePath.
 -------------------------------------------------------------------------------
@@ -54,6 +54,14 @@ local function WriteNameplates(ctx)
     np.showBorder = true
     np.borderSize = 1
     np.borderColor = { r = 0, g = 0, b = 0 }
+    -- The mob's level in its difficulty color. Forever's nameplates show the
+    -- level in the left text slot, uncolored: levelDifficultyColor is off by
+    -- default (EUI_Nameplates_Layout.lua NP_SlotColorMode). Friendly units keep
+    -- the plain color (levelDifficultyColorFriendly). A left slot that was
+    -- switched off gets the level back; one showing something else is kept.
+    np.levelDifficultyColor = true
+    np.levelDifficultyColorFriendly = false
+    if np.textSlotLeft == nil or np.textSlotLeft == "none" then np.textSlotLeft = "level" end
     return true
 end
 
